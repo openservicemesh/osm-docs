@@ -7,7 +7,7 @@
 
 ## Editing Content
 
-docs.openservicemesh.io is a static site. The documentation content needs to be located at `docs/content/docs/`.
+docs.openservicemesh.io is a static site. The documentation content needs to be located at `content/docs/`.
 
 To ensure the docs content renders correctly in the theme, each page will need to have [front matter](https://gohugo.io/content-management/front-matter/) metadata. Example front matter:
 
@@ -30,7 +30,7 @@ type: docs
 
 ### External Links
 
-Links to anything outside of the `docs/content/` directory should be considered an external link - when the website is built, any relative paths to other files and sections in the OSM repo that were navigable within Github will likely break when clicked from the compiled pages at docs.openservicemesh.io.
+Links to anything outside of the `content/` directory should be considered an external link - when the website is built, any relative paths to other files and sections in the OSM repo that were navigable within Github will likely break when clicked from the compiled pages at docs.openservicemesh.io.
 
 To ensure urls work in both settings, please use an absolute path when referencing resources outside of the website content structure.
 
