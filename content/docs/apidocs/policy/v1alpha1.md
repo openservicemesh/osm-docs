@@ -35,7 +35,7 @@ rules in the policy.</p>
 <td>
 <code>metadata</code><br/>
 <em>
-<a href="https://v1-18.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#objectmeta-v1-meta">
+<a href="https://v1-20.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#objectmeta-v1-meta">
 Kubernetes meta/v1.ObjectMeta
 </a>
 </em>
@@ -116,7 +116,7 @@ EgressSpec
 <td>
 <code>matches</code><br/>
 <em>
-<a href="https://v1-18.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#typedlocalobjectreference-v1-core">
+<a href="https://v1-20.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#typedlocalobjectreference-v1-core">
 []Kubernetes core/v1.TypedLocalObjectReference
 </a>
 </em>
@@ -201,7 +201,7 @@ EgressSpec
 <td>
 <code>matches</code><br/>
 <em>
-<a href="https://v1-18.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#typedlocalobjectreference-v1-core">
+<a href="https://v1-20.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#typedlocalobjectreference-v1-core">
 []Kubernetes core/v1.TypedLocalObjectReference
 </a>
 </em>
