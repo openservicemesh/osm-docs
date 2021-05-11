@@ -1,6 +1,6 @@
 ---
-title: "Policy API Reference"
-description: "Policy API reference documentation."
+title: "Policy v1alpha1 API Reference"
+description: "Policy v1alpha1 API reference documentation."
 type: docs
 ---
 <p>Packages:</p>
