@@ -3,7 +3,6 @@
  description: "Documentation regarding OSM's current scale and limitations" 
  type: docs 
 --- 
-# Scale and limits
 
 This document describes current scale and limits known in OSM as of 02/04/2021.
 

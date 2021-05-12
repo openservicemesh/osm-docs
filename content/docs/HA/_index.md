@@ -3,7 +3,6 @@ title: "HA Design considerations"
 description: "Open Service Mesh HA Design considerations"
 type: docs
 ---
-# HA Design considerations
 
 OSM's control plane components are built with High Availability and Fault Tolerance in mind. The following sections will thoroughly document how are these tackled.
 
