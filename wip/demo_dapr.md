@@ -11,14 +11,14 @@ This document walks you through the steps of getting Dapr working with OSM on a 
       1. Dapr has a quickstart repository to help users get familiar with dapr and its features. For this integration demo we will be leveraging the [hello-kubernetes](https://github.com/dapr/quickstarts/tree/master/hello-kubernetes) quickstart. As we would like to integrate this Dapr example with OSM, there are a few modifications required and they are as follows:
 
          - The [hello-kubernetes](https://github.com/dapr/quickstarts/tree/master/hello-kubernetes) demo installs Dapr with mtls enabled (by default), we would **not want mtls from Dapr and would like to leverage OSM for this**. Hence while [installing Dapr](https://github.com/dapr/quickstarts/tree/master/hello-kubernetes#step-1---setup-dapr-on-your-kubernetes-cluster) on your cluster, make sure to disable mtls by passing the flag : `--enable-mtls=false`  during the installation
-         - Futher [hello-kubernetes](https://github.com/dapr/quickstarts/tree/master/hello-kubernetes) sets up everything in the default namespace, it is **strongly recommended** to set up the entire hello-kubernetes demo in a specific namespace (we will later join this namespace to OSM's mesh). For the purpose of this integration, we have the namespace as `dapr-demo`
+         - Futher [hello-kubernetes](https://github.com/dapr/quickstarts/tree/master/hello-kubernetes) sets up everything in the default namespace, it is **strongly recommended** to set up the entire hello-kubernetes demo in a specific namespace (we will later join this namespace to OSM's mesh). For the purpose of this integration, we have the namespace as `dapr-test`
          
            ```console
-            $ kubectl create namespace dapr-demo
-            namespace/dapr-demo created
+            $ kubectl create namespace dapr-test
+            namespace/dapr-test created
            ```
 
-         - The [redis state store](https://github.com/dapr/quickstarts/tree/master/hello-kubernetes#step-2---create-and-configure-a-state-store), [redis.yaml](https://github.com/dapr/quickstarts/blob/master/hello-kubernetes/deploy/redis.yaml), [node.yaml](https://github.com/dapr/quickstarts/blob/master/hello-kubernetes/deploy/node.yaml) and [python.yaml](https://github.com/dapr/quickstarts/blob/master/hello-kubernetes/deploy/python.yaml) need to be deployed in the `dapr-demo` namespace
+         - The [redis state store](https://github.com/dapr/quickstarts/tree/master/hello-kubernetes#step-2---create-and-configure-a-state-store), [redis.yaml](https://github.com/dapr/quickstarts/blob/master/hello-kubernetes/deploy/redis.yaml), [node.yaml](https://github.com/dapr/quickstarts/blob/master/hello-kubernetes/deploy/node.yaml) and [python.yaml](https://github.com/dapr/quickstarts/blob/master/hello-kubernetes/deploy/python.yaml) need to be deployed in the `dapr-test` namespace
           - Since the resources for this demo are set up in a custom namespace. We will need to add an rbac rule on the cluster for Dapr to have access to the secrets. Create the following role and role binding:
 
             ```bash
