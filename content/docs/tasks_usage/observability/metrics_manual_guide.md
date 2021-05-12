@@ -41,7 +41,7 @@ Let's replace the configuration of `stable-prometheus-server`
 kubectl edit configmap stable-prometheus-server
 ```
 
-Now with your editor of choice, look for the `prometheus.yaml` key entry and replace it with [OSM's scraping config](https://github.com/openservicemesh/osm/blob/release-v0.8/charts/osm/templates/osm-configmap.yaml) (care with yaml formatting):
+Now with your editor of choice, look for the `prometheus.yaml` key entry and replace it with [OSM's scraping config](https://github.com/openservicemesh/osm/blob/release-v0.8/charts/osm/templates/prometheus-configmap.yaml) (proceed with care while formatting the yaml file):
 ```
   (....)
   prometheus.yml: |
@@ -57,14 +57,14 @@ Now with your editor of choice, look for the `prometheus.yaml` key entry and rep
         scheme: https
         tls_config:
           ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-          # TODO need to remove this when the CA and SAN match 
+          # TODO need to remove this when the CA and SAN match
           insecure_skip_verify: true
         bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
         metric_relabel_configs:
         - source_labels: [__name__]
           regex: '(apiserver_watch_events_total|apiserver_admission_webhook_rejection_count)'
-          action: keep   
-        relabel_configs: 
+          action: keep
+        relabel_configs:
         - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
           action: keep
           regex: default;kubernetes;https
@@ -93,7 +93,7 @@ Now with your editor of choice, look for the `prometheus.yaml` key entry and rep
         - source_labels: [__name__]
           regex: '(envoy_server_live|envoy_cluster_upstream_rq_xx|envoy_cluster_upstream_cx_active|envoy_cluster_upstream_cx_tx_bytes_total|envoy_cluster_upstream_cx_rx_bytes_total|envoy_cluster_upstream_cx_destroy_remote_with_active_rq|envoy_cluster_upstream_cx_connect_timeout|envoy_cluster_upstream_cx_destroy_local_with_active_rq|envoy_cluster_upstream_rq_pending_failure_eject|envoy_cluster_upstream_rq_pending_overflow|envoy_cluster_upstream_rq_timeout|envoy_cluster_upstream_rq_rx_reset|^osm.*)'
           action: keep
-        relabel_configs: 
+        relabel_configs:
         - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
           action: keep
           regex: true
@@ -146,7 +146,7 @@ Now with your editor of choice, look for the `prometheus.yaml` key entry and rep
           - __meta_kubernetes_pod_controller_name
           action: replace
           regex: ^ReplicaSet;(.*)-[^-]+$
-          target_label: source_workload_name    
+          target_label: source_workload_name
 
       - job_name: 'smi-metrics'
         kubernetes_sd_configs:
@@ -256,7 +256,7 @@ Now with your editor of choice, look for the `prometheus.yaml` key entry and rep
         metric_relabel_configs:
         - source_labels: [__name__]
           regex: '(container_cpu_usage_seconds_total|container_memory_rss)'
-          action: keep   
+          action: keep
         relabel_configs:
         - action: labelmap
           regex: __meta_kubernetes_node_label_(.+)
@@ -274,7 +274,7 @@ After this step, Prometheus should already be able to scrape the mesh and API en
 export POD_NAME=$(kubectl get pods --namespace <promNamespace> -l "app=prometheus,component=server" -o jsonpath="{.items[0].metadata.name}")
 kubectl --namespace <promNamespace> port-forward $POD_NAME 9090
 ```
-And followingly access locally through `http://localhost:9090/targets`. 
+And followingly access locally through `http://localhost:9090/targets`.
 
 Here you should see most of the endpoints connected, up and running for scrape.
 
@@ -320,7 +320,7 @@ OSM Dashboards are available both through:
 - [our repository](https://github.com/openservicemesh/osm/tree/main/charts/osm/grafana), and are importable as json blobs through the web admin portal
 - or [online at Grafana.com](https://grafana.com/grafana/dashboards/14145)
 
-To import a dashboard, look for the `+` sign on the left menu and select `import`. 
+To import a dashboard, look for the `+` sign on the left menu and select `import`.
 You can directly import dashboard by their ID on `Grafana.com`. For example, our `OSM Mesh Details` dashboard uses id `14145`, you can use the ID directly on the form and click `load`:
 
 <p align="center">

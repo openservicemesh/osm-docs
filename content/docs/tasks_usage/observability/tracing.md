@@ -6,7 +6,7 @@ aliases: ["tracing.md"]
 ---
 
 # Tracing
-Open Service Mesh (OSM) allows optional deployment of Jaeger for tracing. Similarly, tracing can be enabled and customized during installation (`tracing` section in `values.yaml`) or at runtime by editing the `osm-config` ConfigMap. Tracing can be enabled, disabled and configured at any time to support BYO scenarios.
+Open Service Mesh (OSM) allows optional deployment of Jaeger for tracing. Similarly, tracing can be enabled and customized during installation (`tracing` section in `values.yaml`) or at runtime by editing the `osm-mesh-config` custom resource. Tracing can be enabled, disabled and configured at any time to support BYO scenarios.
 
 When OSM is deployed with tracing enabled, the OSM control plane will use the [user-provided tracing information](#tracing-values) to direct the Envoys to send traces when and where appropriate. If tracing is enabled without user-provided values, it will use the defaults in `values.yaml`. The `tracing-address` value tells all Envoys injected by OSM the FQDN to send tracing information to.
 
@@ -17,7 +17,7 @@ OSM supports tracing with applications that use Zipkin protocol.
 
 When tracing is enabled, Jaeger is capable of receiving spans from Envoys in the mesh that can then be viewed and queried on Jaeger's UI via port-forwarding.
 
-OSM CLI offers the capability to deploy a Jaeger instance with OSM's installation, but bringing your own managed Jaeger and configuring OSM's tracing to point to it later is also supported. 
+OSM CLI offers the capability to deploy a Jaeger instance with OSM's installation, but bringing your own managed Jaeger and configuring OSM's tracing to point to it later is also supported.
 
 ### Automatically Provision Jaeger
 By default, Jaeger deployment and tracing as a whole is disabled.
@@ -31,7 +31,7 @@ The following command will both deploy Jaeger and configure the tracing paramete
 osm install --set=OpenServiceMesh.deployJaeger=true,OpenServiceMesh.tracing.enable=true
 ```
 
-This default bring-up uses the [All-in-one Jaeger executable](https://www.jaegertracing.io/docs/1.22/getting-started/#all-in-one) that launches the Jaeger UI, collector, query, and agent. 
+This default bring-up uses the [All-in-one Jaeger executable](https://www.jaegertracing.io/docs/1.22/getting-started/#all-in-one) that launches the Jaeger UI, collector, query, and agent.
 
 ### BYO (Bring-your-own)
 This section documents the additional steps needed to allow an already running instance of Jaeger to integrate with your OSM control plane.
@@ -54,15 +54,13 @@ The sections below outline how to make required updates depending on whether you
 If you already have OSM running, `tracing` values must be updated in the OSM ConfigMap using:
 
 ```bash
-osm mesh upgrade --enable-tracing --tracing-address <tracing server hostname> --tracing-port <tracing server port> --tracing-endpoint <tracing server endpoint>
+# Tracing configuration with sample values
+kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"observability":{"tracing":{"enable":true,"address": "jaeger.osm-system.svc.cluster.local","port":9411,"endpoint":"/api/v2/spans"}}}}'  --type=merge
 ```
-> NOTE: This command upgrades an OSM control plane configuration by upgrading the underlying Helm release. Note that if you choose to use `kubectl patch` instead of using the OSM CLI, your change will not be preserved across release upgrades. 
 
-If you face issues with using `osm mesh upgrade`, troubleshoot [here](https://docs.openservicemesh.io/docs/troubleshooting/cli/mesh_upgrade/).
-
-You can verify these changes have been deployed by inspecting data values in `osm-config`:
+You can verify these changes have been deployed by inspecting the `osm-mesh-config` resource:
 ```bash
-kubectl get configmap osm-config -n osm-system -o json | jq '.data'
+kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.observability.tracing}{"\n"}'
 ```
 
 #### b) Enable tracing at OSM control plane install time
@@ -111,8 +109,8 @@ This section walks through the process of creating a simple Jaeger instance and 
             port: 9411
           type: ClusterIP
         EOF
-        ```        
-        
+        ```
+
         Create the Jaeger deployment.
         ```yaml
         kubectl apply -f - <<EOF
@@ -155,13 +153,13 @@ This section walks through the process of creating a simple Jaeger instance and 
 1. Enable tracing and pass in applicable values. If you have installed Jaeger in a different namespace, replace `osm-system` below.
 
     ```bash
-    osm mesh upgrade --enable-tracing --tracing-address jaeger.osm-system.svc.cluster.local --tracing-port 9411 --tracing-endpoint /api/v2/spans
+    kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"observability":{"tracing":{"enable":true,"address": "jaeger.osm-system.svc.cluster.local","port":9411,"endpoint":"/api/v2/spans"}}}}'  --type=merge
     ```
 
 1. Refer to instructions [above](#view-the-jaeger-ui-with-port-forwarding) to view the web UI using port forwarding
 
 1. In the browser, you should see a `Service` dropdown which allows you to select from the various applications deployed by the bookstore demo.
-    
+
     a) Select a service to view all spans from it. For example, if you select `bookbuyer` with a `Lookback` of one hour, you can see its interactions with `bookstore-v1` and `bookstore-v2` sorted by time.
     <p align="center">
         <img src="../../images/jaeger-search-traces.png" width="100%"/>
@@ -169,7 +167,7 @@ This section walks through the process of creating a simple Jaeger instance and 
     <center><i>Jaeger UI search for bookbuyer traces</i></center><br>
 
     b) Click on any item to view it in further detail
-    
+
     c) Select multiple items to compare traces. For example, you can compare the `bookbuyer`'s interactions with `bookstore-v1` and `bookstore-v2` at a particular moment in time:
     <p align="center">
         <img src="../../images/jaeger-compare-traces.png" width="100%"/>
