@@ -133,7 +133,7 @@ For metrics to be scraped, the following prerequisites must be met:
 
 - The namespace must be a part of the mesh, ie. it must be labeled with the `openservicemesh.io/monitored-by` label with an appropriate mesh name. This can be done using the `osm namespace add` command.
 - A running service able to scrap Prometheus endpoints. OSM provides configuration for an [automatic bringup of Prometheus](#automatic-bring-up); alternatively users can [bring their own Prometheus](#byo-bring-your-own).
-- The `prometheus_scraping` config key in osm-controller's `osm-config` ConfigMap must be set to `"true"`, which is the default configuration.
+- The `prometheusScraping` key in osm-controller's `osm-mesh-config` `MeshConfig` resource must be set to `true`, which is the default configuration.
   - This setting causes the osm-injector to add the following annotations to meshed Pods:
 
     ```yaml

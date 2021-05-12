@@ -411,11 +411,11 @@ Once the applications are up and running, they can interact with each other usin
 
 ### How to Check Traffic Policy Mode
 
-Check whether permissive traffic policy mode is enabled or not by retrieving the value for the `permissive_traffic_policy_mode` key in the `osm-config` ConfigMap.
+Check whether permissive traffic policy mode is enabled or not by retrieving the value for the `enablePermissiveTrafficPolicyMode` key in the `osm-mesh-config` `MeshConfig` resource.
 
 ```bash
 # Replace osm-system with osm-controller's namespace if using a non default namespace
-kubectl get configmap -n osm-system osm-config -o json | jq -r '.data["permissive_traffic_policy_mode"]'
+kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.traffic.enablePermissiveTrafficPolicyMode}{"\n"}'
 # Output:
 # false: permissive traffic policy mode is disabled, SMI policy mode is enabled
 # true: permissive traffic policy mode is enabled, SMI policy mode is disabled
@@ -428,20 +428,18 @@ The following sections demonstrate using OSM with [permissive traffic policy mod
 In permissive traffic policy mode, application connectivity within the mesh is automatically configured by `osm-controller`. It can be enabled in the following ways.
 
 1. During install using `osm` CLI:
+  ```bash
+  osm install --set=OpenServiceMesh.enablePermissiveTrafficPolicy=true
+  ```
 
-```bash
-osm install --set=OpenServiceMesh.enablePermissiveTrafficPolicy=true
-```
-
-1. Post install by updating the `osm-config` ConfigMap in the control plane's namespace (`osm-system` by default)
-
-```bash
-osm mesh upgrade --enable-permissive-traffic-policy=true
-```
+1. Post install by patching the `osm-mesh-config` custom resource in the control plane's namespace (`osm-system` by default)
+  ```bash
+  kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":true}}}'  --type=merge
+  ```
 
 ### Verify OSM is in permissive traffic policy mode
 
-Before proceeding, [verify the traffic policy mode](#verify-the-traffic-policy-mode) and ensure the `permissive_traffic_policy_mode` key is set to `true` in the `osm-config` ConfigMap. Refer to the section above to enable permissive traffic policy mode.
+Before proceeding, [verify the traffic policy mode](#verify-the-traffic-policy-mode) and ensure the `enablePermissiveTrafficPolicyMode` key is set to `true` in the `osm-mesh-config` `MeshConfig` resource. Refer to the section above to enable permissive traffic policy mode.
 
 In step [Deploy the Bookstore Application](#deploy-the-bookstore-application), we have already deployed the applications needed to verify traffic flow in permissive traffic policy mode. The `bookstore` service we previously deployed is encoded with an identity of `bookstore-v1` for demo purpose, as can be seen in the [Deployment's manifest](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/docs/example/manifests/apps/bookstore.yaml). The identity reflects which counter increments in the `bookbuyer` and `bookthief` UI, and the identity displayed in the `bookstore` UI.
 
@@ -459,7 +457,7 @@ The `bookbuyer` and `bookthief` applications are able to buy and steal books res
 This can be demonstrated further by disabling permissive traffic policy mode and verifying that the counter for books bought from `bookstore` is not incrementing anymore:
 
 ```bash
-osm mesh upgrade --enable-permissive-traffic-policy=false
+kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}'  --type=merge
 ```
 
 _Note: When you disable permissive traffic policy mode, SMI traffic access mode is implicitly enabled. If counters for the books are incrementing then it could be because some SMI Traffic Access policies have been applied previously to allow such traffic._
@@ -472,12 +470,12 @@ SMI traffic policies can be used for the following:
 1. SMI traffic specs policies to define routing rules to associate with access control policies
 1. SMI traffic split policies to direct client traffic to multiple backends based on weights
 
-The following sections describe how to leverage each of these policies to enforce fine grained control over traffic flowing within the service mesh. Before proceeding, [verify the traffic policy mode](#verify-the-traffic-policy-mode) and ensure the `permissive_traffic_policy_mode` key is set to `false` in the `osm-config` ConfigMap.
+The following sections describe how to leverage each of these policies to enforce fine grained control over traffic flowing within the service mesh. Before proceeding, [verify the traffic policy mode](#verify-the-traffic-policy-mode) and ensure the `enablePermissiveTrafficPolicyMode` key is set to `false` in the `osm-mesh-config` `MeshConfig` resource.
 
 SMI traffic policy mode can be enabled by disabling permissive traffic policy mode:
 
 ```bash
-osm mesh upgrade --enable-permissive-traffic-policy=false
+kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}'  --type=merge
 ```
 
 ### Deploy SMI Access Control Policies

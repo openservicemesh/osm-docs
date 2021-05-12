@@ -62,18 +62,13 @@ OSM provides a means to specify a global list of IP ranges to exclude from outbo
     osm install --set="OpenServiceMesh.outboundIPRangeExclusionList={1.1.1.1/32,2.2.2.2/24}
     ```
 
-1. By setting the `outbound_ip_range_exclusion_list` key in the `osm-config` ConfigMap:
+1. By setting the `outboundIPRangeExclusionList` key in the `osm-mesh-config` resource:
     ```bash
     ## Assumes OSM is installed in the osm-system namespace
-    kubectl patch ConfigMap osm-config -n osm-system -p '{"data":{"outbound_ip_range_exclusion_list":"1.1.1.1/32, 2.2.2.2/24"}}' --type=merge
+    kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"outboundIPRangeExclusionList":["1.1.1.1/32", "2.2.2.2/24"]}}}'  --type=merge
     ```
 
-1. By uppgrading the Helm chart directly if OSM was installed using Helm:
-    ```bash
-    osm mesh upgrade --outbound-ip-range-exclusion-list "1.1.1.1/32,2.2.2.2/24"
-    ```
-
-Excluded IP ranges are stored in the `osm-config` ConfigMap with the key `outbound_ip_range_exclusion_list`, and is read at the time of sidecar injection by `osm-injector`. These dynamically configurable IP ranges are programmed by the init container along with the static rules used to intercept and redirect traffic via the Envoy proxy sidecar. Excluded IP ranges will not be intercepted for traffic redirection to the Envoy proxy sidecar.
+Excluded IP ranges are stored in the `osm-mesh-config` `MeshConfig` custom resource and is read at the time of sidecar injection by `osm-injector`. These dynamically configurable IP ranges are programmed by the init container along with the static rules used to intercept and redirect traffic via the Envoy proxy sidecar. Excluded IP ranges will not be intercepted for traffic redirection to the Envoy proxy sidecar.
 
 ### Outbound port exclusion
 
@@ -91,20 +86,15 @@ OSM provides a means to specify a global list of ports to exclude from outbound 
     osm install --set="OpenServiceMesh.outboundPortExclusionList={6379,7070}
     ```
 
-1. By setting the `outbound_port_exclusion_list` key in the `osm-config` ConfigMap:
+1. By setting the `outboundPortExclusionList` key in the `osm-mesh-config` resource:
     ```bash
     ## Assumes OSM is installed in the osm-system namespace
-    kubectl patch ConfigMap osm-config -n osm-system -p '{"data":{"outbound_port_exclusion_list":"6379, 7070"}}' --type=merge
-    ```
-
-1. By uppgrading the Helm chart directly if OSM was installed using Helm:
-    ```bash
-    osm mesh upgrade --outbound-port-exclusion-list "6379,7070"
+    kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"outboundPortExclusionList":[6379, 7070]}}}'  --type=merge
     ```
 
 #### 2. Pod level outbound port exclusions
 
-In this setup the port exclusions would be applicable to a specific pod. 
+In this setup the port exclusions would be applicable to a specific pod.
 
 OSM provides a means to specify a list of ports to exclude from outbound traffic interception at pod level in the following way:
 
@@ -114,7 +104,7 @@ OSM provides a means to specify a list of ports to exclude from outbound traffic
     kubectl annotate pod <pod> openservicemesh.io/outbound-port-exclusion-list=6379,7070
     ```
 
-Excluded ports are stored in the `osm-config` ConfigMap with the key `outbound_port_exclusion_list` and as an annotation on the pod. Both of these are read and merged at the time of sidecar injection by `osm-injector`. These dynamically configurable ports are programmed by the init container along with the static rules used to intercept and redirect traffic via the Envoy proxy sidecar. Excluded ports will not be intercepted for traffic redirection to the Envoy proxy sidecar.
+Excluded ports are stored in the `osm-mesh-config` `MeshConfig` custom resource and as an annotation on the pod. Both of these are read and merged at the time of sidecar injection by `osm-injector`. These dynamically configurable ports are programmed by the init container along with the static rules used to intercept and redirect traffic via the Envoy proxy sidecar. Excluded ports will not be intercepted for traffic redirection to the Envoy proxy sidecar.
 
 ## Sample demo
 
@@ -178,14 +168,14 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
 1. Program OSM to exclude the IP range `54.91.118.50/32` IP range
     ```bash
     ## Assumes OSM is installed in the osm-system namespace
-    kubectl patch ConfigMap osm-config -n osm-system -p '{"data":{"outbound_ip_range_exclusion_list":"54.91.118.50/32"}}' --type=merge
+    kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"outboundIPRangeExclusionList":["54.91.118.50/32"]}}}'  --type=merge
     ```
 
 1. Confirm the ConfigMap has been updated as expected
     ```console
     # 54.91.118.50 is one of the IP addresses for httpbin.org
-    $ kubectl get configmap -n osm-system osm-config -o jsonpath='{.data.outbound_ip_range_exclusion_list}{"\n"}'
-    54.91.118.50/32
+    $ kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.traffic.outboundIPRangeExclusionList}{"\n"}'
+    ["54.91.118.50/32"]
     ```
 
 1. Restart the `curl` client pod so the updated outbound IP range exclusions can be configured. It is important to note that existing pods must be restarted to pick up the updated configuration because the traffic interception rules are programmed by the init container only at the time of pod creation.

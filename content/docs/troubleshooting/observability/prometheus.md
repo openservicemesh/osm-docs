@@ -72,11 +72,11 @@ If Prometheus is found not to be scraping metrics for any Pods, perform the foll
 
 1. Verify Prometheus scraping is enabled.
 
-    Ensure the `prometheus_scraping` key in the `osm-config` ConfigMap is set to `true`:
+    Ensure the `prometheusScraping` key in the `osm-mesh-config` resource is set to `true`:
 
     ```console
     $ # Assuming OSM is installed in the osm-system namespace:
-    $ kubectl get configmap -n osm-system osm-config -o jsonpath='{.data.prometheus_scraping}'
+    $ kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.observability.prometheusScraping}{"\n"}'
     true
     ```
 
@@ -84,8 +84,8 @@ If Prometheus is found not to be scraping metrics for any Pods, perform the foll
 
     ```console
     $ # Assuming OSM is installed in the osm-system namespace:
-    $ kubectl patch configmap -n osm-system osm-config --type=merge -p '{"data": {"prometheus_scraping": "true"}}'
-    configmap/osm-config patched
+    $ kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"observability":{"prometheusScraping":true}}}'  --type=merge
+    meshconfig.config.openservicemesh.io/osm-mesh-config patched
     ```
 
 1. Verify the intended namespaces have been enrolled in metrics collection.

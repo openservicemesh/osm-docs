@@ -9,11 +9,11 @@ aliases: ["egress.md"]
 
 ### 1. Confirm egress is enabled
 
-Confirm egress is enabled by verifying the value for the `egress` key in the `osm-config` ConfigMap. `osm-config` ConfigMap resides in the namespace OSM control plane namespace, `osm-system` by default.
+Confirm egress is enabled by verifying the value for the `enableEgress` key in the `osm-mesh-config` `MeshConfig` custom resource. `osm-mesh-config` resides in the namespace OSM control plane namespace, `osm-system` by default.
 
 ```console
 # Returns true if egress is enabled
-$ kubectl get configmap -n osm-system osm-config -o jsonpath='{.data.egress}{"\n"}'
+$ kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.traffic.enableEgress}{"\n"}'
 true
 ```
 
@@ -34,9 +34,3 @@ Errors will be logged with the `level` key in the log message set to `error`:
 ### 3. Confirm the Envoy configuration
 
 Confirm the Envoy proxy configuration on the client has a default egress filter chain on the outbound listener. Refer to the [sample configurations](../../../tasks_usage/traffic_management/egress#envoy-configurations) to verify that the client is configured to have outbound access to external destinations.
-
-## When the setting needs to be persisted across upgrades
-
-While the `osm-config` ConfigMap can be directly updated using the `kubectl patch` command, to persist configuration changes across upgrades, it is recommended to always use `osm mesh upgrade` CLI command to update the mesh configuration.
-
-Refer to the [configuring egress](../../../tasks_usage/traffic_management/egress#configuring-egress) section to enable or disable egress.

@@ -31,9 +31,9 @@ Egress can be enabled during OSM install or post install. When egress is enabled
 
 2. After OSM has been installed:
 
-	`osm-controller` retrieves the egress configuration from the `osm-config` ConfigMap in its namespace (`osm-system` by default). Use `osm mesh upgrade` to set `egress: "true"` in the `osm-config` ConfigMap
+	`osm-controller` retrieves the egress configuration from the `osm-mesh-config` `MeshConfig` custom resource in its namespace (`osm-system` by default). Use `kubectl patch` to set `enableEgress` to `true` in the `osm-mesh-config` resource.
 	```bash
-    osm mesh upgrade --enable-egress=true
+  kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enableEgress":true}}}'  --type=merge
 	```
 
 ### Disabling Egress
@@ -45,10 +45,10 @@ Similar to enabling egress, egress can be disabled during OSM install or post in
 	```
 
 2. After OSM has been installed:
-	Use `osm mesh upgrade` to set `egress: "false"` in the `osm-config` ConfigMap
+	Use `kubectl patch` to set `enableEgress` to `false` in the `osm-mesh-config` resource.
 	```bash
-    osm mesh upgrade --enable-egress=false
-    ```
+  kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enableEgress":false}}}'  --type=merge
+  ```
 
 With egress disabled, traffic from pods within the mesh will not be able to access external services outside the cluster.
 
@@ -106,11 +106,11 @@ The following demo shows a `curl` client making HTTPS requests to the external `
 
     A `200 OK` response indicates the HTTPS request from the `curl` client to the `httpbin.org` website was successful.
 
-1. Confirm the HTTPS requests fail when egress is disabled.
+1. Confirm the HTTPS requests fail when mesh-wide egress is disabled.
 
     ```bash
     # Assumes OSM is installed in the osm-system namespace
-    kubectl patch ConfigMap osm-config -n osm-system -p '{"data":{"egress":"false"}}' --type=merge
+    kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enableEgress":false}}}'  --type=merge
     ```
 
     ```console

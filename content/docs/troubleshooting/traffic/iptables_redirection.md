@@ -59,21 +59,21 @@ By default, all traffic using TCP as the underlying transport protocol are redir
 
 If outbound IP ranges are configured to be excluded but being subject to service mesh policies, verify they are configured as expected.
 
-### 1. Confirm outbound IP ranges are correctly configured in the `osm-config` ConfigMap
+### 1. Confirm outbound IP ranges are correctly configured in the `osm-mesh-config` MeshConfig resource
 
 Confirm the outbound IP ranges to be excluded are set correctly:
 
 ```console
 # Assumes OSM is installed in the osm-system namespace
-$ kubectl get configmap -n osm-system osm-config -o jsonpath='{.data.outbound_ip_range_exclusion_list}{"\n"}'
-1.1.1.1/32, 2.2.2.2/24
+$ kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.traffic.outboundIPRangeExclusionList}{"\n"}'
+["1.1.1.1/32","2.2.2.2/24"]
 ```
 
-The output shows the IP ranges that are excluded from outbound traffic redirection, `1.1.1.1/32 and 2.2.2.2/24` in the example above.
+The output shows the IP ranges that are excluded from outbound traffic redirection, `["1.1.1.1/32","2.2.2.2/24"]` in the example above.
 
 ### 2. Confirm outbound IP ranges are included in init container spec
 
-When outbound IP range exclusions are configured, OSM's `osm-injector` service reads this configuration from the `osm-config` ConfigMap and programs `iptables` rules corresponding to these ranges so that they are excluded from outbound traffic redirection via the Envoy sidecar proxy.
+When outbound IP range exclusions are configured, OSM's `osm-injector` service reads this configuration from the `osm-mesh-config` `MeshConfig` resource and programs `iptables` rules corresponding to these ranges so that they are excluded from outbound traffic redirection via the Envoy sidecar proxy.
 
 Confirm OSM's `osm-init` init container spec has rules corresponding to the configured outbound IP ranges to exclude.
 
@@ -119,17 +119,17 @@ By default, all traffic using TCP as the underlying transport protocol are redir
 
 If outbound ports are configured to be excluded but being subject to service mesh policies, verify they are configured as expected.
 
-### 1. Confirm global outbound ports are correctly configured in the `osm-config` ConfigMap
+### 1. Confirm global outbound ports are correctly configured in the `osm-mesh-config` MeshConfig resource
 
 Confirm the outbound ports to be excluded are set correctly:
 
 ```console
 # Assumes OSM is installed in the osm-system namespace
-$ kubectl get configmap -n osm-system osm-config -o jsonpath='{.data.outbound_port_exclusion_list}{"\n"}'
-6379, 7070
+$ kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.traffic.outboundPortExclusionList}{"\n"}'
+[6379,7070]
 ```
 
-The output shows the ports that are excluded from outbound traffic redirection, `6379 and 7070` in the example above.
+The output shows the ports that are excluded from outbound traffic redirection, `[6379,7070]` in the example above.
 
 ### 2. Confirm pod level outbound ports are correctly annotated on the pod
 
@@ -144,7 +144,7 @@ The output shows the ports that are excluded from outbound traffic redirection o
 
 ### 3. Confirm outbound ports are included in init container spec
 
-When outbound port exclusions are configured, OSM's `osm-injector` service reads this configuration from the `osm-config` ConfigMap and from the annotations on the pod, and programs `iptables` rules corresponding to these ranges so that they are excluded from outbound traffic redirection via the Envoy sidecar proxy.
+When outbound port exclusions are configured, OSM's `osm-injector` service reads this configuration from the `osm-mesh-config` `MeshConfig` resource and from the annotations on the pod, and programs `iptables` rules corresponding to these ranges so that they are excluded from outbound traffic redirection via the Envoy sidecar proxy.
 
 Confirm OSM's `osm-init` init container spec has rules corresponding to the configured outbound ports to exclude.
 

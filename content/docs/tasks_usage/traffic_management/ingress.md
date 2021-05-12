@@ -49,21 +49,20 @@ Other ingress controllers might also work as long as they use the Kubernetes Ing
 
 ### Enabling HTTP or HTTPS Ingress
 
-By default, OSM configures HTTP as the backend protocol for services when an ingress resource is applied with a backend service that belongs to the mesh. A mesh-wide configuration setting in OSM's `osm-config` ConfigMap enables configuring ingress with the backend protocol to be HTTPS.
+By default, OSM configures HTTP as the backend protocol for services when an ingress resource is applied with a backend service that belongs to the mesh. A mesh-wide configuration setting in OSM's `osm-mesh-config` `MeshConfig` custom resource enables configuring ingress with the backend protocol to be HTTPS.
 
 #### HTTP ingress
 HTTP based ingress is provisioned in OSM by default.
 
 #### HTTPS ingress
-HTTPs Ingress is disabled by default when OSM is installed. However, HTTPS ingress can be enabled by updating the `osm-config` ConfigMap in `osm-controller`'s namespace (`osm-system` by default).
+HTTPs Ingress is disabled by default when OSM is installed. However, HTTPS ingress can be enabled by updating the `osm-mesh-config` custom resource in `osm-controller`'s namespace (`osm-system` by default).
 
-Patch the ConfigMap by setting use_https_ingress: "true".
+Patch the `osm-mesh-config` resource to set `useHTTPSIngress` to `true`.
 
 ```bash
 # Replace osm-system with osm-controller's namespace if using a non default namespace
-kubectl patch ConfigMap osm-config -n osm-system -p '{"data":{"use_https_ingress":"true"}}' --type=merge
+kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"useHTTPSIngress":true}}}'  --type=merge
 ```
-> Note: Changes made with `kubectl patch` are not preserved across release upgrades. To make this change persistent between upgrades, use `osm mesh upgrade`. See `osm mesh upgrade --help` for more details.
 
 > Note: Enabling HTTPS ingress will disable HTTP ingress.
 
@@ -82,7 +81,7 @@ Patch the ConfigMap by setting use_https_ingress: "false".
 
 ```bash
 # Replace osm-system with osm-controller's namespace if using a non default namespace
-kubectl patch ConfigMap osm-config -n osm-system -p '{"data":{"use_https_ingress":"false"}}' --type=merge
+kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"useHTTPSIngress":false}}}'  --type=merge
 ```
 
 ## How it works

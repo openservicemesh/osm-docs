@@ -30,7 +30,8 @@ osm install --set OpenServiceMesh.enablePermissiveTrafficPolicy=true
 
 After OSM has been installed:
 ```bash
-osm mesh upgrade --enable-permissive-traffic-policy=true
+# Assumes OSM is installed in the osm-system namespace
+kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":true}}}'  --type=merge
 ```
 
 ### Disabling permissive traffic policy mode
@@ -44,7 +45,8 @@ osm install --set OpenServiceMesh.enablePermissiveTrafficPolicy=false
 
 After OSM has been installed:
 ```bash
-osm mesh upgrade --enable-permissive-traffic-policy=false
+# Assumes OSM is installed in the osm-system namespace
+kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}'  --type=merge
 ```
 
 ## How it works
@@ -129,7 +131,7 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
 
     ```bash
     # Assumes OSM is installed in the osm-system namespace
-    kubectl patch ConfigMap osm-config -n osm-system -p '{"data":{"permissive_traffic_policy_mode":"false"}}' --type=merge
+    kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}'  --type=merge
     ```
 
     ```console
