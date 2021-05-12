@@ -124,7 +124,7 @@ Run `osm uninstall --help` for more options.
 
 If any resources were provided or created for OSM at install time, they can be deleted at this point.
 
-For example, if [Hashicorp Vault](https://github.com/openservicemesh/osm/blob/main/docs/content/docs/tasks_usage/certificates.md#installing-hashi-vault) was deployed for the sole purpose of managing certificates for OSM, all related resources can be deleted.
+For example, if [Hashicorp Vault](/docs/tasks_usage/certificates/#installing-hashi-vault) was deployed for the sole purpose of managing certificates for OSM, all related resources can be deleted.
 
 ### Delete OSM Namespace
 

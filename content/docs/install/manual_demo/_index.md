@@ -43,7 +43,7 @@ unzip osm.zip
 .\windows-amd64\osm.exe version
 ```
 
-The `osm` CLI can be compiled from source using [this guide](../../install/_index.md).
+The `osm` CLI can be compiled from source using [this guide](/docs/install/).
 
 
 
@@ -75,10 +75,10 @@ osm install \
 This installed OSM Controller in the `osm-system` namespace.
 
 
-Read more on OSM's integrations with Prometheus, Grafana, and Jaeger in the [observability documentation](../../patterns/observability/_index.md).
+Read more on OSM's integrations with Prometheus, Grafana, and Jaeger in the [observability documentation](/docs/tasks_usage/observability/).
 
 ### OpenShift
-For details on how to install OSM on OpenShift, refer to the [installation guide](../_index.md#openshift)
+For details on how to install OSM on OpenShift, refer to the [installation guide](/docs/install/#openshift)
 
 
 

@@ -364,7 +364,7 @@ For HTTPS ingress, additional annotations are required.
 
 ## Other Ingress configurations
 
-Demos for using OSM with other Ingress resources, such as Azure Application Gateway and Gloo Edge, can be found in the [demos folder](https://github.com/openservicemesh/osm/tree/main/docs/content/docs/tasks_usage/traffic_management/demos)
+Demos for using OSM with other Ingress resources, such as Azure Application Gateway and Gloo Edge, can be found in the [demos folder](/docs/tasks_usage/traffic_management/)
 
 [1]: https://github.com/openservicemesh/osm/blob/release-v0.8/README.md
 [2]: https://kubernetes.github.io/ingress-nginx/
