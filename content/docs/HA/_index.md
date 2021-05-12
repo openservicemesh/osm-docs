@@ -12,7 +12,7 @@ High Availability and Fault Tolerance are implemented and ensured by several des
 
 ### Statelessness
 OSM's control plane components do not own or have any state-dependent data that needs to be saved at runtime; with the controlled exceptions of:
-- CA / Root Certificate: The CA root certificate is required to be the same for multiple OSM instances when running multiple replica. For [Certificate Managers](/DESIGN.md#2-certificate-manager) implementations that require the root CA to have been generated/provided prior OSM execution (Vault, Cert-Manager), the root CA will be fetched from the provider at boot by all instances.
+- CA / Root Certificate: The CA root certificate is required to be the same for multiple OSM instances when running multiple replica. For [Certificate Managers](https://github.com/openservicemesh/osm/blob/main/DESIGN.md#2-certificate-manager) implementations that require the root CA to have been generated/provided prior OSM execution (Vault, Cert-Manager), the root CA will be fetched from the provider at boot by all instances.
 For other Certificate Providers that can autogenerate a CA when none is present (such as Tresor), atomicity and synchronization will be ensured during creation, ensuring all instances load the same CA.
 - Envoy Bootstrap Certificates (used by the proxies to authenticate against the control plane): these are created during injection webhook handling and inlined as part of the Proxy's bootstrap configuration. The configuration is stored as a kubernetes secret and mounted in the injected envoy pod as a volume, assuring idempotence for a single pod at any one time.
 

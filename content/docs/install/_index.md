@@ -65,7 +65,7 @@ The [OSM chart](https://github.com/openservicemesh/osm/tree/release-v0.8/charts/
 You can configure the OSM installation by overriding the values file.
 1. Create a copy of the [values file](https://github.com/openservicemesh/osm/blob/release-v0.8/charts/osm/values.yaml) (make sure to use the version for the chart you wish to install).
 1. Change any values you wish to customize. You can omit all other values.
-   - To see which values correspond to the ConfigMap settings, see the [OSM ConfigMap documentation](../osm_config_map.md)
+   - To see which values correspond to the ConfigMap settings, see the [OSM ConfigMap documentation](https://github.com/openservicemesh/osm/blob/main/docs/content/docs/osm_config_map.md)
 
    - For example, to set the `envoy_log_level` field in the ConfigMap to `info`, save the following as `override.yaml`:
      ```

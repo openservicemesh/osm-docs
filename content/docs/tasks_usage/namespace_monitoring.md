@@ -25,7 +25,7 @@ Add a namespace for monitoring and sidecar injection to the mesh with the follow
 osm namespace add <namespace>
 ```
 
-Explicitly disable sidecar injection while adding the namespace using `--disable-sidecar-injection` flag as shown [here](../tasks_usage/sidecar_injection.md#Explicitly-Disabling-Automatic-Sidecar-Injection-on-Namespaces).
+Explicitly disable sidecar injection while adding the namespace using `--disable-sidecar-injection` flag as shown [here](/docs/tasks_usage/sidecar_injection/#explicitly-disabling-automatic-sidecar-injection-on-namespaces).
 
 ## Remove a Namespace from the OSM control plane
 
