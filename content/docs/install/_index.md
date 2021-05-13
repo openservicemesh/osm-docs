@@ -91,7 +91,7 @@ To install OSM on OpenShift:
     ```shell
     osm install --set="OpenServiceMesh.enablePrivilegedInitContainer=true"
     ```
-    - If you have already installed OSM without enabling privileged init containers, set `enable_privileged_init_container` to `true` in the [OSM ConfigMap](../osm_config_map.md) and restart any pods in the mesh.
+    - If you have already installed OSM without enabling privileged init containers, set `enable_privileged_init_container` to `true` in the [OSM ConfigMap](https://github.com/openservicemesh/osm/blob/main/docs/content/docs/osm_config_map.md) and restart any pods in the mesh.
 1. Add the `privileged` [security context constraint](https://docs.openshift.com/container-platform/4.7/authentication/managing-security-context-constraints.html) to each service account in the mesh.
     - Install the [oc CLI](https://docs.openshift.com/container-platform/4.7/cli_reference/openshift_cli/getting-started-cli.html).
     - Add the security context constraint to the service account
