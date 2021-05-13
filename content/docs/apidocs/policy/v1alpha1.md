@@ -3,6 +3,7 @@ title: "Policy v1alpha1 API Reference"
 description: "Policy v1alpha1 API reference documentation."
 type: docs
 ---
+
 <p>Packages:</p>
 <ul>
 <li>
@@ -72,7 +73,7 @@ EgressSpec
 </em>
 </td>
 <td>
-<p>Sources defines the list of sources the Egress policy is applicable to</p>
+<p>Sources defines the list of sources the Egress policy applies to.</p>
 </td>
 </tr>
 <tr>
@@ -84,7 +85,15 @@ EgressSpec
 </td>
 <td>
 <em>(Optional)</em>
-<p>Hosts defines the list of external hosts the Egress policy should allow</p>
+<p>Hosts defines the list of external hosts the Egress policy will allow
+access to.</p>
+<ul>
+<li><p>For HTTP traffic, the HTTP Host/Authority header is matched against the
+list of Hosts specified.</p></li>
+<li><p>For HTTPS traffic, the Server Name Indication (SNI) indicated by the client
+in the TLS handshake is matched against the list of Hosts specified.</p></li>
+<li><p>For non-HTTP(s) based protocols, the Hosts field is ignored.</p></li>
+</ul>
 </td>
 </tr>
 <tr>
@@ -96,7 +105,9 @@ EgressSpec
 </td>
 <td>
 <em>(Optional)</em>
-<p>IPAddresses defines the list of external IP addresses the Egress policy is applicable to</p>
+<p>IPAddresses defines the list of external IP address ranges the Egress policy
+applies to. The destination IP address of the traffic is matched against the
+list of IPAddresses specified as a CIDR range.</p>
 </td>
 </tr>
 <tr>
@@ -109,7 +120,8 @@ EgressSpec
 </em>
 </td>
 <td>
-<p>Ports defines the list of ports the Egress policy is applicable to</p>
+<p>Ports defines the list of ports the Egress policy is applies to.
+The destination port of the traffic is matched against the list of Ports specified.</p>
 </td>
 </tr>
 <tr>
@@ -123,7 +135,7 @@ EgressSpec
 </td>
 <td>
 <em>(Optional)</em>
-<p>Matches defines the list of routes the Egress policy should match on</p>
+<p>Matches defines the list of object references the Egress policy should match on.</p>
 </td>
 </tr>
 </table>
@@ -137,7 +149,7 @@ EgressSpec
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.Egress">Egress</a>)
 </p>
 <p>
-<p>EgressSpec is the type used to represent the Egress policy specification</p>
+<p>EgressSpec is the type used to represent the Egress policy specification.</p>
 </p>
 <table>
 <thead>
@@ -157,7 +169,7 @@ EgressSpec
 </em>
 </td>
 <td>
-<p>Sources defines the list of sources the Egress policy is applicable to</p>
+<p>Sources defines the list of sources the Egress policy applies to.</p>
 </td>
 </tr>
 <tr>
@@ -169,7 +181,15 @@ EgressSpec
 </td>
 <td>
 <em>(Optional)</em>
-<p>Hosts defines the list of external hosts the Egress policy should allow</p>
+<p>Hosts defines the list of external hosts the Egress policy will allow
+access to.</p>
+<ul>
+<li><p>For HTTP traffic, the HTTP Host/Authority header is matched against the
+list of Hosts specified.</p></li>
+<li><p>For HTTPS traffic, the Server Name Indication (SNI) indicated by the client
+in the TLS handshake is matched against the list of Hosts specified.</p></li>
+<li><p>For non-HTTP(s) based protocols, the Hosts field is ignored.</p></li>
+</ul>
 </td>
 </tr>
 <tr>
@@ -181,7 +201,9 @@ EgressSpec
 </td>
 <td>
 <em>(Optional)</em>
-<p>IPAddresses defines the list of external IP addresses the Egress policy is applicable to</p>
+<p>IPAddresses defines the list of external IP address ranges the Egress policy
+applies to. The destination IP address of the traffic is matched against the
+list of IPAddresses specified as a CIDR range.</p>
 </td>
 </tr>
 <tr>
@@ -194,7 +216,8 @@ EgressSpec
 </em>
 </td>
 <td>
-<p>Ports defines the list of ports the Egress policy is applicable to</p>
+<p>Ports defines the list of ports the Egress policy is applies to.
+The destination port of the traffic is matched against the list of Ports specified.</p>
 </td>
 </tr>
 <tr>
@@ -208,7 +231,7 @@ EgressSpec
 </td>
 <td>
 <em>(Optional)</em>
-<p>Matches defines the list of routes the Egress policy should match on</p>
+<p>Matches defines the list of object references the Egress policy should match on.</p>
 </td>
 </tr>
 </tbody>
@@ -219,7 +242,7 @@ EgressSpec
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.EgressSpec">EgressSpec</a>)
 </p>
 <p>
-<p>PortSpec is the type used to represent the Port in the list of Ports specified in an Egress policy specification</p>
+<p>PortSpec is the type used to represent the Port in the list of Ports specified in an Egress policy specification.</p>
 </p>
 <table>
 <thead>
@@ -237,7 +260,7 @@ int
 </em>
 </td>
 <td>
-<p>Number defines the port number</p>
+<p>Number defines the port number.</p>
 </td>
 </tr>
 <tr>
@@ -248,7 +271,7 @@ string
 </em>
 </td>
 <td>
-<p>Protocol defines the protocol served by the port</p>
+<p>Protocol defines the protocol served by the port.</p>
 </td>
 </tr>
 </tbody>
@@ -259,7 +282,7 @@ string
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.EgressSpec">EgressSpec</a>)
 </p>
 <p>
-<p>SourceSpec is the type used to represent the Source in the list of Sources specified in an Egress policy specification</p>
+<p>SourceSpec is the type used to represent the Source in the list of Sources specified in an Egress policy specification.</p>
 </p>
 <table>
 <thead>
@@ -277,7 +300,7 @@ string
 </em>
 </td>
 <td>
-<p>Kind defines the kind for the source in the Egress policy, ex. ServiceAccount</p>
+<p>Kind defines the kind for the source in the Egress policy, ex. ServiceAccount.</p>
 </td>
 </tr>
 <tr>
@@ -288,7 +311,7 @@ string
 </em>
 </td>
 <td>
-<p>Name defines the name of the source for the given Kind</p>
+<p>Name defines the name of the source for the given Kind.</p>
 </td>
 </tr>
 <tr>
@@ -299,7 +322,7 @@ string
 </em>
 </td>
 <td>
-<p>Namespace defines the namespace for the given source</p>
+<p>Namespace defines the namespace for the given source.</p>
 </td>
 </tr>
 </tbody>
@@ -307,5 +330,5 @@ string
 <hr/>
 <p><em>
 Generated with <code>gen-crd-api-reference-docs</code>
-on git commit <code>43a55c3b</code>.
+on git commit <code>2749cf9c</code>.
 </em></p>
