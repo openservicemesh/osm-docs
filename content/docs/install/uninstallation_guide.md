@@ -14,7 +14,7 @@ This guide describes how to uninstall Open Service Mesh (OSM) from a Kubernetes 
 
 - Kubernetes cluster with OSM installed
 - The `kubectl` CLI
-- The `osm` CLI or the helm 3 CLI
+- The [`osm` CLI](/docs/install/#set-up-the-osm-cli) or the helm 3 CLI
 
 ## Remove Envoy Sidecars from Application Pods and Envoy Secrets
 
