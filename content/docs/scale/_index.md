@@ -3,8 +3,8 @@
  description: "Documentation regarding OSM's current scale and limitations" 
  type: docs 
 --- 
-
-This document describes current scale and limits known in OSM as of 02/04/2021.
+# Scale and limits
+This document tracks current scale and limitations known in OSM.
 
 ## Considerations
 The scale limits documented here have to be put in light of current architecture. 
@@ -17,15 +17,15 @@ It is also acknowledged that some of the scale constraints need to be addressed 
 ## Test
 The test was run in different OSM form factors, factoring in different amounts of RAM/CPU, to better qualify potential limits in case any of those were to be a constraint upon deployment.
 
-#### For all tests:
-- Using Release v0.8 (Tue Mar 23)
-- 8 Node (Kubernetes v1.20, nodes: 4vcpu 16Gb)
+### Test details:
+- Commit-id: 4381544908261e135974bb3ea9ff6d46be8dbd56 (5/13/2021)
+- 10 Node (Kubernetes v1.20, nodes: 4vcpu 16Gb)
 - Envoy proxy log level Error
 - 2048 bitsize RSA keys 
 - OSM controller
   - Log level Error
   - Using default max 1.5 CPU
-  - Using default 512MB Memory
+  - Using Max Memory 1GB
 - OSM Injector
   - Log level Error
   - Using default max 0.5 CPU
@@ -43,37 +43,59 @@ The test was run in different OSM form factors, factoring in different amounts o
 
 ## Assessment and Limits
 *Note: Assuming proxy per pod, so pod/proxies can be used interchangeably.*
+
+Test failed at around 1200 pods, with kubernetes unable to bring up in time a pod in the mesh.
 ### CPU
 #### OSM Controller
-- **1vcpu per 500 proxies**, however giving more cpu does not scale linearly (m<1) with current architecture; horizontal scaling should be considered to increase supported mesh size. 
-- Network settlment times vary from **<10s with no pods to +2min at 700 pods**. 
+- **1vcpu per 700 proxies**, giving more cpu does not scale linearly (m<1) with current architecture; horizontal scaling should be considered to increase supported mesh size. 
+- Network settlment times vary from **<10s with no pods to +2min at 1000 pods**. 
 
 <p align="center">
-  <img src="../images/scale/cpu.png" width="550" height="275"/>
+  <img src="../images/scale/prox.png" width="750" height="120"/>
 </p>
-<center><i>In blue, OSM controller, orange for OSM Injector, red for Prometheus</i></center><br>
+<center><i>Fig 1. Function of number of proxies onboarded during the test. Test period is ~1h.</i></center><br>
+
+<p align="center">
+  <img src="../images/scale/cpu.png" width="750" height="225"/>
+</p>
+<center><i>Fig 2. Function of CPU load; OSM in yellow, CPU time for each iteration (spike) increases in time per iteration.</i></center><br>
+
+#### ADS Performance
+- With the recent ADS pipelining changes in OSM, it is ensured not too many ADS updates are scheduled for busy work at the same time, ensuring low times as granted by the available CPU.
+This yields more deterministic results, with all updates always under sub 0.10s window, and serialization of number of events as opposed to arbitrary scheduling from Golang.
+<p align="center">
+  <img src="../images/scale/histogram.png" width="1250" height="225"/>
+</p>
+<center><i>Fig 3. Histogram of ADS computation timings. (All verticals) </i></center><br>
+
+- The number of XDS updates over the test grows additively with any current number of onboarded proxies, each iteration occupying more time until basically iterations overlap, given the rate at which OSM can compute ADS updates.
 
 #### OSM Injector
-- Injector shows constant handling of 20 pods at a time, with constant times to create the 2048bit certificates and webhook handling staying around the 2-5sec (accounting for the certificate creation).
+- Injector can handle onboarding 20 pods concurrently per 0.5cpu, with rather stable times to create the 2048-bit certificates and webhook handling staying regularly below 5s, with some outliers in the 5-10s and in very limited occasions in the 10-20s (and probably closer to 10).
+- Since 99% of the webhook handling time happens in the RSA certificate creation context, injector should scale rather linearly with added vcpu.
+  
+<p align="center">
+  <img src="../images/scale/sidecar-inj.png" width="850" height="220"/>
+</p>
+<center><i>Fig 4. Heatmap of sidecar injection timings / webhook handling times. </i></center><br>
 
 #### Prometheus
-- Prometheus shows an increase of CPU per scrapped pod to almost **1vcpu per 700 pods**.
-This has to take into account our default settings and our scrapping options (which, for example, we use quite low `scrape_interval`), which heavily affect the resources consumed.
+- Our control plane qualification testing has disabled envoy scraping for the time being.
+- Scraping the control plane alone, requires around 0.25vcpu per 1000 proxies (given number of metrics scraped and scrape interval used), see in orange Fig 2. 
 
 ### Memory
 #### OSM Controller
 Memory per pod/envoy onboarded in the network is calculated after the initial snapshot with nothing onboarded on the mesh is seen to take into account standalone memory used by OSM.
-- Memory (RSS) in controller: **650kB-1MB per proxy**
+- Memory (RSS) in controller: **600~800KB per proxy**
 
 <p align="center">
-  <img src="../images/scale/mem.png" width="550" height="275"/>
+  <img src="../images/scale/mem.png" width="800" height="250"/>
 </p>
-<center><i>In light blue, OSM controller; red for Prometheus</i></center><br>
+<center><i>Fig 5. Function of Memory (RSS) in use during the test.</i></center><br>
 
 #### OSM Injector
-OSM injector doesn't store any intermediate state per pod, so it has no immediate scalability constraint at this scale order of magnitude.
+OSM injector doesn't store any intermediate state per pod, so it has no immediate memory scalability constraints at this scale order of magnitude.
 
 #### Prometheus
-*NOTE: This assumes our defaults and metrics of interest used, and can heavily vary based on deployment needs.*
-
-- Prometheus shows a memory increase per proxy of about **~2.6MB per proxy**
+- Our control plane qualification testing has disabled envoy scraping for the time being.
+- Prometheus shows a memory increase per proxy of about **~0.7MB per proxy** to handle the metric listed by OSM metrics.
