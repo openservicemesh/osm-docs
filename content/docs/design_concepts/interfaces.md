@@ -13,11 +13,11 @@ the development of the OSM in [this repository](https://github.com/openserviceme
 This section adopts the following assumptions:
 
 - [1:1 relationship](<https://en.wikipedia.org/wiki/One-to-one_(data_model)>) between a [proxy](https://www.envoyproxy.io/docs/envoy/latest/intro/what_is_envoy) and an instance of a service. (No more than one service fronted by the same proxy.)
-- [1:1 relationship](<https://en.wikipedia.org/wiki/One-to-one_(data_model)>) between an [endpoint](#fgh-endpoint) (port and IP) and a [proxy](#a-proxy)
+- [1:1 relationship](<https://en.wikipedia.org/wiki/One-to-one_(data_model)>) between an [endpoint](/docs/design_concepts/components_desc/#fgh-endpoint) (port and IP) and a [proxy](/docs/design_concepts/components_desc/#a-proxy)
 
 ### Proxy Control Plane
 
-The [Proxy control plane](#1-proxy-control-plane) handles gRPC connections from the service mesh sidecar proxies and implements Envoy's `go-control-plane`.
+The [Proxy control plane](/docs/design_concepts/components_desc/#1-proxy-control-plane) handles gRPC connections from the service mesh sidecar proxies and implements Envoy's `go-control-plane`.
 
 For a fully functional Envoy-based service mesh, the proxy control plane must implement the following interface:
 
@@ -145,23 +145,23 @@ type Proxy struct {
 
 ### Endpoints Providers Interface
 
-The [Endpoints providers](#3-endpoints-providers) component provides abstractions around the Go
+The [Endpoints providers](/docs/design_concepts/components_desc/#3-endpoints-providers) component provides abstractions around the Go
 SDKs of various Kubernetes clusters, or cloud vendor's virtual machines and other compute, which
-participate in the service mesh. Each [endpoint provider](#3-endpoints-providers) is responsible for either a particular Kubernetes cluster, or a cloud vendor subscription.
-The [Mesh catalog](#5-mesh-catalog) will query each [Endpoints provider](#3-endpoints-providers) for a particular [service](#c-service), and obtain the IP addresses and ports of the endpoints handling traffic for service.
+participate in the service mesh. Each [endpoint provider](/docs/design_concepts/components_desc/#3-endpoints-providers) is responsible for either a particular Kubernetes cluster, or a cloud vendor subscription.
+The [Mesh catalog](/docs/design_concepts/components_desc/#5-mesh-catalog) will query each [Endpoints provider](/docs/design_concepts/components_desc/#3-endpoints-providers) for a particular [service](/docs/design_concepts/components_desc/#c-service), and obtain the IP addresses and ports of the endpoints handling traffic for service.
 
-The [Endpoints providers](#3-endpoints-providers) are aware of:
+The [Endpoints providers](/docs/design_concepts/components_desc/#3-endpoints-providers) are aware of:
 
 - Kubernetes Service and their own CRD
 - vendor-specific APIs and methods to retrieve IP addresses and Port numbers for Endpoints
 
-The [Endpoints providers](#3-endpoints-providers) has no awareness of:
+The [Endpoints providers](/docs/design_concepts/components_desc/#3-endpoints-providers) has no awareness of:
 
 - what SMI Spec is
 - what Proxy or sidecar is
 
 > Note: As of this iteration of OSM we deliberately choose to leak the Mesh Specification implementation into the
-> EndpointsProvider. The [Endpoints Providers](#3-endpoints-providers) are responsible for implementing a method to
+> EndpointsProvider. The [Endpoints Providers](/docs/design_concepts/components_desc/#3-endpoints-providers) are responsible for implementing a method to
 > resolve an SMI-declared service to the provider's specific resource definition. For instance,
 > when Azure EndpointProvider's `ListEndpointsForService` is invoked with some a service name
 > the provider would use its own method to resolve the
@@ -169,7 +169,7 @@ The [Endpoints providers](#3-endpoints-providers) has no awareness of:
 > These URIs are unique identifiers of Azure VMs, VMSS, or other compute with Envoy reverse-proxies,
 > participating in the service mesh.
 
-In the sample `ListEndpointsForService` implementation, the Mesh Catalog loops over a list of [Endpoints providers](#3-endpoints-providers):
+In the sample `ListEndpointsForService` implementation, the Mesh Catalog loops over a list of [Endpoints providers](/docs/design_concepts/components_desc/#3-endpoints-providers):
 
 ```go
 for _, provider := range catalog.ListEndpointsProviders() {

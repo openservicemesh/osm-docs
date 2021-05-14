@@ -4,7 +4,6 @@ description: "OSM's observability stack includes Prometheus for metrics collecti
 type: docs
 ---
 
-# Observability
 
 OSM's observability stack includes Prometheus for metrics collection, Grafana for metrics visualization, Jaeger for tracing and Fluent Bit for log forwarding to a user-defined endpoint. These are disabled by default but may be enabled during OSM installation with flags `--deploy-prometheus`, `--deploy-grafana`, `--deploy-jaeger` and `--enable-fluentbit`.
 
