@@ -171,7 +171,7 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
     kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"outboundIPRangeExclusionList":["54.91.118.50/32"]}}}'  --type=merge
     ```
 
-1. Confirm the ConfigMap has been updated as expected
+1. Confirm the MeshConfig has been updated as expected
     ```console
     # 54.91.118.50 is one of the IP addresses for httpbin.org
     $ kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.traffic.outboundIPRangeExclusionList}{"\n"}'

@@ -75,7 +75,7 @@ HTTP ingress can be disabled by enabling HTTPS ingress.
 
 #### HTTPs ingress
 
-Patch the ConfigMap by setting use_https_ingress: "false".
+Patch the MeshConfig by setting useHTTPSIngress:false.
 
 > Note: Disabling HTTPS ingress will enable HTTP ingress.
 

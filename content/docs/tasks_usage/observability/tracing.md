@@ -24,7 +24,7 @@ By default, Jaeger deployment and tracing as a whole is disabled.
 
 A Jaeger instance can be automatically deployed by using the `--set=OpenServiceMesh.deployJaeger=true` OSM CLI flag at install time. This will provision a Jaeger pod in the mesh namespace.
 
-Additionally, OSM has to be instructed to enable tracing on the proxies; this is done via the `tracing` section on the ConfigMap.
+Additionally, OSM has to be instructed to enable tracing on the proxies; this is done via the `tracing` section on the MeshConfig.
 
 The following command will both deploy Jaeger and configure the tracing parameters according to the address of the newly deployed instance of Jaeger during OSM installation:
 ```bash
@@ -51,7 +51,7 @@ The sections below outline how to make required updates depending on whether you
 
 #### a) Enable tracing after OSM control plane has already been installed
 
-If you already have OSM running, `tracing` values must be updated in the OSM ConfigMap using:
+If you already have OSM running, `tracing` values must be updated in the OSM MeshConfig using:
 
 ```bash
 # Tracing configuration with sample values
