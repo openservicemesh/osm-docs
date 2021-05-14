@@ -162,7 +162,7 @@ This section walks through the process of creating a simple Jaeger instance and 
 
     a) Select a service to view all spans from it. For example, if you select `bookbuyer` with a `Lookback` of one hour, you can see its interactions with `bookstore-v1` and `bookstore-v2` sorted by time.
     <p align="center">
-        <img src="../../images/jaeger-search-traces.png" width="100%"/>
+        <img src="/docs/images/jaeger-search-traces.png" width="100%"/>
     </p>
     <center><i>Jaeger UI search for bookbuyer traces</i></center><br>
 
@@ -170,13 +170,13 @@ This section walks through the process of creating a simple Jaeger instance and 
 
     c) Select multiple items to compare traces. For example, you can compare the `bookbuyer`'s interactions with `bookstore-v1` and `bookstore-v2` at a particular moment in time:
     <p align="center">
-        <img src="../../images/jaeger-compare-traces.png" width="100%"/>
+        <img src="/docs/images/jaeger-compare-traces.png" width="100%"/>
     </p>
     <center><i>bookbuyer interactions with bookstore-v1 and bookestore-v2</i></center><br>
 
     d) Click on the `System Architecture` tab to view a graph of how the various applications have been interacting/communicating. This provides an idea of how traffic is flowing between the applications.
     <p align="center">
-        <img src="../../images/jaeger-system-architecture.png" width="40%"/>
+        <img src="/docs/images/jaeger-system-architecture.png" width="40%"/>
     </p>
     <center><i>Directed acyclic graph of bookstore demo application interactions</i></center><br>
 
@@ -195,4 +195,4 @@ Expect to see:
 This suggests that the issue is not caused by your Jaeger or tracing configuration.
 
 ## Troubleshoot
-To troubleshoot issues with Jaeger and tracing, check out the [tracing troubleshooting guide](https://docs.openservicemesh.io/docs/troubleshooting/observability/tracing).
+To troubleshoot issues with Jaeger and tracing, check out the [tracing troubleshooting guide](/docs/troubleshooting/observability/tracing).
