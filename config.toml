@@ -1,5 +1,5 @@
 title = "Open Service Mesh"
-baseURL = "https://docs.openservicemesh.io/"
+baseURL = "https://openservicemesh.io/"
 languageCode = "en-us"
 description = "Documentation for Open Service Mesh (OSM)"
 theme = "dosmy"
