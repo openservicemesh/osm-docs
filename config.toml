@@ -76,6 +76,8 @@ latexDashes = true
 [params]
 copyright = "The Docsy Authors"
 offlineSearch = true
+offlineSearchSummaryLength = 200
+algolia_docsearch = false
 prism_syntax_highlighting = true
 project_home = "https://openservicemesh.io/"
 
