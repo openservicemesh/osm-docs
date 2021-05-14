@@ -2,10 +2,9 @@
 title: "Ingress with Gloo Edge Ingress Demo"
 description: "Exposing services outside the cluster using Gloo Edge Ingress Controller"
 type: docs
-aliases: ["gloo_edge_ingress_demo.md"]
 ---
 
-The OSM ingress guide with Gloo API Gateway is a short demo on exposing HTTP routes on services within the mesh externally using the Gloo Edge ingress controller. 
+The OSM ingress guide with Gloo API Gateway is a short demo on exposing HTTP routes on services within the mesh externally using the Gloo Edge ingress controller.
 
 ## Sample demo
 
@@ -18,7 +17,7 @@ The following demo sends a request from an external IP to a httpbin service insi
     glooctl install ingress
     ```
 
-    Verify that the pods in the gloo-system namespace is up and running: 
+    Verify that the pods in the gloo-system namespace is up and running:
 
     ```console
     $ kubectl get pods -n gloo-system
@@ -115,7 +114,7 @@ The following demo sends a request from an external IP to a httpbin service insi
     httpbin-ingress   <none>   httpbin.httpbin.svc.cluster.local   52.234.160.38   80      152m
     ```
 
-1. Configure the `Upstream` object to use OSM's root ca bundle: 
+1. Configure the `Upstream` object to use OSM's root ca bundle:
 
     ```yaml
     apiVersion: gloo.solo.io/v1

@@ -2,10 +2,9 @@
 title: "Ingress with Azure Application Gateway Demo"
 description: "Exposing services outside the cluster using Azure Application Gateway Ingress Controller"
 type: docs
-aliases: ["azure_application_gateway_ingress_demo.md"]
 ---
 
-The OSM ingress guide with Azure Application Gateway is a short demo on exposing HTTP routes on services within the mesh externally using the Azure Application Gateway ingress controller. 
+The OSM ingress guide with Azure Application Gateway is a short demo on exposing HTTP routes on services within the mesh externally using the Azure Application Gateway ingress controller.
 
 ## Sample demo
 
