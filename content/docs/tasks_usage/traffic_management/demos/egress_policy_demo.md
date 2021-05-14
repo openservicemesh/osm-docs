@@ -188,3 +188,102 @@ TCP based Egress traffic is matched against the destination port and IP address 
     $ kubectl exec $(kubectl get pod -n curl -l app=curl -o jsonpath='{.items..metadata.name}') -n curl -c curl -- curl -sI https://openservicemesh.io:443
     command terminated with exit code 7
     ```
+
+## HTTP Egress with SMI route matches
+
+HTTP Egress policies can specify SMI HTTPRouteGroup matches for fine grained traffic control based on HTTP methods, headers and paths.
+
+1. Confirm the `curl` client is unable make HTTP requests to `http://httpbin.org:80/get` and `http://httpbin.org:80/status/200` to the `httpbin.org` website on port `80`.
+    ```console
+    $ kubectl exec $(kubectl get pod -n curl -l app=curl -o jsonpath='{.items..metadata.name}') -n curl -c curl -- curl -sI http://httpbin.org:80/get
+    command terminated with exit code 7
+    $ kubectl exec $(kubectl get pod -n curl -l app=curl -o jsonpath='{.items..metadata.name}') -n curl -c curl -- curl -sI http://httpbin.org:80/status/200
+    command terminated with exit code 7
+    ```
+
+1. Apply an SMI HTTPRouteGroup resource to allow access to the HTTP path `/get` and an Egress policy to access the `httpbin.org` on website port `80` that matches on the SMI HTTPRouteGroup.
+    ```bash
+    kubectl apply -f - <<EOF
+    apiVersion: specs.smi-spec.io/v1alpha4
+    kind: HTTPRouteGroup
+    metadata:
+      name: egress-http-route
+      namespace: curl
+    spec:
+      matches:
+      - name: get
+        pathRegex: /get
+    ---
+    kind: Egress
+    apiVersion: policy.openservicemesh.io/v1alpha1
+    metadata:
+      name: httpbin-80
+      namespace: curl
+    spec:
+      sources:
+      - kind: ServiceAccount
+        name: curl
+        namespace: curl
+      hosts:
+      - httpbin.org
+      ports:
+      - number: 80
+        protocol: http
+      matches:
+      - apiGroup: specs.smi-spec.io/v1alpha4
+        kind: HTTPRouteGroup
+        name: egress-http-route
+    EOF
+    ```
+
+1. Confirm the `curl` client is able to make successful HTTP requests to `http://httpbin.org:80/get`.
+    ```console
+    $ kubectl exec $(kubectl get pod -n curl -l app=curl -o jsonpath='{.items..metadata.name}') -n curl -c curl -- curl -sI http://httpbin.org:80/get
+    HTTP/1.1 200 OK
+    date: Thu, 13 May 2021 21:49:35 GMT
+    content-type: application/json
+    content-length: 335
+    server: envoy
+    access-control-allow-origin: *
+    access-control-allow-credentials: true
+    x-envoy-upstream-service-time: 168
+    ```
+
+1. Confirm the `curl` client is unable to make successful HTTP requests to `http://httpbin.org:80/status/200`.
+    ```console
+    $ kubectl exec $(kubectl get pod -n curl -l app=curl -o jsonpath='{.items..metadata.name}') -n curl -c curl -- curl -sI http://httpbin.org:80/status/200
+    HTTP/1.1 404 Not Found
+    date: Fri, 14 May 2021 17:08:48 GMT
+    server: envoy
+    transfer-encoding: chunked
+    ```
+
+1. Update the matching SMI HTTPRouteGroup resource to allow requests to HTTP paths matching the regex `/status.*`.
+    ```bash
+    kubectl apply -f - <<EOF
+    apiVersion: specs.smi-spec.io/v1alpha4
+    kind: HTTPRouteGroup
+    metadata:
+      name: egress-http-route
+      namespace: curl
+    spec:
+      matches:
+      - name: get
+        pathRegex: /get
+      - name: status
+        pathRegex: /status.*
+    EOF
+    ```
+
+1. Confirm the `curl` client can now make successful HTTP requests to `http://httpbin.org:80/status/200`.
+    ```console
+    $ kubectl exec $(kubectl get pod -n curl -l app=curl -o jsonpath='{.items..metadata.name}') -n curl -c curl -- curl -sI http://httpbin.org:80/status/200
+    HTTP/1.1 200 OK
+    date: Fri, 14 May 2021 17:10:48 GMT
+    content-type: text/html; charset=utf-8
+    content-length: 0
+    server: envoy
+    access-control-allow-origin: *
+    access-control-allow-credentials: true
+    x-envoy-upstream-service-time: 188
+    ```
