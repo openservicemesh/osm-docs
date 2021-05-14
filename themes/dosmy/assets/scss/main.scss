@@ -103,17 +103,143 @@ body {
   background: linear-gradient(0deg, #fff 0%, #e6fff8 100%);
   border-right: none;
 
-  .td-sidebar-nav {
-    margin-top: 1rem;
+  // global sidebar link styles
+  ul {
+    padding: 0 !important;
+    margin: 0 !important;
+    li {
+      padding: 0 !important;
+      margin: 0 !important;
+      font-weight: 400;
+      
+      a {
+        display: block;
+        border-right: 4px solid transparent;
+        @include transition;
+        line-height: 1.4;
+        padding: 0.25rem 1rem !important;
 
-    a {
-      color: desaturate($blue, 25%);
-      &.active {
-        color: $blue;
+        &:hover {
+          color: $bluem;
+          border-right: 4px solid lighten($green, 15%) !important;
+        }
+
+        &.active {
+          color: $blue;
+          font-weight: 500;
+          border-right-color: $green;
+        }
       }
     }
   }
+
+  // tiered sidebar link styles
+  .td-sidebar-nav {
+    margin-top: 0.825rem;
+    padding: 0 0 2rem !important;
+
+    ul.td-sidebar-nav__section {
+      // hide the parent that duplicates 'docs'
+      li:first-of-type {
+        display: none;
+      }
+      ul.td-sidebar-docs-menu {
+        
+        li {
+          font-size: 0.975rem;
+          
+          &:first-of-type {
+            display: block;
+          }
+
+          a {
+            padding: 0.75rem 1rem !important;
+            font-weight: 500;
+            color: $blue;
+            border-top: 1px solid RGBA(196, 214, 238, 0.25);
+          }
+
+          // main menu categories
+          ul {
+            li {
+              font-size: 0.975rem;
+
+              a {
+                padding: 0.75rem 1rem !important;
+                border-top: 1px solid rgba(196, 214, 238, 0.25);
+                font-weight: 500;
+                color: $blue;
+
+                &.active {
+                  border-right: 4px solid $green;
+                }
+              }
+            } // main cat
+
+            // second level sub-categories
+            ul {
+              padding: 0rem !important;
+
+              li {
+                font-size: 0.825rem;
+
+                a {
+                  padding: 0.25rem 1.2rem 0.25rem !important;
+                  font-weight: 400;
+                  color: desaturate($blue, 50%);
+                  border-top: none;
+                }
+
+                &.active {
+                  border-right-color: $green;
+                }
+              } // second
+
+              // third level sub-sub-categories
+              ul {
+                padding: 0 !important;
+
+                li {
+                  // background: purple;
+
+                  a {
+                    padding-left: 1.25rem !important;
+                    
+                    &.active {
+                      color: $blue;
+                      border-right-color: $green;
+                    }
+                  }
+                } // third
+
+                // fourth level sub-sub-categories
+                ul {
+                  padding: 0.5rem 0 !important;
+                  li {
+                    font-size: 0.825rem;
+
+                    a {
+                      padding: 0.125rem 0.825rem 0.125rem !important;
+                      margin-left: 1.5rem !important;
+                      border-left: 2px solid $bluel;
+                      
+                      &.active {
+                        color: $blue;
+                        border-right-color: $green;
+                      }
+                    }
+                  }
+                } // fourth
+
+              }
+            }
+          }
+        }
+      }
+    } //ul 
+  }
 }
+
 
 .td-sidebar__inner {
   top: 7.5rem;

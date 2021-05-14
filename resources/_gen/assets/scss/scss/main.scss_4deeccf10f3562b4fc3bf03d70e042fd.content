@@ -13902,12 +13902,81 @@ body {
 .td-sidebar {
   background: linear-gradient(0deg, #fff 0%, #e6fff8 100%);
   border-right: none; }
+  .td-sidebar ul {
+    padding: 0 !important;
+    margin: 0 !important; }
+    .td-sidebar ul li {
+      padding: 0 !important;
+      margin: 0 !important;
+      font-weight: 400; }
+      .td-sidebar ul li a {
+        display: block;
+        border-right: 4px solid transparent;
+        transition: all 0.2s ease-in-out;
+        line-height: 1.4;
+        padding: 0.25rem 1rem !important; }
+        @media (prefers-reduced-motion: reduce) {
+          .td-sidebar ul li a {
+            transition: none; } }
+        .td-sidebar ul li a:hover {
+          color: #569cf5;
+          border-right: 4px solid #a1e1d1 !important; }
+        .td-sidebar ul li a.active {
+          color: #1128a9;
+          font-weight: 500;
+          border-right-color: #67ceb4; }
   .td-sidebar .td-sidebar-nav {
-    margin-top: 1rem; }
-    .td-sidebar .td-sidebar-nav a {
-      color: #283892; }
-      .td-sidebar .td-sidebar-nav a.active {
-        color: #1128a9; }
+    margin-top: 0.825rem;
+    padding: 0 0 2rem !important; }
+    .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section li:first-of-type {
+      display: none; }
+    .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li {
+      font-size: 0.975rem; }
+      .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li:first-of-type {
+        display: block; }
+      .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li a {
+        padding: 0.75rem 1rem !important;
+        font-weight: 500;
+        color: #1128a9;
+        border-top: 1px solid RGBA(196, 214, 238, 0.25); }
+      .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul li {
+        font-size: 0.975rem; }
+        .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul li a {
+          padding: 0.75rem 1rem !important;
+          border-top: 1px solid rgba(196, 214, 238, 0.25);
+          font-weight: 500;
+          color: #1128a9; }
+          .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul li a.active {
+            border-right: 4px solid #67ceb4; }
+      .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul {
+        padding: 0rem !important; }
+        .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul li {
+          font-size: 0.825rem; }
+          .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul li a {
+            padding: 0.25rem 1.2rem 0.25rem !important;
+            font-weight: 400;
+            color: #40487b;
+            border-top: none; }
+          .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul li.active {
+            border-right-color: #67ceb4; }
+        .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul ul {
+          padding: 0 !important; }
+          .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul ul li a {
+            padding-left: 1.25rem !important; }
+            .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul ul li a.active {
+              color: #1128a9;
+              border-right-color: #67ceb4; }
+          .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul ul ul {
+            padding: 0.5rem 0 !important; }
+            .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul ul ul li {
+              font-size: 0.825rem; }
+              .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul ul ul li a {
+                padding: 0.125rem 0.825rem 0.125rem !important;
+                margin-left: 1.5rem !important;
+                border-left: 2px solid #c1d6f1; }
+                .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul ul ul li a.active {
+                  color: #1128a9;
+                  border-right-color: #67ceb4; }
 
 .td-sidebar__inner {
   top: 7.5rem; }
