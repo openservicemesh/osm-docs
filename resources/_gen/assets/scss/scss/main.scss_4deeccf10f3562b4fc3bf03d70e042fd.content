@@ -13931,7 +13931,7 @@ body {
     .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section li:first-of-type {
       display: none; }
     .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li {
-      font-size: 0.975rem; }
+      font-size: 1rem; }
       .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li:first-of-type {
         display: block; }
       .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li a {
@@ -13940,23 +13940,29 @@ body {
         color: #1128a9;
         border-top: 1px solid RGBA(196, 214, 238, 0.25); }
       .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul li {
-        font-size: 0.975rem; }
+        font-size: 1rem; }
         .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul li a {
           padding: 0.75rem 1rem !important;
-          border-top: 1px solid rgba(196, 214, 238, 0.25);
+          border-top: 1px solid rgba(196, 214, 238, 0.67);
           font-weight: 500;
           color: #1128a9; }
+          .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul li a:hover {
+            color: #1128a9;
+            background-color: #c1d6f1; }
           .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul li a.active {
             border-right: 4px solid #67ceb4; }
       .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul {
-        padding: 0rem !important; }
+        padding: 0 !important; }
         .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul li {
-          font-size: 0.825rem; }
+          font-size: 0.925rem; }
           .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul li a {
-            padding: 0.25rem 1.2rem 0.25rem !important;
+            padding: 0.33rem 1.2rem 0.33rem !important;
             font-weight: 400;
-            color: #40487b;
+            color: #48528b;
             border-top: none; }
+            .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul li a:hover {
+              color: #1128a9;
+              background-color: #c1d6f1; }
           .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul li.active {
             border-right-color: #67ceb4; }
         .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul ul {
@@ -13969,11 +13975,22 @@ body {
           .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul ul ul {
             padding: 0.5rem 0 !important; }
             .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul ul ul li {
-              font-size: 0.825rem; }
+              font-size: 0.925rem; }
               .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul ul ul li a {
-                padding: 0.125rem 0.825rem 0.125rem !important;
+                padding: 0.125rem 0 0.125rem 1rem !important;
                 margin-left: 1.5rem !important;
-                border-left: 2px solid #c1d6f1; }
+                position: relative; }
+                .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul ul ul li a:before {
+                  border: solid #67ceb4;
+                  border-width: 0 3px 3px 0;
+                  display: inline-block;
+                  content: " ";
+                  padding: 3px;
+                  transform: rotate(-45deg);
+                  -webkit-transform: rotate(-45deg);
+                  position: absolute;
+                  left: -0.2rem;
+                  top: 0.5rem; }
                 .td-sidebar .td-sidebar-nav ul.td-sidebar-nav__section ul.td-sidebar-docs-menu li ul ul ul ul li a.active {
                   color: #1128a9;
                   border-right-color: #67ceb4; }
@@ -14018,7 +14035,8 @@ body {
   color: #569cf5; }
 
 .td-content {
-  padding: 0 1vw; }
+  padding: 0 1vw;
+  min-height: 200vh; }
   .td-content h1,
   .td-content h2,
   .td-content h3 {

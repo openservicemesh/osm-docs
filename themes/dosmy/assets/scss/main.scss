@@ -146,7 +146,7 @@ body {
       ul.td-sidebar-docs-menu {
         
         li {
-          font-size: 0.975rem;
+          font-size: 1rem;
           
           &:first-of-type {
             display: block;
@@ -162,13 +162,18 @@ body {
           // main menu categories
           ul {
             li {
-              font-size: 0.975rem;
+              font-size: 1rem;
 
               a {
                 padding: 0.75rem 1rem !important;
-                border-top: 1px solid rgba(196, 214, 238, 0.25);
+                border-top: 1px solid rgba(196, 214, 238, 0.67);
                 font-weight: 500;
                 color: $blue;
+
+                &:hover {
+                  color: $blue;
+                  background-color: $bluel;
+                }
 
                 &.active {
                   border-right: 4px solid $green;
@@ -178,16 +183,21 @@ body {
 
             // second level sub-categories
             ul {
-              padding: 0rem !important;
+              padding: 0 !important;
 
               li {
-                font-size: 0.825rem;
+                font-size: 0.925rem;
 
                 a {
-                  padding: 0.25rem 1.2rem 0.25rem !important;
+                  padding: 0.33rem 1.2rem 0.33rem !important;
                   font-weight: 400;
-                  color: desaturate($blue, 50%);
+                  color: lighten(desaturate($blue, 50%), 5%);
                   border-top: none;
+
+                  &:hover {
+                    color: $blue;
+                    background-color: $bluel;
+                  }
                 }
 
                 &.active {
@@ -216,12 +226,25 @@ body {
                 ul {
                   padding: 0.5rem 0 !important;
                   li {
-                    font-size: 0.825rem;
+                    font-size: 0.925rem;
 
                     a {
-                      padding: 0.125rem 0.825rem 0.125rem !important;
+                      padding: 0.125rem 0 0.125rem 1rem !important;
                       margin-left: 1.5rem !important;
-                      border-left: 2px solid $bluel;
+                      position: relative;
+
+                      &:before {
+                        border: solid $green;
+                        border-width: 0 3px 3px 0;
+                        display: inline-block;
+                        content:  " ";
+                        padding: 3px;
+                        transform: rotate(-45deg);
+                        -webkit-transform: rotate(-45deg);
+                        position: absolute;
+                        left: -0.2rem;
+                        top: 0.5rem;
+                      }
                       
                       &.active {
                         color: $blue;
@@ -300,6 +323,7 @@ body {
 // Main content column
 .td-content {
   padding: 0 1vw;
+  min-height: 200vh;
 
   h1,
   h2,
