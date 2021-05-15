@@ -21,7 +21,7 @@ kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.observa
 To verify that the Envoys point to the FQDN you intend to use, check the value for the `address` key.
 
 ## 3. Verify the tracing values being used are as expected
-To dig one level deeper, you may also check whether the values set by the ConfigMap are being correctly used. Use the command below to get the config dump of the pod in question and save the output in a file.
+To dig one level deeper, you may also check whether the values set by the MeshConfig are being correctly used. Use the command below to get the config dump of the pod in question and save the output in a file.
 ```bash
 osm proxy get config_dump -n <pod-namespace> <pod-name> > <file-name>
 ```

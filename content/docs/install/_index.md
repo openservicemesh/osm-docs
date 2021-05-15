@@ -65,9 +65,9 @@ The [OSM chart](https://github.com/openservicemesh/osm/tree/release-v0.8/charts/
 You can configure the OSM installation by overriding the values file.
 1. Create a copy of the [values file](https://github.com/openservicemesh/osm/blob/release-v0.8/charts/osm/values.yaml) (make sure to use the version for the chart you wish to install).
 1. Change any values you wish to customize. You can omit all other values.
-   - To see which values correspond to the ConfigMap settings, see the [OSM ConfigMap documentation](https://github.com/openservicemesh/osm/blob/main/docs/content/docs/osm_config_map.md)
+   - To see which values correspond to the MeshConfig settings, see the [OSM MeshConfig documentation](/docs/osm_mesh_config)
 
-   - For example, to set the `envoy_log_level` field in the ConfigMap to `info`, save the following as `override.yaml`:
+   - For example, to set the `logLevel` field in the MeshConfig to `info`, save the following as `override.yaml`:
      ```
      OpenServiceMesh:
        envoyLogLevel: info
@@ -91,7 +91,7 @@ To install OSM on OpenShift:
     ```shell
     osm install --set="OpenServiceMesh.enablePrivilegedInitContainer=true"
     ```
-    - If you have already installed OSM without enabling privileged init containers, set `enable_privileged_init_container` to `true` in the [OSM ConfigMap](https://github.com/openservicemesh/osm/blob/main/docs/content/docs/osm_config_map.md) and restart any pods in the mesh.
+    - If you have already installed OSM without enabling privileged init containers, set `enablePrivilegedInitContainer` to `true` in the [OSM MeshConfig](/docs/osm_mesh_config) and restart any pods in the mesh.
 1. Add the `privileged` [security context constraint](https://docs.openshift.com/container-platform/4.7/authentication/managing-security-context-constraints.html) to each service account in the mesh.
     - Install the [oc CLI](https://docs.openshift.com/container-platform/4.7/cli_reference/openshift_cli/getting-started-cli.html).
     - Add the security context constraint to the service account
@@ -110,7 +110,7 @@ If you are running OSM in a cluster with PSPs enabled, pass in `--set OpenServic
 A few components will be installed by default into the `osm-system` Namespace. Inspect them by using the following `kubectl` command:
 
 ```console
-$ kubectl get pods,svc,secrets,configmaps,serviceaccount --namespace osm-system
+$ kubectl get pods,svc,secrets,meshconfigs,serviceaccount --namespace osm-system
 ```
 
 A few cluster wide (non Namespaced components) will also be installed. Inspect them using the following `kubectl` command:

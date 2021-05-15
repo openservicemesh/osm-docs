@@ -9,7 +9,7 @@ aliases: ["permissive_traffic_policy_mode.md"]
 
 ### 1. Confirm Permissive traffic policy mode is enabled
 
-Confirm permissive traffic policy mode is enabled by verifying the value for the `enablePermissiveTrafficPolicyMode` key in the `osm-mesh-config` custom resource. `osm-mesh-config` ConfigMap resides in the namespace OSM control plane namespace, `osm-system` by default.
+Confirm permissive traffic policy mode is enabled by verifying the value for the `enablePermissiveTrafficPolicyMode` key in the `osm-mesh-config` custom resource. `osm-mesh-config` MeshConfig resides in the namespace OSM control plane namespace, `osm-system` by default.
 
 ```console
 # Returns true if permissive traffic policy mode is enabled

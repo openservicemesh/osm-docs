@@ -79,7 +79,7 @@ You can now interact with your logs in either of these instances.
 ### Configuring Outbound Proxy Support for Fluent Bit
 You may require outbound proxy support if your egress traffic is configured to go through a proxy server. There are two ways to enable this.
 
-If you have already built OSM with the ConfigMap changes above, you can simply enable proxy support using the OSM CLI, replacing your values in the command below:
+If you have already built OSM with the MeshConfig changes above, you can simply enable proxy support using the OSM CLI, replacing your values in the command below:
 ```
 osm install --set=OpenServiceMesh.enableFluentbit=true,OpenServiceMesh.fluentBit.enableProxySupport=true,OpenServiceMesh.fluentBit.httpProxy=<http-proxy-host:port>,OpenServiceMesh.fluentBit.httpsProxy=<https-proxy-host:port>
 ```
