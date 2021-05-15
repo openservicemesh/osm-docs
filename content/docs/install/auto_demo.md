@@ -56,7 +56,7 @@ By default, Grafana is deployed by the demo script. To turn this off. Set the va
 - build and push demo application images described below
 - create the following topology in Kubernetes:
 
-  ![Graph](https://raw.githubusercontent.com/openservicemesh/osm/75aeb3cba4db7bfec73df1b79e2ca933dc5ec151/demo/graph.svg)
+  ![Graph](graph.svg)
 
   - `bookbuyer` and `bookthief` continuously issue HTTP `GET` requests against `bookstore` to buy books and github.com to verify egress traffic.
   - `bookstore` is a service backed by two servers: `bookstore-v1` and `bookstore-v2`. Whenever either sells a book, it issues an HTTP `POST` request to the `bookwarehouse` to restock.

@@ -1,14 +1,13 @@
 ---
 title: "Upgrade Troubleshooting"
-description: "OSM Mesh Upgrade Troubleshooting Guide"
+description: "OSM Upgrade Troubleshooting Guide"
 type: docs
 ---
 
 # OSM Upgrade Troubleshooting Guide
 
 ## Server could not find requested resource
-
-If the [upgrade CRD guide](/docs/upgrade_guide/#crd-upgrades) was not followed, it is possible that the installed CRDs are out of sync with the OSM controller.
+If the [upgrade CRD guide](../upgrade_guide.md##crd-upgrades) was not followed, it is possible that the installed CRDs are out of sync with the OSM controller.
 
 The OSM controller will then crash with errors similar to this:
 ```

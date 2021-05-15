@@ -6,342 +6,76 @@ aliases: ["OSM Manaual Demo"]
 weight: 2
 ---
 
+# OSM Manual Demo Guide
 
 The OSM Manual Install Demo Guide is a step by step set of instructions to quickly demo OSM's key features.
 
+## Configure Prerequisites
 
-## Prerequisites
-This demo of OSM v0.8.3 requires:
-  - a cluster running Kubernetes v1.17 or greater
-  - a workstation capable of executing [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) scripts
-  - [The Kubernetes command-line tool](https://kubernetes.io/docs/tasks/tools/#kubectl) - `kubectl`
+- Kubernetes cluster running Kubernetes v1.15.0 or greater
+- Have `kubectl` CLI installed - [Install and Set Up Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+- kubectl current context is configured for the target cluster install
+  - `kubectl config current-context`
+- Have a local clone of the OSM GitHub Repo
+  - `git clone https://github.com/openservicemesh/osm.git`
+  - `cd osm`
 
+## Build or Download the OSM CLI
 
+Use the [installation guide](../../install) to install the `osm` cli.
 
-## Download and install the OSM command-line tool
+## Install OSM Control Plane
 
-The `osm` command-line tool contains everything needed to install and configure Open Service Mesh.
-The binary is available on the [OSM GitHub releases page](https://github.com/openservicemesh/osm/releases/).
+For the purpose of this demo, install OSM with [permissive traffic policy mode](#permissive-traffic-policy-mode) enabled via the `--enable-permissive-traffic-policy` flag. By default, OSM will install with permissive traffic policy mode disabled and [SMI Traffic Policy Mode](#smi-traffic-policy-mode) enabled. Also by default, `osm` CLI does not enable Prometheus, Grafana, and Jaeger as a part of control plane installation.
 
-### For GNU/Linux and macOS
-
-Download the 64-bit GNU/Linux or macOS binary of OSM v0.8.3:
-```bash
-system=$(uname -s)
-release=v0.8.3
-curl -L https://github.com/openservicemesh/osm/releases/download/${release}/osm-${release}-${system}-amd64.tar.gz | tar -vxzf -
-./${system}-amd64/osm version
-```
-
-### For Windows
-
-Download the 64-bit Windows OSM v0.8.3 binary via Powershell:
-```powershell
-wget  https://github.com/openservicemesh/osm/releases/download/v0.8.3/osm-v0.8.3-windows-amd64.zip -o osm.zip
-unzip osm.zip
-.\windows-amd64\osm.exe version
-```
-
-The `osm` CLI can be compiled from source using [this guide](/docs/install/).
-
-
-
-## Installing OSM on Kubernetes
-
-With the `osm` binary downloaded and unzipped, we are ready to install Open Service Mesh on a Kubernetes cluster:
-
-The command below shows how to install OSM on your Kubernetes cluster.
-This command enables
-[Prometheus](https://github.com/prometheus/prometheus),
-[Grafana](https://github.com/grafana/grafana), and
-[Jaeger](https://github.com/jaegertracing/jaeger) integrations.
-The `OpenServiceMesh.enablePermissiveTrafficPolicy` chart value instructs OSM to ignore any policies and
-let traffic flow freely between the pods. With Permissive Traffic Policy mode enabled, new pods
-will be injected with Envoy, but traffic will flow through the proxy and will not be blocked.
-
-> Note: Permissive Traffic Policy mode is an important feature for brownfield deployments, where it may take some time to craft SMI policies. While operators design the SMI policies, existing services will to continue to operate as they have been before OSM was installed.
+Install OSM in permissive traffic policy mode with these features enabled:
 
 ```bash
-osm install \
-    --set=OpenServiceMesh.enablePermissiveTrafficPolicy=true
-    --set=OpenServiceMesh.deployPrometheus=true \
-    --set=OpenServiceMesh.deployGrafana=true \
-    --set=OpenServiceMesh.deployJaeger=true
+osm install --enable-permissive-traffic-policy --deploy-prometheus --deploy-grafana --deploy-jaeger
 ```
 
-> Note: This document assumes you have already installed credentials for a Kubernetes cluster in ~/.kube/config and `kubectl cluster-info` executes successfully.
-
-This installed OSM Controller in the `osm-system` namespace.
-
-
-Read more on OSM's integrations with Prometheus, Grafana, and Jaeger in the [observability documentation](/docs/tasks_usage/observability/).
+See the [observability documentation](../../patterns/observability/_index.md) for more details about using Prometheus, Grafana, and Jaeger with OSM.
 
 ### OpenShift
-For details on how to install OSM on OpenShift, refer to the [installation guide](/docs/install/#openshift)
+For details on how to install OSM on OpenShift, refer to the [installation guide](../#openshift)
 
+## Deploy the Bookstore Demo Applications
 
+This demo consists of the following applications:
 
-## Deploy Applications
+- `bookbuyer` application that makes requests to `bookstore` to buy books
+- `bookthief` application that makes requests to `bookstore` to steal books
+- `bookstore` application that receives requests from clients to purchase books and makes requests to `bookwarehouse` to restock books
+- `bookwarehouse` application that receives requests from `bookstore` to restock books
 
-In this section we will deploy 4 different Pods, and we will apply policies to control the traffic between them.
+When we demonstrate traffic splitting using SMI Traffic Split, we will deploy an additional application:
 
-- `bookbuyer` is an HTTP client makeing requests to `bookstore`. This traffic is **permitted**.
-- `bookthief` is an HTTP client and much like `bookbuyer` also makes HTTP requests to `bookstore`. This traffic should be **blocked**.
-- `bookstore` is a server, which responds to HTTP requests. It is also a client making requests to the `bookwarehouse` service.
-- `bookwarehouse` is a server and should respond only to `bookstore`. Both `bookbuyer` and `bookthief` should be blocked.
+- `bookstore-v2` application representing version v2 of the `bookstore` application
 
+The `bookbuyer`, `bookthief`, `bookstore`, and `bookwarehouse` demo applications will be installed in their respective Kubernetes Namespaces. For OSM to work, each application Pod must contain an Envoy proxy as a sidecar container. OSM can automatically inject an Envoy proxy sidecar into application Pods. Use the `osm` CLI to add Kubernetes Namespaces to monitor and inject proxies into using the `osm namespace add` command. Once the Namespace is added, OSM will monitor the Namespace for new Pods and automatically inject the Envoy proxy as a sidecar into each Pod created in the Namespace.
 
-We are going to craft SMI policies, which will bring us to this final desired
-state of allowed and blocked traffic between pods:
-
-| from  /   to: | bookbuyer | bookthief | bookstore | bookwarehouse |
-|---------------|-----------|-----------|-----------|---------------|
-| bookbuyer     |     \     |     ❌     |     ✔    |       ❌       |
-| bookthief     |     ❌     |     \     |     ❌     |       ❌       |
-| bookstore     |     ❌     |     ❌     |     \     |       ✔      |
-| bookwarehouse |     ❌     |     ❌     |     ❌     |      \        |
-
-
-To show SMI Traffic Split, we will deploy an additional application:
-
-- `bookstore-v2` - this is the same container as the first `bookstore` we deployed, but for this demo we will assume that it is a new version of the app we need to upgrade to.
-
-The `bookbuyer`, `bookthief`, `bookstore`, and `bookwarehouse` Pods will be in separate Kubernetes Namespaces with
-the same names. Each new Pod in the service mesh will be injected with an Envoy sidecar container.
-
-### Create the Namespaces
+### Create the Bookstore Application Namespaces
 
 ```bash
-kubectl create namespace bookstore
-kubectl create namespace bookbuyer
-kubectl create namespace bookthief
-kubectl create namespace bookwarehouse
+for i in bookstore bookbuyer bookthief bookwarehouse; do kubectl create ns $i; done
 ```
 
-### Add the new namespaces to the OSM control plane
+### Onboard the Namespaces to the OSM Mesh and enable sidecar injection on the namespaces
 
 ```bash
-osm namespace add bookstore
-osm namespace add bookbuyer
-osm namespace add bookthief
-osm namespace add bookwarehouse
+osm namespace add bookstore bookbuyer bookthief bookwarehouse
 ```
 
-Now each one of the four namespaces is labelled with `openservicemesh.io/monitored-by: osm` and also
-annotated with `openservicemesh.io/sidecar-injection: enabled`. The OSM Controller, noticing the label and annotation
-on these namespaces, will start injecting all **new** pods with Envoy sidecars.
+### Create the Kubernetes resources for the bookstore demo applications
 
-### Create Pods, Services, ServiceAccounts
+Deploy `bookbuyer`, `bookthief`, `bookstore`, `bookwarehouse` applications:
 
-Create the service accounts:
 ```bash
-kubectl apply -f - <<EOF
----
-
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: bookbuyer
-  namespace: bookbuyer
-
----
-
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: bookthief
-  namespace: bookthief
-
----
-
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: bookstore
-  namespace: bookstore
-
----
-
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: bookwarehouse
-  namespace: bookwarehouse
-
-EOF
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/bookbuyer.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/bookthief.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/bookstore.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/bookwarehouse.yaml
 ```
-
-
-Create the `bookbuyer` deployment:
-```bash
-kubectl apply -f - <<EOF
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: bookbuyer
-  namespace: bookbuyer
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: bookbuyer
-      version: v1
-  template:
-    metadata:
-      labels:
-        app: bookbuyer
-        version: v1
-    spec:
-      serviceAccountName: bookbuyer
-      containers:
-      - name: bookbuyer
-        image: openservicemesh/bookbuyer:v0.8.2
-        imagePullPolicy: Always
-        command: ["/bookbuyer"]
-        env:
-        - name: "BOOKSTORE_NAMESPACE"
-          value: bookstore
-EOF
-```
-
-Create the `bookthief` deployment:
-```bash
-kubectl apply -f - <<EOF
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: bookthief
-  namespace: bookthief
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: bookthief
-  template:
-    metadata:
-      labels:
-        app: bookthief
-        version: v1
-    spec:
-      serviceAccountName: bookthief
-      containers:
-      - name: bookthief
-        image: openservicemesh/bookthief:v0.8.2
-        imagePullPolicy: Always
-        command: ["/bookthief"]
-        env:
-        - name: "BOOKSTORE_NAMESPACE"
-          value: bookstore
-EOF
-```
-
-
-Create bookstore service:
-```bash
-kubectl apply -f - <<EOF
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: bookstore
-  namespace: bookstore
-  labels:
-    app: bookstore
-spec:
-  selector:
-    app: bookstore
-  ports:
-  - port: 14001
-    name: bookstore-port
-EOF
-```
-
-Create bookstore deployment:
-```bash
-kubectl apply -f - <<EOF
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: bookstore
-  namespace: bookstore
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: bookstore
-  template:
-    metadata:
-      labels:
-        app: bookstore
-    spec:
-      serviceAccountName: bookstore
-      containers:
-      - name: bookstore
-        image: openservicemesh/bookstore:v0.8.2
-        imagePullPolicy: Always
-        ports:
-          - containerPort: 14001
-        command: ["/bookstore"]
-        args: ["--path", "./", "--port", "14001"]
-        env:
-        - name: BOOKWAREHOUSE_NAMESPACE
-          value: bookwarehouse
-        - name: IDENTITY
-          value: bookstore-v1
-EOF
-```
-
-Create the `bookwarehouse` service:
-```bash
-kubectl apply -f - <<EOF
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: bookwarehouse
-  namespace: bookwarehouse
-  labels:
-    app: bookwarehouse
-spec:
-  selector:
-    app: bookwarehouse
-  ports:
-  - port: 14001
-EOF
-```
-
-Create the `bookwarehouse` deployment:
-```bash
-kubectl apply -f - <<EOF
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: bookwarehouse
-  namespace: bookwarehouse
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: bookwarehouse
-  template:
-    metadata:
-      labels:
-        app: bookwarehouse
-        version: v1
-    spec:
-      serviceAccountName: bookwarehouse
-      containers:
-      - name: bookwarehouse
-        image: openservicemesh/bookwarehouse:v0.8.2
-        imagePullPolicy: Always
-        command: ["/bookwarehouse"]
-EOF
-```
-
 
 ### Checkpoint: What Got Installed?
 
@@ -350,25 +84,8 @@ A Kubernetes Service, Deployment, and Service Account for applications `bookbuye
 To view these resources on your cluster, run the following commands:
 
 ```bash
-kubectl get deployments -n bookbuyer
-kubectl get deployments -n bookthief
-kubectl get deployments -n bookstore
-kubectl get deployments -n bookwarehouse
-
-kubectl get pods -n bookbuyer
-kubectl get pods -n bookthief
-kubectl get pods -n bookstore
-kubectl get pods -n bookwarehouse
-
-kubectl get services -n bookbuyer
-kubectl get services -n bookthief
-kubectl get services -n bookstore
-kubectl get services -n bookwarehouse
-
-kubectl get endpoints -n bookbuyer
-kubectl get endpoints -n bookthief
-kubectl get endpoints -n bookstore
-kubectl get endpoints -n bookwarehouse
+kubectl get svc --all-namespaces
+kubectl get deployment --all-namespaces
 ```
 
 In addition to Kubernetes Services and Deployments, a [Kubernetes Service Account](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) was also created for each Deployment. The Service Account services as the application's identity which will be used later in the demo to create service to service access control policies.
@@ -410,11 +127,11 @@ Once the applications are up and running, they can interact with each other usin
 
 ### How to Check Traffic Policy Mode
 
-Check whether permissive traffic policy mode is enabled or not by retrieving the value for the `enablePermissiveTrafficPolicyMode` key in the `osm-mesh-config` `MeshConfig` resource.
+Check whether permissive traffic policy mode is enabled or not by retrieving the value for the `permissive_traffic_policy_mode` key in the `osm-config` ConfigMap.
 
 ```bash
 # Replace osm-system with osm-controller's namespace if using a non default namespace
-kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.traffic.enablePermissiveTrafficPolicyMode}{"\n"}'
+kubectl get configmap -n osm-system osm-config -o json | jq -r '.data["permissive_traffic_policy_mode"]'
 # Output:
 # false: permissive traffic policy mode is disabled, SMI policy mode is enabled
 # true: permissive traffic policy mode is enabled, SMI policy mode is disabled
@@ -427,20 +144,22 @@ The following sections demonstrate using OSM with [permissive traffic policy mod
 In permissive traffic policy mode, application connectivity within the mesh is automatically configured by `osm-controller`. It can be enabled in the following ways.
 
 1. During install using `osm` CLI:
-  ```bash
-  osm install --set=OpenServiceMesh.enablePermissiveTrafficPolicy=true
-  ```
 
-1. Post install by patching the `osm-mesh-config` custom resource in the control plane's namespace (`osm-system` by default)
-  ```bash
-  kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":true}}}'  --type=merge
-  ```
+```bash
+osm install --enable-permissive-traffic-policy
+```
+
+1. Post install by updating the `osm-config` ConfigMap in the control plane's namespace (`osm-system` by default)
+
+```bash
+osm mesh upgrade --enable-permissive-traffic-policy=true
+```
 
 ### Verify OSM is in permissive traffic policy mode
 
-Before proceeding, [verify the traffic policy mode](#verify-the-traffic-policy-mode) and ensure the `enablePermissiveTrafficPolicyMode` key is set to `true` in the `osm-mesh-config` `MeshConfig` resource. Refer to the section above to enable permissive traffic policy mode.
+Before proceeding, [verify the traffic policy mode](#verify-the-traffic-policy-mode) and ensure the `permissive_traffic_policy_mode` key is set to `true` in the `osm-config` ConfigMap. Refer to the section above to enable permissive traffic policy mode.
 
-In step [Deploy the Bookstore Application](#deploy-the-bookstore-application), we have already deployed the applications needed to verify traffic flow in permissive traffic policy mode. The `bookstore` service we previously deployed is encoded with an identity of `bookstore-v1` for demo purpose, as can be seen in the [Deployment's manifest](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/docs/example/manifests/apps/bookstore.yaml). The identity reflects which counter increments in the `bookbuyer` and `bookthief` UI, and the identity displayed in the `bookstore` UI.
+In step [Deploy the Bookstore Application](#deploy-the-bookstore-application), we have already deployed the applications needed to verify traffic flow in permissive traffic policy mode. The `bookstore` service we previously deployed is encoded with an identity of `bookstore-v1` for demo purpose, as can be seen in the [Deployment's manifest](https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/bookstore.yaml). The identity reflects which counter increments in the `bookbuyer` and `bookthief` UI, and the identity displayed in the `bookstore` UI.
 
 The counter in the `bookbuyer`, `bookthief` UI for the books bought and stolen respectively from `bookstore v1` should now be incrementing:
 
@@ -456,7 +175,7 @@ The `bookbuyer` and `bookthief` applications are able to buy and steal books res
 This can be demonstrated further by disabling permissive traffic policy mode and verifying that the counter for books bought from `bookstore` is not incrementing anymore:
 
 ```bash
-kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}'  --type=merge
+osm mesh upgrade --enable-permissive-traffic-policy=false
 ```
 
 _Note: When you disable permissive traffic policy mode, SMI traffic access mode is implicitly enabled. If counters for the books are incrementing then it could be because some SMI Traffic Access policies have been applied previously to allow such traffic._
@@ -469,12 +188,12 @@ SMI traffic policies can be used for the following:
 1. SMI traffic specs policies to define routing rules to associate with access control policies
 1. SMI traffic split policies to direct client traffic to multiple backends based on weights
 
-The following sections describe how to leverage each of these policies to enforce fine grained control over traffic flowing within the service mesh. Before proceeding, [verify the traffic policy mode](#verify-the-traffic-policy-mode) and ensure the `enablePermissiveTrafficPolicyMode` key is set to `false` in the `osm-mesh-config` `MeshConfig` resource.
+The following sections describe how to leverage each of these policies to enforce fine grained control over traffic flowing within the service mesh. Before proceeding, [verify the traffic policy mode](#verify-the-traffic-policy-mode) and ensure the `permissive_traffic_policy_mode` key is set to `false` in the `osm-config` ConfigMap.
 
 SMI traffic policy mode can be enabled by disabling permissive traffic policy mode:
 
 ```bash
-kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}'  --type=merge
+osm mesh upgrade --enable-permissive-traffic-policy=false
 ```
 
 ### Deploy SMI Access Control Policies
@@ -483,63 +202,9 @@ At this point, applications do not have access to each other because no access c
 
 Apply the [SMI Traffic Target][1] and [SMI Traffic Specs][2] resources to define access control and routing policies for the applications to communicate:
 
- Deploy SMI TrafficTarget
 ```bash
-kubectl apply -f - <<EOF
----
-kind: TrafficTarget
-apiVersion: access.smi-spec.io/v1alpha3
-metadata:
-  name: bookstore
-  namespace: bookstore
-spec:
-  destination:
-    kind: ServiceAccount
-    name: bookstore
-    namespace: bookstore
-  rules:
-  - kind: HTTPRouteGroup
-    name: bookstore-service-routes
-    matches:
-    - buy-a-book
-    - books-bought
-  sources:
-  - kind: ServiceAccount
-    name: bookbuyer
-    namespace: bookbuyer
-# Bookthief is NOT allowed to talk to Bookstore
-#  - kind: ServiceAccount
-#    name: bookthief
-#    namespace: bookthief
-EOF
-```
-
-Deploy HTTPRouteGroup policy
-```bash
-kubectl apply -f - <<EOF
----
-apiVersion: specs.smi-spec.io/v1alpha4
-kind: HTTPRouteGroup
-metadata:
-  name: bookstore-service-routes
-  namespace: bookstore
-spec:
-  matches:
-  - name: books-bought
-    pathRegex: /books-bought
-    methods:
-    - GET
-    headers:
-    - host: "bookstore.bookstore"
-    - "user-agent": ".*-http-client/*.*"
-    - "client-app": "bookbuyer"
-  - name: buy-a-book
-    pathRegex: ".*a-book.*new"
-    methods:
-    - GET
-    headers:
-    - host: "bookstore.bookstore"
-EOF
+# Deploy SMI TrafficTarget and HTTPRouteGroup policy
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/access/traffic-access-v1.yaml
 ```
 
 The counters should now be incrementing for the `bookbuyer`, and `bookstore` applications:
@@ -555,7 +220,7 @@ That is because the SMI Traffic Target SMI HTTPRouteGroup resources deployed onl
 
 #### Allowing the Bookthief Application to access the Mesh
 
-Currently the Bookthief application has not been authorized to participate in the service mesh communication. We will now uncomment out the lines in the [docs/example/manifests/access/traffic-access-v1.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/docs/example/manifests/access/traffic-access-v1.yaml) to allow `bookthief` to communicate with `bookstore`. Then, re-apply the manifest and watch the change in policy propagate.
+Currently the Bookthief application has not been authorized to participate in the service mesh communication. We will now uncomment out the lines in the [docs/example/manifests/access/traffic-access-v1.yaml](https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/access/traffic-access-v1.yaml) to allow `bookthief` to communicate with `bookstore`. Then, re-apply the manifest and watch the change in policy propagate.
 
 Current TrafficTarget spec with commented `bookthief` kind:
 
@@ -616,7 +281,7 @@ spec:
 Re-apply the access manifest with the updates.
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/docs/example/manifests/access/traffic-access-v1-allow-bookthief.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/access/traffic-access-v1-allow-bookthief.yaml
 ```
 
 The counter in the `bookthief` window will start incrementing.
@@ -627,10 +292,10 @@ Comment out the bookthief source lines in the Traffic Target object and re-apply
 
 ```bash
 # Re-apply original SMI TrafficTarget and HTTPRouteGroup resources
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/docs/example/manifests/access/traffic-access-v1.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/access/traffic-access-v1.yaml
 ```
 
-The counter in the `bookthief` window will stop incrementing.
+The counter in the `bookthief` window will start incrementing.
 
 - [http://localhost:8083](http://localhost:8083) - **bookthief**
 
@@ -645,7 +310,7 @@ To demonstrate usage of SMI traffic access and split policies, we will deploy no
 ```bash
 # Contains the bookstore-v2 Kubernetes Service, Service Account, Deployment and SMI Traffic Target resource to allow
 # bookbuyer to communicate with `bookstore-v2` pods
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/docs/example/manifests/apps/bookstore-v2.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/bookstore-v2.yaml
 ```
 
 Wait for the `bookstore-v2` pod to be running in the `bookstore` namespace. Next, exit and restart the `./scripts/port-forward-all.sh` script in order to access v2 of bookstore.
@@ -659,19 +324,7 @@ The counter should _not_ be incrementing because no traffic is flowing yet to th
 Deploy the SMI traffic split policy to direct 100 percent of the traffic sent to the root `bookstore` service to the `bookstore` service backend:
 
 ```bash
-kubectl apply -f - <<EOF
----
-apiVersion: split.smi-spec.io/v1alpha2
-kind: TrafficSplit
-metadata:
-  name: bookstore-split
-  namespace: bookstore
-spec:
-  service: bookstore.bookstore # <root-service>.<namespace>
-  backends:
-  - service: bookstore
-    weight: 100
-EOF
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/split/traffic-split-v1.yaml
 ```
 
 _Note: The root service can be any Kubernetes service. It does not have any label selectors. It also doesn't need to overlap with any of the Backend services specified in the Traffic Split resource. The root service can be referred to in the SMI Traffic Split resource as the name of the service with or without the `.<namespace>` suffix._
@@ -687,21 +340,7 @@ kubectl describe trafficsplit bookstore-split -n bookstore
 Update the SMI Traffic Split policy to direct 50 percent of the traffic sent to the root `bookstore` service to the `bookstore` service and 50 perfect to `bookstore-v2` service by adding the `bookstore-v2` backend to the spec and modifying the weight fields.
 
 ```bash
-kubectl apply -f - <<EOF
----
-apiVersion: split.smi-spec.io/v1alpha2
-kind: TrafficSplit
-metadata:
-  name: bookstore-split
-  namespace: bookstore
-spec:
-  service: bookstore.bookstore # <root-service>.<namespace>
-  backends:
-  - service: bookstore
-    weight: 50
-  - service: bookstore-v2
-    weight: 50
-EOF
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/split/traffic-split-50-50.yaml
 ```
 
 Wait for the changes to propagate and observe the counters increment for `bookstore` and `bookstore-v2` in your browser windows. Both
@@ -715,21 +354,7 @@ counters should be incrementing:
 Update the SMI TrafficSplit policy for `bookstore` Service configuring all traffic to go to `bookstore-v2`:
 
 ```bash
-kubectl apply -f - <<EOF
----
-apiVersion: split.smi-spec.io/v1alpha2
-kind: TrafficSplit
-metadata:
-  name: bookstore-split
-  namespace: bookstore
-spec:
-  service: bookstore.bookstore # <root-service>.<namespace>
-  backends:
-  - service: bookstore
-    weight: 0
-  - service: bookstore-v2
-    weight: 100
-EOF
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/split/traffic-split-v2.yaml
 ```
 
 Wait for the changes to propagate and observe the counters increment for `bookstore-v2` and freeze for `bookstore` in your
@@ -749,23 +374,6 @@ osm dashboard
 ```
 
 Simply navigate to http://localhost:3000 to access the Grafana dashboards. The default user name is `admin` and the default password is `admin`. On the Grafana homepage click on the **Home** icon, you will see a folders containing dashboards for both OSM Control Plan and OSM Data Plane.
-
-
-## Cleanup
-
-To cleanup all resources created for the demo, the OSM control plane, SMI resources, and the sample applications need to be deleted.
-
-To uninstall the sample applications and SMI resources, delete their namespaces with the following command:
-```bash
-kubectl delete ns bookbuyer bookthief bookstore bookwarehouse
-```
-
-To uninstall OSM, run
-```bash
-osm uninstall
-```
-
-For more details about uninstalling OSM, see the [uninstallation guide](../uninstallation_guide/).
 
 [1]: https://github.com/servicemeshinterface/smi-spec/blob/v0.6.0/apis/traffic-access/v1alpha2/traffic-access.md
 [2]: https://github.com/servicemeshinterface/smi-spec/blob/v0.6.0/apis/traffic-specs/v1alpha4/traffic-specs.md

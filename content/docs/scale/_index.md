@@ -4,7 +4,8 @@
  type: docs 
 --- 
 # Scale and limits
-This document tracks current scale and limitations known in OSM.
+
+This document describes current scale and limits known in OSM as of 02/04/2021.
 
 ## Considerations
 The scale limits documented here have to be put in light of current architecture. 
@@ -17,19 +18,11 @@ It is also acknowledged that some of the scale constraints need to be addressed 
 ## Test
 The test was run in different OSM form factors, factoring in different amounts of RAM/CPU, to better qualify potential limits in case any of those were to be a constraint upon deployment.
 
-### Test details:
-- Commit-id: 4381544908261e135974bb3ea9ff6d46be8dbd56 (5/13/2021)
-- 10 Node (Kubernetes v1.20, nodes: 4vcpu 16Gb)
+#### For all tests:
+- Change ID 9b829667f797879a0a4cd911eb08c4808e0f8083 (Thu Feb 4 13:38:37 2021)
+- 8 Node (Kubernetes v1.18, nodes: 4vcpu 16Gb)
 - Envoy proxy log level Error
-- 2048 bitsize RSA keys 
-- OSM controller
-  - Log level Error
-  - Using default max 1.5 CPU
-  - Using Max Memory 1GB
-- OSM Injector
-  - Log level Error
-  - Using default max 0.5 CPU
-  - Using default max 64MB Memory
+- OSM controller log level Trace (reasons)
 - HTTP debug server disabled on OSM
 - Test topology deploys each iteration:
 	- 2 clients
@@ -41,61 +34,82 @@ The test was run in different OSM form factors, factoring in different amounts o
 	- Correctness is ensured. It is checked that all TrafficSplit server members are eventually reached.
 - Test timeout for network correctness: 150 seconds
 
-## Assessment and Limits
-*Note: Assuming proxy per pod, so pod/proxies can be used interchangeably.*
+#### Varying form factors
+- with 256MB max RAM
+	- 1.5 CPU
+- With 512MB RAM
+	- 1.5 CPU
+	- 4 CPU
 
-Test failed at around 1200 pods, with kubernetes unable to bring up in time a pod in the mesh.
-### CPU
-#### OSM Controller
-- **1vcpu per 700 proxies**, giving more cpu does not scale linearly (m<1) with current architecture; horizontal scaling should be considered to increase supported mesh size. 
-- Network settlment times vary from **<10s with no pods to +2min at 1000 pods**. 
+(All tests were run multiple times to ensure validity of the results)
 
-<p align="center">
-  <img src="../images/scale/prox.png" width="750" height="120"/>
-</p>
-<center><i>Fig 1. Function of number of proxies onboarded during the test. Test period is ~1h.</i></center><br>
+## Assessment
 
-<p align="center">
-  <img src="../images/scale/cpu.png" width="750" height="225"/>
-</p>
-<center><i>Fig 2. Function of CPU load; OSM in yellow, CPU time for each iteration (spike) increases in time per iteration.</i></center><br>
-
-#### ADS Performance
-- With the recent ADS pipelining changes in OSM, it is ensured not too many ADS updates are scheduled for busy work at the same time, ensuring low times as granted by the available CPU.
-This yields more deterministic results, with all updates always under sub 0.10s window, and serialization of number of events as opposed to arbitrary scheduling from Golang.
-<p align="center">
-  <img src="../images/scale/histogram.png" width="1250" height="225"/>
-</p>
-<center><i>Fig 3. Histogram of ADS computation timings. (All verticals) </i></center><br>
-
-- The number of XDS updates over the test grows additively with any current number of onboarded proxies, each iteration occupying more time until basically iterations overlap, given the rate at which OSM can compute ADS updates.
-
-#### OSM Injector
-- Injector can handle onboarding 20 pods concurrently per 0.5cpu, with rather stable times to create the 2048-bit certificates and webhook handling staying regularly below 5s, with some outliers in the 5-10s and in very limited occasions in the 10-20s (and probably closer to 10).
-- Since 99% of the webhook handling time happens in the RSA certificate creation context, injector should scale rather linearly with added vcpu.
-  
-<p align="center">
-  <img src="../images/scale/sidecar-inj.png" width="850" height="220"/>
-</p>
-<center><i>Fig 4. Heatmap of sidecar injection timings / webhook handling times. </i></center><br>
-
-#### Prometheus
-- Our control plane qualification testing has disabled envoy scraping for the time being.
-- Scraping the control plane alone, requires around 0.25vcpu per 1000 proxies (given number of metrics scraped and scrape interval used), see in orange Fig 2. 
-
+Note: Please assume we are deploying a proxy per pod in the following results, so use pod/proxies interchangeably.
 ### Memory
-#### OSM Controller
-Memory per pod/envoy onboarded in the network is calculated after the initial snapshot with nothing onboarded on the mesh is seen to take into account standalone memory used by OSM.
-- Memory (RSS) in controller: **600~800KB per proxy**
+- Memory per pod/envoy onboarded in the network is calculated after the initial snapshot with nothing onboarded on the mesh is seen to take into account standalone memory used by OSM.
+  - Initial memory use of OSM **40~46MB**
+  - Memory increase per pod ranges between **800KB~1MB** per pod. 
+- With **256MB** max memory limit for OSM's container, **180-200 pods** should be a conservative limit. Any more pods
+can (and will) have OSM `OOMKilled` by Kubernetes.
+- With **512MB** max memory limit for OSM's container, it can reach to **~400 pods**, although convergence times will spike through the roof up to **+120s** with a rather oversubscribed CPU profile, that could potentially lead to other issues.
 
-<p align="center">
-  <img src="../images/scale/mem.png" width="800" height="250"/>
-</p>
-<center><i>Fig 5. Function of Memory (RSS) in use during the test.</i></center><br>
+### CPU
+#### 1.5/2 vCPU (512MB mem)
+- At **200 pods**, ADS completion times<sup>[1]</sup> for individual envoys range around **10s-20s** and full configuration convergence ranges around **20-40s**
+- At **400 pods**, ADS completion times<sup>[1]</sup> for individual envoys range around **40-90s** and full configuration convergence ranges around **+150s**
+- Injector webhook and certificate (2048 RSA) issuance times are stable between **1s-5s** in all cases.
+#### 4 vCPU (512MB mem)
+- At **200 pods**, ADS completion times<sup>[1]</sup> for individual envoys range around **5-10s**, however full configuration convergence falls into the **20-40s** bucket.
+- At **400 pods**, ADS completion times<sup>[1]</sup> for individual envoys range around **20-40s** and full configuration convergence ranges around **+90s**
+- Injector webhook and certificate (2048 RSA) issuance times are stable between **1s-5s** in all cases.
 
-#### OSM Injector
-OSM injector doesn't store any intermediate state per pod, so it has no immediate memory scalability constraints at this scale order of magnitude.
+- In both cases, and taking into account the architecture limitations explained above, OSM will run hot on CPU, most of the time recomputing ADS updates for all pods in the mesh. This oversubscription could lead to not enough cycles available for other critical path routines (liveness), depending entirely on the scheduler.
+- Adding more vCPU helps OSM compute a larger amount of ADS updates at a time, as well as reduce the configuration convergence time - however due to the nature of the buckets, we suspect this is far from a linear improvement as some of these numbers could suggest.
 
-#### Prometheus
-- Our control plane qualification testing has disabled envoy scraping for the time being.
-- Prometheus shows a memory increase per proxy of about **~0.7MB per proxy** to handle the metric listed by OSM metrics.
+
+Below, more results with meaningful related data explained.
+
+## Detailed Test Results
+#### 256 RAM @1.5 CPU
+- OSM is killed (OOM) at around ~260 Pods
+- mem/pod on OSM is grossly around 787kB
+- Full CPU utilization is first seen at around ~180-200 pods.
+- At around 200 pods, ADS updates get bucketed at between 10-20s to 20-40s seconds collectively<sup>[1]</sup>. 
+- Certificate issuance: constant, going from 1s to 5s buckets at most, with some non-trended outliers.
+- Webhook injector: constant, ranging also from 1s to 5s, with some non-trended outliers.
+
+[CPU profile during test](../images/scale/256-1.5-cpu.png)
+
+[ADS Histogram during test](../images/scale/256-1.5-ADSTimes.png)
+
+*256MB poses a hard limit on the number of pods supported, hence we did not proceed to test other cpu form factors with 256MB.*
+
+#### 512RAM @1.5 CPU
+- OSM fails to converge network configuration at around ~440 pods (Test timeout).
+- Mem/pod on OSM is grossly around 968kB
+- Large prolonged periods of full CPU usage and saturation.
+- Certificate issuance and Webhook injector trend to take a little bit more on average on higher pod count, but still in the 1s to 5s margin.
+- A number RDS updates seems to be consistently failing.
+
+[CPU profile during test](../images/scale/512-1.5-cpu.png)
+
+[ADS Histogram during test](../images/scale/512-1.5-ADSTimes.png)
+
+[Injector & ADS (success/failure) update count](../images/scale/512-1.5-injads.png)
+
+#### 512RAM @4CPU
+- OSM fails to converge network configuration at around ~460 pods (Test timeout).
+- Mem/pod on OSM is grossly around 982kB
+- Cpu peaks at around ~2.7 utilization. Supposedly CPU to spare.
+- Certificate issuance and Webhook injector trend to take a little bit more on average on higher pod count, but still in the 1s to 5s margin.
+- A number of RDS updates seems to be consistently failing.
+
+[CPU profile during test](../images/scale/512-4-cpu.png)
+
+[ADS Histogram during test](../images/scale/512-4-ADSTimes.png)
+
+[Injector & ADS (success/failure) update count](../images/scale/512-4-injads.png)
+
+
+<sup>[1]</sup>: Note that collective updates do not mean \<time> per ADS update, but since all updates are scheduled at the same time (coroutine per proxy) they share the same cpu time at the mercy of the scheduler, and on average, they all start and finish \<time> seconds apart. The exact time taken per update should be a division of that time by the number of updates being handled at a time interval by the scheduler, which we don't have an accurate count of because we don't know when the scheduler schedules them.
