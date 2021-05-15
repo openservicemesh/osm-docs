@@ -103,6 +103,11 @@ body {
   background: linear-gradient(0deg, #fff 0%, #e6fff8 100%);
   border-right: none;
 
+  @media (min-width: 992px) {
+    max-width: 22.5vw;
+    margin-right: 2.5vw;
+  }
+
   // global sidebar link styles
   ul {
     padding: 0 !important;
@@ -162,7 +167,7 @@ body {
           // main menu categories
           ul {
             li {
-              font-size: 1rem;
+              font-size: 1.125rem;
 
               a {
                 padding: 0.75rem 1rem !important;
@@ -186,7 +191,7 @@ body {
               padding: 0 !important;
 
               li {
-                font-size: 0.925rem;
+                font-size: 1rem;
 
                 a {
                   padding: 0.33rem 1.2rem 0.33rem !important;
@@ -226,7 +231,7 @@ body {
                 ul {
                   padding: 0.5rem 0 !important;
                   li {
-                    font-size: 0.925rem;
+                    font-size: 1rem;
 
                     a {
                       padding: 0.125rem 0 0.125rem 1rem !important;
@@ -324,6 +329,23 @@ body {
 .td-content {
   padding: 0 1vw;
   min-height: 200vh;
+
+  // center things nicely
+  margin-left: auto;
+  margin-right: auto;
+  width: 70vw;
+  max-width: 67rem;
+
+  @media (max-width: 991px) {
+    width: 86vw;
+    max-width: 80rem;
+  }
+
+  @media (min-width: 992px) {
+    .td-max-width-on-larger-screens, .td-content > pre, .td-content > .highlight, .td-content > .lead, .td-content > h1, .td-content > h2, .td-content > ul, .td-content > ol, .td-content > p, .td-content > blockquote, .td-content > dl dd, .td-content .footnotes, .td-content > .alert {
+      max-width: 100% !important;
+    }
+  }
 
   h1,
   h2,
@@ -506,61 +528,61 @@ footer {
 }
 
 .popover {
-    margin: 0;
-    top: 10.5rem !important;
-    left: 0 !important;
-    right: 10vw !important;
-    bottom: 0 !important;
-    min-width: 33vw;
-    max-width: 600px !important;
-    position: fixed !important;
-    box-shadow: 0 5px 12px 11999px rgba(60,60,60,0.5);
+  margin: 0;
+  top: 10.5rem !important;
+  left: 0 !important;
+  right: 10vw !important;
+  bottom: 0 !important;
+  min-width: 33vw;
+  max-width: 600px !important;
+  position: fixed !important;
+  box-shadow: 0 5px 12px 11999px rgba(60,60,60,0.5);
 
-    .popover-body {
-      padding: 1.5rem 2rem;
-      overflow-y: scroll;
-      display: inline-block;
-      height: auto;
+  .popover-body {
+    padding: 1.5rem 2rem;
+    overflow-y: scroll;
+    display: inline-block;
+    height: auto;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+
+    span {
+      font-size: 1.5rem;
+      margin: 1rem 0;
+      color: $blue;
+      display: block;
+      font-weight: bold;
+      text-transform: capitalize;
+    }
+    .search-result-close-button {
+      right: 1.5rem;
+      top: 1.25rem;
+      font-size: 1.333rem;
+      color: #666;
+      cursor: pointer;
       position: fixed;
-      top: 0;
-      bottom: 0;
+      top: 1.5rem;
+    }
 
-      span {
-        font-size: 1.5rem;
-        margin: 1rem 0;
-        color: $blue;
-        display: block;
+    .mt-4 {
+      position: relative;
+      
+      small {
+        position: absolute;
+        top: 2rem;
+      }
+
+      a {
         font-weight: bold;
-        text-transform: capitalize;
+        font-size: 1.125rem;
+        margin: 0.925rem 0 2rem;
+        display: block;
       }
-      .search-result-close-button {
-        right: 1.5rem;
-        top: 1.25rem;
-        font-size: 1.333rem;
-        color: #666;
-        cursor: pointer;
-        position: fixed;
-        top: 1.5rem;
-      }
+      p {
+        margin-bottom: 2rem;
 
-      .mt-4 {
-        position: relative;
-        
-        small {
-          position: absolute;
-          top: 2rem;
-        }
-
-        a {
-          font-weight: bold;
-          font-size: 1.125rem;
-          margin: 0.925rem 0 2rem;
-          display: block;
-        }
-        p {
-          margin-bottom: 2rem;
-
-        }
       }
     }
+  }
 }
