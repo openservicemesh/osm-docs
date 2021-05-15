@@ -81,6 +81,13 @@ algolia_docsearch = false
 prism_syntax_highlighting = true
 project_home = "https://openservicemesh.io/"
 
+[[params.versions]]
+  version = "latest"
+  url = "https://docs.openservicemesh.io/"
+[[params.versions]]
+  version = "0.8.0"
+  url = "https://release-v0-8.docs.openservicemesh.io/"
+
 [params.ui]
 navbar_logo = true
 sidebar_menu_compact = false
