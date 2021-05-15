@@ -141,6 +141,16 @@ body {
       }
     }
 
+    .navbar-logo-mobile {
+      left: 22.5vw;
+      top: 1rem;
+
+      img {
+        width: 55vw;
+        max-width: 360px;
+      }
+    }
+
     span.text-uppercase {
       position: absolute;
       left: -999em;
@@ -356,61 +366,97 @@ footer {
 }
 
 .popover {
-    margin: 0;
-    top: 10.5rem !important;
-    left: 0 !important;
-    right: 10vw !important;
-    bottom: 0 !important;
-    min-width: 33vw;
-    max-width: 600px !important;
-    position: fixed !important;
-    box-shadow: 0 5px 12px 11999px rgba(60,60,60,0.5);
+  margin: 0;
+  top: 10.5rem !important;
+  left: 0 !important;
+  right: 10vw !important;
+  bottom: 0 !important;
+  min-width: 33vw;
+  max-width: 600px !important;
+  position: fixed !important;
+  box-shadow: 0 5px 12px 11999px rgba(60,60,60,0.5);
 
-    .popover-body {
-      padding: 1.5rem 2rem;
-      overflow-y: scroll;
-      display: inline-block;
-      height: auto;
+  .popover-body {
+    padding: 1.5rem 2rem;
+    overflow-y: scroll;
+    display: inline-block;
+    height: auto;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+
+    span {
+      font-size: 1.5rem;
+      margin: 1rem 0;
+      color: $blue;
+      display: block;
+      font-weight: bold;
+      text-transform: capitalize;
+    }
+    .search-result-close-button {
+      right: 1.5rem;
+      top: 1.25rem;
+      font-size: 1.333rem;
+      color: #666;
+      cursor: pointer;
       position: fixed;
-      top: 0;
-      bottom: 0;
+      top: 1.5rem;
+    }
 
-      span {
-        font-size: 1.5rem;
-        margin: 1rem 0;
-        color: $blue;
-        display: block;
+    .mt-4 {
+      position: relative;
+      
+      small {
+        position: absolute;
+        top: 2rem;
+      }
+
+      a {
         font-weight: bold;
-        text-transform: capitalize;
+        font-size: 1.125rem;
+        margin: 0.925rem 0 2rem;
+        display: block;
       }
-      .search-result-close-button {
-        right: 1.5rem;
-        top: 1.25rem;
-        font-size: 1.333rem;
-        color: #666;
-        cursor: pointer;
-        position: fixed;
-        top: 1.5rem;
-      }
+      p {
+        margin-bottom: 2rem;
 
-      .mt-4 {
-        position: relative;
-        
-        small {
-          position: absolute;
-          top: 2rem;
-        }
-
-        a {
-          font-weight: bold;
-          font-size: 1.125rem;
-          margin: 0.925rem 0 2rem;
-          display: block;
-        }
-        p {
-          margin-bottom: 2rem;
-
-        }
       }
     }
+  }
+}
+
+
+#banner {
+  background: $blue;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  z-index: 1450;
+
+  p {
+    color: white;
+    padding: 0.333rem 0 0.35rem;
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  a {
+    color: white;
+    @include transition;
+    border-bottom: 2px solid rgba(255,255,255,0.5);
+  }
+
+  display: block;
+}
+
+body.has-banner {
+  padding-top: 1.5rem;
+
+  .td-navbar {
+    top: 1.5rem;
+  }
 }

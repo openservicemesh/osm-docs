@@ -1,0 +1,11 @@
+<div id="banner">
+  <!-- viewing helm 3 version of site (desktop) -->
+  <p class="center text-center d-none d-lg-block">
+    You are viewing archival docs for the {{ .Site.Params.oldversion.archive }} release. Latest docs are <a href="{{ .Site.Params.oldversion.latest }}">here</a>.
+  </p>
+  
+  <!-- viewing helm 3 version of site (mobile) -->
+  <p class="center text-center d-lg-none">
+    Viewing {{ .Site.Params.oldversion.archive }} docs. <a href="{{ .Site.Params.oldversion.latest }}">Latest version is here</a>.
+  </p>
+</div>

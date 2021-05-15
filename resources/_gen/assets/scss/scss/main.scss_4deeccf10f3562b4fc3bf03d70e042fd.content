@@ -13927,6 +13927,12 @@ body {
     .td-navbar .navbar-brand .navbar-logo svg {
       width: auto;
       height: 108px; }
+  .td-navbar .navbar-brand .navbar-logo-mobile {
+    left: 22.5vw;
+    top: 1rem; }
+    .td-navbar .navbar-brand .navbar-logo-mobile img {
+      width: 55vw;
+      max-width: 360px; }
   .td-navbar .navbar-brand span.text-uppercase {
     position: absolute;
     left: -999em; }
@@ -14112,5 +14118,33 @@ footer {
         display: block; }
       .popover .popover-body .mt-4 p {
         margin-bottom: 2rem; }
+
+#banner {
+  background: #1128a9;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  z-index: 1450;
+  display: block; }
+  #banner p {
+    color: white;
+    padding: 0.333rem 0 0.35rem;
+    margin: 0;
+    font-size: 1rem; }
+  #banner a {
+    color: white;
+    transition: all 0.2s ease-in-out;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5); }
+    @media (prefers-reduced-motion: reduce) {
+      #banner a {
+        transition: none; } }
+body.has-banner {
+  padding-top: 1.5rem; }
+  body.has-banner .td-navbar {
+    top: 1.5rem; }
 
 /*# sourceMappingURL=style.css.map */
