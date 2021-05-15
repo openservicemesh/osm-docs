@@ -1,5 +1,5 @@
 title = "OSM (0.8.0)"
-baseURL = "ttps://v0-8-0.openservicemesh.io/"
+baseURL = "https://release-v0-8.docs.openservicemesh.io/"
 languageCode = "en-us"
 description = "Documentation for Open Service Mesh (OSM)"
 theme = "dosmy"
@@ -92,7 +92,7 @@ sidebar_search_disable = false
   url = "https://docs.openservicemesh.io/"
 [[params.versions]]
   version = "0.8.0"
-  url = "https://v0-8-0.openservicemesh.io/"
+  url = "https://release-v0-8.docs.openservicemesh.io/"
 [params.oldversion]
 	show = true
 	archive = "0.8.0"
