@@ -1,5 +1,5 @@
-title = "Open Service Mesh"
-baseURL = "https://docs.openservicemesh.io/"
+title = "Open Service Mesh (0.8.0)"
+baseURL = "https://release-v0.8--osm-docs.netlify.app//"
 languageCode = "en-us"
 description = "Documentation for Open Service Mesh (OSM)"
 theme = "dosmy"
@@ -9,7 +9,7 @@ CanonifyURLs=true
 # Theme General Config
 [languages]
 [languages.en]
-title = "Open Service Mesh"
+title = "Open Service Mesh (0.8.0)"
 description = "Documentation for Open Service Mesh (OSM)"
 languageName ="English"
 weight = 1
@@ -86,6 +86,14 @@ navbar_logo = true
 sidebar_menu_compact = false
 breadcrumb_disable = false
 sidebar_search_disable = false
+
+[[params.versions]]
+  version = "latest"
+  url = "https://docs.openservicemesh.io/"
+[[params.versions]]
+  version = "0.8.0"
+  url = "https://release-v0.8--osm-docs.netlify.app/"
+
 
 [params.ui.feedback]
 enable = true
