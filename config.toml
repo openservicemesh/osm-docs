@@ -1,5 +1,5 @@
 title = "Open Service Mesh (0.8.0)"
-baseURL = "https://release-v0.8--osm-docs.netlify.app//"
+baseURL = "https://docs.openservicemesh.io/"
 languageCode = "en-us"
 description = "Documentation for Open Service Mesh (OSM)"
 theme = "dosmy"
