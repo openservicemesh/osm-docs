@@ -2,7 +2,6 @@
 title: "OSM Manual Demo Guide"
 description: "The manual demo is a step-by-step walkthrough set of instruction of the automated demo."
 type: docs
-aliases: ["OSM Manaual Demo"]
 weight: 2
 ---
 
@@ -12,7 +11,7 @@ The OSM Manual Install Demo Guide is a step by step set of instructions to quick
 
 ## Prerequisites
 This demo of OSM v0.8.3 requires:
-  - a cluster running Kubernetes v1.17 or greater
+  - a cluster running Kubernetes v1.18 or greater
   - a workstation capable of executing [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) scripts
   - [The Kubernetes command-line tool](https://kubernetes.io/docs/tasks/tools/#kubectl) - `kubectl`
 
