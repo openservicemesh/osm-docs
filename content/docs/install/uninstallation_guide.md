@@ -55,7 +55,7 @@ Alternatively, if sidecar injection is enabled via annotations on pods instead o
 Restart all pods running with a sidecar:
 
 ```console
-# If pods are running as part of a Kuberenetes deployment
+# If pods are running as part of a Kubernetes deployment
 # Can use this strategy for daemonset as well
 $ kubectl rollout restart deployment <deployment-name> -n <namespace>
 
