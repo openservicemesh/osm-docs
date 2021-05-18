@@ -164,6 +164,7 @@ TCP based Egress traffic is matched against the destination port and IP address 
         protocol: tcp
     EOF
     ```
+    > Note: For `server-first` protocols such as `MySQL`, `PostgreSQL`, etc., where the server initiates the first bytes of data between the client and server, the protocol must be set to `tcp-server-first` to indicate to OSM to not perform protocol detection on the port. Protocol detection relies on inspecting the initial bytes of a connection, which is incompatible with `server-first` protocols. When the port's protocol is set to `tcp-server-first`, protocol detection is skipped for that port number. It is also important to note that `server-first` port numbers must not be used for other application ports that require protocol detection to performed, which means the port numbers used for `server-first` protocols must not be used with other protocols such as `HTTP` and `TCP` that require protocol detection to be performed.
 
 1. Confirm the `curl` client is able to make successful HTTPS requests to `https://openservicemesh.io:443`.
     ```console
