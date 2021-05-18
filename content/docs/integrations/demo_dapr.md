@@ -4,14 +4,14 @@ description: "A simple demo showing to integrate Dapr with OSM"
 type: docs
 ---
 
-This document walks you through the steps of getting Dapr working with OSM on a kubernetes cluster.
+This document walks you through the steps of getting Dapr working with OSM on a Kubernetes cluster.
 
 1. Install Dapr on your cluster with mTLS disabled:
 
       1. Dapr has a quickstart repository to help users get familiar with dapr and its features. For this integration demo we will be leveraging the [hello-kubernetes](https://github.com/dapr/quickstarts/tree/master/hello-kubernetes) quickstart. As we would like to integrate this Dapr example with OSM, there are a few modifications required and they are as follows:
 
          - The [hello-kubernetes](https://github.com/dapr/quickstarts/tree/master/hello-kubernetes) demo installs Dapr with mtls enabled (by default), we would **not want mtls from Dapr and would like to leverage OSM for this**. Hence while [installing Dapr](https://github.com/dapr/quickstarts/tree/master/hello-kubernetes#step-1---setup-dapr-on-your-kubernetes-cluster) on your cluster, make sure to disable mtls by passing the flag : `--enable-mtls=false`  during the installation
-         - Futher [hello-kubernetes](https://github.com/dapr/quickstarts/tree/master/hello-kubernetes) sets up everything in the default namespace, it is **strongly recommended** to set up the entire hello-kubernetes demo in a specific namespace (we will later join this namespace to OSM's mesh). For the purpose of this integration, we have the namespace as `dapr-test`
+         - Further [hello-kubernetes](https://github.com/dapr/quickstarts/tree/master/hello-kubernetes) sets up everything in the default namespace, it is **strongly recommended** to set up the entire hello-kubernetes demo in a specific namespace (we will later join this namespace to OSM's mesh). For the purpose of this integration, we have the namespace as `dapr-test`
          
            ```console
             $ kubectl create namespace dapr-test
@@ -68,7 +68,7 @@ This document walks you through the steps of getting Dapr working with OSM on a 
 
 4. Exclude kubernetes API server IP from being intercepted by OSM's sidecar:
 
-    1. Get the kubenetes API server cluster IP:
+    1. Get the kubernetes API server cluster IP:
        ```console
        $ kubectl get svc -n default
        NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
@@ -80,8 +80,8 @@ This document walks you through the steps of getting Dapr working with OSM on a 
        meshconfig.config.openservicemesh.io/osm-mesh-config patched
        ```
 
-    It is necessary to exclude the kubernetes API server IP in OSM because Dapr leverges kubernetes secrets to access the redis state store in this demo. 
-    
+    It is necessary to exclude the Kubernetes API server IP in OSM because Dapr leverages Kubernetes secrets to access the redis state store in this demo.
+
     *Note: If you have hardcoded the password in the Dapr component file, you may skip this step.*
 
 5. Globally exclude ports from being intercepted by OSM's sidecar:
@@ -107,7 +107,7 @@ This document walks you through the steps of getting Dapr working with OSM on a 
 
     It is necessary to globally exclude Dapr's placement server (`dapr-placement-server`) port from being intercepted by OSM's sidecar, as pods having Dapr on them would need to talk to Dapr's control plane. The redis state store also needs to be excluded so that Dapr's sidecar can route the traffic to redis, without being intercepted by OSM's sidecar.
     
-    *Note: Globally excluding ports would result in all pods in OSM's mesh from not interceting any outbound traffic to the specified ports. If you wish to exclude the ports selectively only on pods that are running Darp, you may omit this step and follow the step mentioned below.*
+    *Note: Globally excluding ports would result in all pods in OSM's mesh from not interceting any outbound traffic to the specified ports. If you wish to exclude the ports selectively only on pods that are running Dapr, you may omit this step and follow the step mentioned below.*
 
 6. Exclude ports from being intercepted by OSM's sidecar at pod level:
 
@@ -169,7 +169,7 @@ This document walks you through the steps of getting Dapr working with OSM on a 
    pythonapp-6bd9897fb7-wdmb5   3/3     Running   0          53s
    ```
   
-9. Verify the Darp hello-kubernetes demo works as expected:
+9. Verify the Dapr hello-kubernetes demo works as expected:
 
     1. Verify the nodeapp service using the steps documented [here](https://github.com/dapr/quickstarts/tree/master/hello-kubernetes#step-3---deploy-the-nodejs-app-with-the-dapr-sidecar) 
     
@@ -271,11 +271,11 @@ This document walks you through the steps of getting Dapr working with OSM on a 
 
     6. Update the pod spec in both nodeapp ([node.yaml](https://github.com/dapr/quickstarts/blob/master/hello-kubernetes/deploy/node.yaml)) and pythonapp ([python.yaml](https://github.com/dapr/quickstarts/blob/master/hello-kubernetes/deploy/python.yaml)) to contain their respective service accounts. Delete and re-deploy the Dapr hello-kubernetes pods
 
-    7. Verify the Darp hello-kubernetes demo works as expected, shown [here](https://github.com/dapr/quickstarts/tree/master/hello-kubernetes#step-6---observe-messages)
+    7. Verify the Dapr hello-kubernetes demo works as expected, shown [here](https://github.com/dapr/quickstarts/tree/master/hello-kubernetes#step-6---observe-messages)
 
 11. Cleanup: 
     
-    1. To clean up the Darp hello-kubernetes demo, clean the `dapr-test` namespace
+    1. To clean up the Dapr hello-kubernetes demo, clean the `dapr-test` namespace
 
        ```console
        $ kubectl delete ns dapr-test
