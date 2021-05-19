@@ -62,7 +62,7 @@ will be injected with Envoy, but traffic will flow through the proxy and will no
 
 ```bash
 osm install \
-    --set=OpenServiceMesh.enablePermissiveTrafficPolicy=true
+    --set=OpenServiceMesh.enablePermissiveTrafficPolicy=true \
     --set=OpenServiceMesh.deployPrometheus=true \
     --set=OpenServiceMesh.deployGrafana=true \
     --set=OpenServiceMesh.deployJaeger=true
