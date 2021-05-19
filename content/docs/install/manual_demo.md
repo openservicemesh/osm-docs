@@ -54,7 +54,7 @@ This command enables
 [Prometheus](https://github.com/prometheus/prometheus),
 [Grafana](https://github.com/grafana/grafana), and
 [Jaeger](https://github.com/jaegertracing/jaeger) integrations.
-The `OpenServiceMesh.enablePermissiveTrafficPolicy` chart value instructs OSM to ignore any policies and
+The `--enable-permissive-traffic-policy` argument instructs OSM to ignore any policies and
 let traffic flow freely between the pods. With Permissive Traffic Policy mode enabled, new pods
 will be injected with Envoy, but traffic will flow through the proxy and will not be blocked.
 
@@ -62,10 +62,8 @@ will be injected with Envoy, but traffic will flow through the proxy and will no
 
 ```bash
 osm install \
-    --set=OpenServiceMesh.enablePermissiveTrafficPolicy=true
-    --set=OpenServiceMesh.deployPrometheus=true \
-    --set=OpenServiceMesh.deployGrafana=true \
-    --set=OpenServiceMesh.deployJaeger=true
+    --enable-permissive-traffic-policy \
+    --deploy-grafana  --deploy-jaeger --deploy-prometheus
 ```
 
 > Note: This document assumes you have already installed credentials for a Kubernetes cluster in ~/.kube/config and `kubectl cluster-info` executes successfully.
@@ -427,7 +425,7 @@ In permissive traffic policy mode, application connectivity within the mesh is a
 
 1. During install using `osm` CLI:
   ```bash
-  osm install --set=OpenServiceMesh.enablePermissiveTrafficPolicy=true
+  osm install --enable-permissive-traffic-policy
   ```
 
 1. Post install by patching the `osm-mesh-config` custom resource in the control plane's namespace (`osm-system` by default)
