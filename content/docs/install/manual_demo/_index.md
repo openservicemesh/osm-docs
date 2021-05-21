@@ -305,7 +305,7 @@ We will now demonstrate how to balance traffic between two Kubernetes services, 
 
 ### Deploy bookstore v2 application
 
-To demonstrate usage of SMI traffic access and split policies, we will deploy now deploy version v2 of the bookstore application (`bookstore-v2`):
+To demonstrate usage of SMI traffic access and split policies, we will now deploy version v2 of the bookstore application (`bookstore-v2`) - remember that if you are using openshift, you must add the security context constraint to the bookstore-v2 service account as specified in the [installation guide](/docs/install/#openshift).
 
 ```bash
 # Contains the bookstore-v2 Kubernetes Service, Service Account, Deployment and SMI Traffic Target resource to allow
