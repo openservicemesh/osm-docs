@@ -1,4 +1,4 @@
-title = "OSM (0.8.0)"
+title = "OSM v0.8"
 baseURL = "https://release-v0-8.docs.openservicemesh.io/"
 languageCode = "en-us"
 description = "Documentation for Open Service Mesh (OSM)"
@@ -9,7 +9,7 @@ CanonifyURLs=true
 # Theme General Config
 [languages]
 [languages.en]
-title = "OSM (0.8.0)"
+title = "OSM v0.8"
 description = "Documentation for Open Service Mesh (OSM)"
 languageName ="English"
 weight = 1
@@ -91,11 +91,11 @@ sidebar_search_disable = false
   version = "latest"
   url = "https://docs.openservicemesh.io/"
 [[params.versions]]
-  version = "0.8.0"
+  version = "v0.8"
   url = "https://release-v0-8.docs.openservicemesh.io/"
 [params.oldversion]
 	show = true
-	archive = "0.8.0"
+	archive = "v0.8"
 	latest = "https://docs.openservicemesh.io/"
 
 
