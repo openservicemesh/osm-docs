@@ -1,6 +1,6 @@
 ---
 title: "OSM Manual Demo Guide"
-description: "The manual demo is a step-by-step walkthrough set of instruction of the automated demo."
+description: "This manual demo shows you a step-by-step walkthrough of the automated demo."
 type: docs
 weight: 2
 ---
@@ -58,7 +58,7 @@ The `OpenServiceMesh.enablePermissiveTrafficPolicy` chart value instructs OSM to
 let traffic flow freely between the pods. With Permissive Traffic Policy mode enabled, new pods
 will be injected with Envoy, but traffic will flow through the proxy and will not be blocked.
 
-> Note: Permissive Traffic Policy mode is an important feature for brownfield deployments (where it may take some time to craft SMI policies). While operators design the SMI policies, existing services will to continue to operate as they have been before you installed OSM.
+> Note: Permissive Traffic Policy mode is an important feature for brownfield deployments (where it may take some time to craft SMI policies). Operators can design the SMI policies while existing services continue to operate as they have been before you installed OSM.
 
 ```bash
 osm install \
@@ -82,7 +82,7 @@ For details on how to install OSM on OpenShift, refer to the [installation guide
 
 ## Deploy Applications
 
-In this section we will deploy 4 different Pods. You will also apply policies to control the traffic between these pods.
+In this section you will deploy 4 different Pods. You'll also apply policies to control the traffic between these pods.
 
 - `bookbuyer` is an HTTP client makeing requests to `bookstore`. This traffic is **permitted**.
 - `bookthief` is an HTTP client and much like `bookbuyer` also makes HTTP requests to `bookstore`. This traffic should be **blocked**.
@@ -101,14 +101,14 @@ state of allowed and blocked traffic between pods:
 | bookwarehouse |     ❌     |     ❌     |     ❌     |      \        |
 
 
-To show SMI Traffic Split, you need to deploy an additional application:
+To show the SMI Traffic Split, you need to deploy an additional application:
 
-- `bookstore-v2` - this is the same container as the first `bookstore` you deployed, but for this demo we will assume that it is a new version of the app we need to upgrade to.
+- `bookstore-v2` - This is the same container as the first `bookstore` you deployed, but for this demo you can assume that it is a new version of the app you need to upgrade to.
 
 The `bookbuyer`, `bookthief`, `bookstore`, and `bookwarehouse` Pods will be in separate Kubernetes Namespaces with
 the same names. Each new Pod in the service mesh will be injected with an Envoy sidecar container.
 
-> Note: The following commands must be run in Bash and not in Powershell.
+> Note: The following commands *must* be run in Bash and *not* in Powershell.
 
 ### Create the Namespaces
 
@@ -348,7 +348,7 @@ EOF
 
 A Kubernetes Service, Deployment, and Service Account for applications `bookbuyer`, `bookthief`, `bookstore` and `bookwarehouse`.
 
-To view these resources on your cluster, run the following commands:
+To view these resources on your cluster, run these commands:
 
 ```bash
 kubectl get deployments -n bookbuyer
@@ -403,15 +403,15 @@ In a browser, open up the following urls:
 - [http://localhost:8082](http://localhost:8082) - **bookstore-v2**
   - _Note: This page will not be available at this time in the demo. This will become available during the SMI Traffic Split configuration set up_
 
-Position the browser windows so that you can see all four at the same time. The header at the top of each webpage shows the application and version.
+Position the browser windows so that you can see all four at the same time. Note that the header at the top of each webpage shows the application and version.
 
 ## Traffic Encryption
 
-All traffic is encrypted via mTLS regardless of whether you're using access control policies or have enabled permissive traffic policy mode.
+OSM encrypts all traffic via mTLS regardless of whether you're using access control policies or have enabled permissive traffic policy mode.
 
 ## Traffic Policy Modes
 
-Once the applications are up and running, they can interact with each other using [permissive traffic policy mode](#permissive-traffic-policy-mode) or [SMI traffic policy mode](#smi-traffic-policy-mode). In permissive traffic policy mode, traffic between application services is automatically configured by `osm-controller`, and SMI policies are not enforced. In the SMI policy mode, all traffic is denied by default unless explicitly allowed using a combination of SMI access and routing policies.
+Once the applications are up and running, they can interact with each other using [permissive traffic policy mode](#permissive-traffic-policy-mode) or [SMI traffic policy mode](#smi-traffic-policy-mode). In permissive traffic policy mode, `osm-controller` automatically configures traffic between application services and does not enforce SMI policies. In the SMI policy mode, all traffic is denied by default unless explicitly allowed using a combination of SMI access and routing policies.
 
 ### How to Check Traffic Policy Mode
 
@@ -447,7 +447,7 @@ Before proceeding, [verify the traffic policy mode](#verify-the-traffic-policy-m
 
 In step [Deploy the Bookstore Application](#deploy-the-bookstore-application), you already deployed the applications needed to verify traffic flow in permissive traffic policy mode. The `bookstore` service you previously deployed is encoded with an identity of `bookstore-v1` for demo purposes, as can be seen in the [Deployment's manifest](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/docs/example/manifests/apps/bookstore.yaml). The identity reflects which counter increments in the `bookbuyer` and `bookthief` UI, and the identity displayed in the `bookstore` UI.
 
-The counter in the `bookbuyer`, `bookthief` UI is for the books bought and stolen respectively from `bookstore v1`. It should now increment:
+The counter in the `bookbuyer` and in the `bookthief` UI is for the books bought or stolen respectively from `bookstore v1`. These counters will now increment:
 
 - [http://localhost:8080](http://localhost:8080) - **bookbuyer**
 - [http://localhost:8083](http://localhost:8083) - **bookthief**
@@ -456,9 +456,9 @@ The counter in the `bookstore` UI is for the books sold and should also incremen
 
 - [http://localhost:8084](http://localhost:8084) - **bookstore**
 
-The `bookbuyer` and `bookthief` applications can buy and steal books respectively from the newly deployed `bookstore` application because permissive traffic policy mode is enabled. This allows connectivity between applications without the need for SMI traffic access policies.
+The `bookbuyer` and `bookthief` applications can buy and steal books respectively from the newly deployed `bookstore` application. They can do this because permissive traffic policy mode is enabled. This mode allows connectivity between applications without the need for SMI traffic access policies.
 
-You can demonstrate this further by disabling permissive traffic policy mode. You can verify it is disabled by checking that the counter for books bought from `bookstore` no longer increments:
+You can demonstrate this operation further by disabling permissive traffic policy mode. To verify the mode is disabled, check that the counter for books bought from `bookstore` no longer increments:
 
 ```bash
 kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}'  --type=merge
@@ -471,8 +471,8 @@ _Note: When you disable permissive traffic policy mode, SMI traffic access mode 
 You can use SMI traffic policies for:
 
 1. SMI access control policies to authorize traffic access between service identities
-1. SMI traffic specs policies to define routing rules to associate with access control policies
-1. SMI traffic split policies to direct client traffic to multiple backends based on weights
+2. SMI traffic specs policies to define routing rules to associate with access control policies
+3. SMI traffic split policies to direct client traffic to multiple backends based on weights
 
 The following sections describe how to leverage each of these policies to enforce fine-grained control over traffic flow within the service mesh. Before proceeding, [verify the traffic policy mode](#verify-the-traffic-policy-mode) and ensure that the `enablePermissiveTrafficPolicyMode` key is set to `false` in the `osm-mesh-config` `MeshConfig` resource.
 
@@ -556,11 +556,11 @@ Note that the counter is _not_ incrementing for the `bookthief` application:
 
 - [http://localhost:8083](http://localhost:8083) - **bookthief**
 
-Why is the counter not incrementing? This is because the SMI Traffic Target SMI HTTPRouteGroup resources deployed only allow `bookbuyer` to communicate with the `bookstore`.
+Why is the counter not incrementing? This is because the SMI Traffic Target SMI HTTPRouteGroup resources deployed only allow `bookbuyer` to communicate with the `bookstore` and not `bookthief`.
 
 #### Allowing the Bookthief Application to access the Mesh
 
-Currently, the Bookthief application has not been authorized to participate in the service mesh communication. To authorize this, uncomment the lines in the [docs/example/manifests/access/traffic-access-v1.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/docs/example/manifests/access/traffic-access-v1.yaml) to allow `bookthief` to communicate with `bookstore`. Then, re-apply the manifest and watch the change in policy propagate.
+Currently, the Bookthief application is not authorized to participate in the service mesh communication. To authorize this application, uncomment the lines in the [docs/example/manifests/access/traffic-access-v1.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/docs/example/manifests/access/traffic-access-v1.yaml) to allow `bookthief` to communicate with `bookstore`. Then, re-apply the manifest and watch the change in policy propagate.
 
 Current TrafficTarget spec with commented `bookthief` kind:
 
@@ -624,7 +624,7 @@ Re-apply the access manifest with the updates.
 kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/docs/example/manifests/access/traffic-access-v1-allow-bookthief.yaml
 ```
 
-The counter in the `bookthief` window will start incrementing.
+The counter in the `bookthief` window starts incrementing.
 
 - [http://localhost:8083](http://localhost:8083) - **bookthief**
 
