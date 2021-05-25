@@ -8,7 +8,7 @@ weight: 3
 
 # Uninstallation Guide
 
-This guide describes how to uninstall Open Service Mesh (OSM) from a Kubernetes cluster. IT assumes you have a single OSM control plane (mesh) running. If you have multiple meshes in a cluster, repeat the process described below for each control plane in the cluster. Do this before uninstalling any cluster-wide resources described at the end of this guide. The steps here cover both the control plane and the dataplane. The goal is to take you through the uninstall of all OSM elements with minimal downtime.
+This guide describes how to uninstall Open Service Mesh (OSM) from a Kubernetes cluster. These steps assume you have a single OSM control plane (mesh) running. If you have multiple meshes in a cluster, repeat the process described below for each control plane in the cluster. Do this before uninstalling any cluster-wide resources described at the end of this guide. The steps here cover both the control plane and the dataplane. The goal is to take you through the uninstall of all OSM elements with minimal downtime.
 
 ## Prerequisites
 
@@ -18,14 +18,14 @@ This guide describes how to uninstall Open Service Mesh (OSM) from a Kubernetes 
 
 ## Remove Envoy Sidecars from Application Pods and Envoy Secrets
 
-The first step is to remove the Envoy sidecar containers from the application pods. Recall that these sidecar containers enforced traffic policies. Without them, traffic would flow to and from Pods according to the default Kubernetes networking unless you applied [Kubernetes Network Policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/).
+The first step is to remove the Envoy sidecar containers from the application pods. Recall that these sidecar containers enforced OSM traffic policies. Without them, traffic would flow to and from Pods according to the default Kubernetes networking unless you applied [Kubernetes Network Policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/).
 
 To remove the OSM Envoy sidecars and related secrets:
 
 1. [Disable automatic sidecar injection](#disable-automatic-sidecar-injection)
 1. [Restart pods](#restart-pods)
 1. [Update Ingress Resources](#update-ingress-resources)
-1. [Delete Envoy bootsrap secrets](#delete-envoy-bootsrap-secrets)
+1. [Delete Envoy bootstrap secrets](#delete-envoy-bootstrap-secrets)
 
 ### Disable Automatic Sidecar Injection
 
