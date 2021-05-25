@@ -47,13 +47,14 @@ You can compile the `osm` CLI from source using [this guide](/docs/install/).
 
 ## Installing OSM on Kubernetes
 
-After you download and unsip the `osm` binary, you are ready to install Open Service Mesh on a Kubernetes cluster:
+After you download and unzip the `osm` binary, you are ready to install Open Service Mesh on a Kubernetes cluster:
 
 
 The Install command enables:
 [Prometheus](https://github.com/prometheus/prometheus),
 [Grafana](https://github.com/grafana/grafana), and
 [Jaeger](https://github.com/jaegertracing/jaeger) integrations.
+
 The `OpenServiceMesh.enablePermissiveTrafficPolicy` chart value instructs OSM to ignore any policies and
 let traffic flow freely between the pods. With Permissive Traffic Policy mode enabled, new pods
 will be injected with Envoy, but traffic will flow through the proxy and will not be blocked.
@@ -431,12 +432,12 @@ The following sections demonstrate how to use OSM with [permissive traffic polic
 
 The `osm-controller` can automatically configure application connectivity within the mesh in permissive traffic policy mode. To enable this:
 
-1. During install using `osm` CLI:
+During install using `osm` CLI:
   ```bash
   osm install --set=OpenServiceMesh.enablePermissiveTrafficPolicy=true
   ```
 
-1. Post-install by patching the `osm-mesh-config` custom resource in the control plane's namespace (`osm-system` by default)
+Post-install by patching the `osm-mesh-config` custom resource in the control plane's namespace (`osm-system` by default)
   ```bash
   kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":true}}}'  --type=merge
   ```
@@ -464,7 +465,7 @@ You can demonstrate this operation further by disabling permissive traffic polic
 kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}'  --type=merge
 ```
 
-_Note: When you disable permissive traffic policy mode, SMI traffic access mode is implicitly enabled. If counters for the books increment, this could be because some SMI Traffic Access policies have been applied previously to allow such traffic._
+> Note: When you disable permissive traffic policy mode, SMI traffic access mode is implicitly enabled. If counters for the books increment, this could be because some SMI Traffic Access policies have been applied previously to allow such traffic._
 
 ## SMI Traffic Policy Mode
 
@@ -482,7 +483,7 @@ You can enable SMI traffic policy mode by disabling permissive traffic policy mo
 kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}'  --type=merge
 ```
 
-### Deploy SMI Access Control Policies
+## Deploy SMI Access Control Policies
 
 At this point, applications do not have access to each other because you have not applied any access control policies. To confirm this, verify that none of the counters in the `bookbuyer`, `bookthief`, `bookstore`, and `bookstore-v2` UI are incrementing.
 
@@ -639,11 +640,11 @@ The counter in the `bookthief` window now stops incrementing.
 
 - [http://localhost:8083](http://localhost:8083) - **bookthief**
 
-### Configure Traffic Split between Two Services
+## Configure Traffic Split between Two Services
 
 This section demonstrates how to balance traffic between two Kubernetes services, commonly known as a traffic split. You will split the traffic directed to the root `bookstore` service between the backend's `bookstore` service and `bookstore-v2` service.
 
-### Deploy bookstore v2 application
+## Deploy bookstore v2 application
 
 To demonstrate usage of SMI traffic access and split policies, deploy version v2 of the bookstore application (`bookstore-v2`):
 
@@ -679,7 +680,7 @@ spec:
 EOF
 ```
 
-_Note: The root service can be any Kubernetes service. It does not have any label selectors. It also doesn't need to overlap with any of the backend services specified in the Traffic Split resource. You can refer to the root service in the SMI Traffic Split resource as the name of the service with or without the `.<namespace>` suffix._
+> Note: The root service can be any Kubernetes service. It does not have any label selectors. It also doesn't need to overlap with any of the backend services specified in the Traffic Split resource. You can refer to the root service in the SMI Traffic Split resource as the name of the service with or without the `.<namespace>` suffix._
 
 The count for the books sold from the `bookstore-v2` browser window should remain at 0. This is because the current traffic split policy is weighted 100 for `bookstore`. Also,   `bookbuyer` is sending traffic to the `bookstore` service and no application is sending requests to the `bookstore-v2` service. You can verify the traffic split policy by running the following to view the **Backends** properties:
 
