@@ -19,7 +19,7 @@ This demo of OSM v0.8.4 requires:
 
 ## Download and install the OSM command-line tool
 
-The `osm` command-line tool has everything needed to install and configure Open Service Mesh.
+The `osm` command-line tool has everything you need to install and configure Open Service Mesh.
 You can find the binary on the [OSM GitHub releases page](https://github.com/openservicemesh/osm/releases/).
 
 ### For GNU/Linux and macOS
@@ -44,13 +44,10 @@ unzip osm.zip
 You can compile the `osm` CLI from source using [this guide](/docs/install/).
 
 
-
 ## Installing OSM on Kubernetes
 
-After you download and unzip the `osm` binary, you are ready to install Open Service Mesh on a Kubernetes cluster:
+After you download and unzip the `osm` binary, use the copy command to move the binary into your usr path. You are ready to install Open Service Mesh on a Kubernetes cluster. The Install command enables:
 
-
-The Install command enables:
 [Prometheus](https://github.com/prometheus/prometheus),
 [Grafana](https://github.com/grafana/grafana), and
 [Jaeger](https://github.com/jaegertracing/jaeger) integrations.
@@ -69,12 +66,11 @@ osm install \
     --set=OpenServiceMesh.deployJaeger=true
 ```
 
-> Note: This document assumes you have already installed credentials for a Kubernetes cluster in ~/.kube/config and `kubectl cluster-info` executes successfully.
+> Note: This document assumes you have already installed credentials for a Kubernetes cluster in ~/.kube/config and the command `kubectl cluster-info` executes successfully.
 
 This process also installed the OSM Controller in the `osm-system` namespace.
 
-
-Read more on OSM's integrations with Prometheus, Grafana, and Jaeger in the [observability documentation](/docs/tasks_usage/observability/).
+> Note: You can read more on OSM's integrations with Prometheus, Grafana, and Jaeger in the [observability documentation](/docs/tasks_usage/observability/).
 
 ### OpenShift
 For details on how to install OSM on OpenShift, refer to the [installation guide](/docs/install/#openshift)
@@ -91,8 +87,7 @@ In this section you will deploy 4 different Pods. You'll also apply policies to 
 - `bookwarehouse` is a server and should respond only to `bookstore`. Both `bookbuyer` and `bookthief` should be blocked.
 
 
-You will craft SMI policies, which will bring you to this final desired
-state of allowed and blocked traffic between pods:
+You will craft SMI policies, which will bring you to this final desired state of allowed and blocked traffic between pods:
 
 | from  /   to: | bookbuyer | bookthief | bookstore | bookwarehouse |
 |---------------|-----------|-----------|-----------|---------------|
@@ -109,7 +104,7 @@ To show the SMI Traffic Split, you need to deploy an additional application:
 The `bookbuyer`, `bookthief`, `bookstore`, and `bookwarehouse` Pods will be in separate Kubernetes Namespaces with
 the same names. Each new Pod in the service mesh will be injected with an Envoy sidecar container.
 
-> Note: The following commands *must* be run in Bash and *not* in Powershell.
+> Note: The following commands *must* be run in a Linux shell (or a compatible shell with WSL2) and *not* in Powershell.
 
 ### Create the Namespaces
 
@@ -347,7 +342,7 @@ EOF
 
 ### Checkpoint: What Got Installed?
 
-A Kubernetes Service, Deployment, and Service Account for applications `bookbuyer`, `bookthief`, `bookstore` and `bookwarehouse`.
+A Kubernetes Service, Deployment, and Service Account for the applications `bookbuyer`, `bookthief`, `bookstore` and `bookwarehouse`.
 
 To view these resources on your cluster, run these commands:
 
@@ -379,7 +374,7 @@ In addition to Kubernetes Services and Deployments, these commands also created 
 
 Use the following steps to set up client port forwarding to access the applications in the Kubernetes cluster. 
 
-> Note: It is best to start a new terminal session to run the port forwarding script and maintain the port forwarding session. Use your original terminal to continue to issue commands. 
+> Note: These steps assume you copied the OSM repo locally and the commands run at the root. It is also best to start a new terminal session to run the port forwarding script to maintain the port forwarding session. Use your original terminal to continue to issue commands. 
  
 The port-forward-all.sh script looks for a `.env` file for the environment variables needed to run the script. The `.env` creates the necessary variables that target the previously created namespaces. These steps use the reference `.env.example` file and then run the port forwarding script.
 
@@ -432,12 +427,12 @@ The following sections demonstrate how to use OSM with [permissive traffic polic
 
 The `osm-controller` can automatically configure application connectivity within the mesh in permissive traffic policy mode. To enable this:
 
-During install using `osm` CLI:
+**During install** using the `osm` CLI:
   ```bash
   osm install --set=OpenServiceMesh.enablePermissiveTrafficPolicy=true
   ```
 
-Post-install by patching the `osm-mesh-config` custom resource in the control plane's namespace (`osm-system` by default)
+**Post-install** by patching the `osm-mesh-config` custom resource in the control plane's namespace (`osm-system` by default)
   ```bash
   kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":true}}}'  --type=merge
   ```
@@ -759,14 +754,23 @@ Navigate to http://localhost:3000 to access the Grafana dashboards. The default 
 
 ## Cleanup
 
-To cleanup after the demo, delete all the resources created for the demo, the OSM control plane, SMI resources, and the sample applications. To do this:
+To cleanup after the demo, you need to delete:
+
+- All the resources created for the demo 
+- the OSM control plane
+- SMI resources 
+- the sample applications 
+
+To do this:
 
 Uninstall the sample applications and SMI resources and delete their namespaces with the following command:
+
 ```bash
 kubectl delete ns bookbuyer bookthief bookstore bookwarehouse
 ```
 
 To uninstall OSM, run:
+
 ```bash
 osm uninstall
 ```
