@@ -423,10 +423,11 @@ body {
     background: lighten(desaturate($green-bg, 15%), 25%);
   }
 
+  div.highlight pre,
   div.code-toolbar pre {
     background: linear-gradient(
       180deg,
-      lighten(desaturate($green-bg, 20%), 25%) 0%,
+      lighten(desaturate($green-bg, 23.5%), 27.5%) 0%,
       lighten(desaturate($green-bg, 25%), 30%) 100%
     );
     border-radius: 1rem;
