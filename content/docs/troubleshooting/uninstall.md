@@ -8,11 +8,13 @@ type: docs
 
 ## Unsuccessful Uninstall
 
-If for any reason, `osm uninstall` is unsuccessful, run the [cleanup script](https://github.com/openservicemesh/osm/blob/release-v0.8/scripts/cleanup/osm-cleanup.sh) which will delete any OSM related resources.
+If for any reason, `osm uninstall` is unsuccessful, run the [cleanup script](https://github.com/openservicemesh/osm/blob/release-v0.8/scripts/cleanup/osm-cleanup.sh) to delete any OSM-related resources.
 
-To run the script, create a `.env` environment variable file to set the values specified at the top of the script. These values should match the values used to deploy the mesh.
+To run this script: 
 
-In the root directory of the osm repository locally, run:
+1. Create a `.env` environment variable file to set the values specified at the top of the script. These values should match the values used to deploy the mesh.
+
+2. In the root directory of the local osm repository, run:
 
 ```console
 ./scripts/cleanup/osm-cleanup.sh
