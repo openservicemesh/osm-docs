@@ -94,7 +94,7 @@ $ helm uninstall <mesh name> --namespace <osm namespace>
 
 Run `helm uninstall --help` to view more options.
 
-## Resource Management
+# Resource Management
 
 ## Uninstall the OSM Control Plane and Remove User-Provided Resources
 
@@ -104,7 +104,7 @@ To uninstall the OSM control plane and related components:
 1. [Remove User Provided Resources](#remove-user-provided-resources)
 1. [Delete OSM Namespace](#delete-osm-namespace)
 
-### Uninstall the OSM control plane
+## Uninstall the OSM control plane
 
 Use the `osm` CLI to uninstall the OSM control plane from your Kubernetes cluster. The Uninstall command removes:
 
@@ -123,13 +123,13 @@ OSM [mesh name: <mesh-name>] uninstalled
 
 Run `osm uninstall --help` to view more options.
 
-### Remove User-Provided Resources
+## Remove User-Provided Resources
 
 If you provided or created any resources for OSM at install time, you can delete them now.
 
 For example, if you deployed [Hashicorp Vault](/docs/tasks_usage/certificates/#installing-hashi-vault) for the sole purpose of managing certificates for OSM, you can delete all related resources.
 
-### Delete OSM Namespace
+## Delete OSM Namespace
 
 The `osm` CLI created a namespace for installing the control plane (if it did not already exist). This OSM uninstall procedure however does not automatically delete this namespace. This occurs because there may be resources that you created in this namespace that you may not want to automatically delete.
 
@@ -148,6 +148,11 @@ OSM ensures that the Service Mesh Interface Custom Resource Definitions (CRDs) e
 
 To remove the CRDs, run these `kubectl` commands:
 
+```console
 kubectl delete -f [https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/charts/osm/crds/access.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/charts/osm/crds/access.yaml)
+
 kubectl delete -f [https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/charts/osm/crds/specs.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/charts/osm/crds/specs.yaml)
+
 kubectl delete -f [https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/charts/osm/crds/split.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/charts/osm/crds/split.yaml)
+
+```
