@@ -14104,11 +14104,14 @@ body {
   .td-content table code,
   .td-content p code {
     background: #d3f8ef; }
+  .td-content div.highlight pre,
   .td-content div.code-toolbar pre {
-    background: linear-gradient(180deg, #d5f7ee 0%, #ebfaf6 100%);
+    background: linear-gradient(180deg, #e0f8f2 0%, #ebfaf6 100%);
     border-radius: 1rem;
     margin-top: 2rem;
     margin-bottom: 2.5rem; }
+    .td-content div.highlight pre code[class*="language-"],
+    .td-content div.highlight pre pre[class*="language-"],
     .td-content div.code-toolbar pre code[class*="language-"],
     .td-content div.code-toolbar pre pre[class*="language-"] {
       background: transparent !important; }
