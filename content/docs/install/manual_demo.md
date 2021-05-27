@@ -11,9 +11,12 @@ The OSM Manual Install Demo Guide is a step by step set of instructions to quick
 
 ## Prerequisites
 This demo of OSM v0.8.4 requires:
-  - a cluster running Kubernetes v1.18 or greater
+  - a cluster running Kubernetes v1.18 or greater (using a cloud provider of choice, [minikube](https://minikube.sigs.k8s.io/docs/start/), or similar)
   - a workstation capable of executing [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) scripts
   - [The Kubernetes command-line tool](https://kubernetes.io/docs/tasks/tools/#kubectl) - `kubectl`
+  - the [OSM code repo](https://github.com/openservicemesh/osm/) available locally
+
+> Note: This document assumes you have already installed credentials for a Kubernetes cluster in ~/.kube/config and `kubectl cluster-info` executes successfully.
 
 
 
@@ -54,11 +57,11 @@ This command enables
 [Prometheus](https://github.com/prometheus/prometheus),
 [Grafana](https://github.com/grafana/grafana), and
 [Jaeger](https://github.com/jaegertracing/jaeger) integrations.
-The `OpenServiceMesh.enablePermissiveTrafficPolicy` chart value instructs OSM to ignore any policies and
+The `OpenServiceMesh.enablePermissiveTrafficPolicy` chart parameter in the `values.yaml` file instructs OSM to ignore any policies and
 let traffic flow freely between the pods. With Permissive Traffic Policy mode enabled, new pods
 will be injected with Envoy, but traffic will flow through the proxy and will not be blocked.
 
-> Note: Permissive Traffic Policy mode is an important feature for brownfield deployments, where it may take some time to craft SMI policies. While operators design the SMI policies, existing services will to continue to operate as they have been before OSM was installed.
+> Note: Permissive Traffic Policy mode is an important feature for brownfield deployments, where it may take some time to craft SMI policies. While operators design the SMI policies, existing services will continue to operate as they have been before OSM was installed.
 
 ```bash
 osm install \
@@ -67,8 +70,6 @@ osm install \
     --set=OpenServiceMesh.deployGrafana=true \
     --set=OpenServiceMesh.deployJaeger=true
 ```
-
-> Note: This document assumes you have already installed credentials for a Kubernetes cluster in ~/.kube/config and `kubectl cluster-info` executes successfully.
 
 This installed OSM Controller in the `osm-system` namespace.
 
@@ -84,7 +85,7 @@ For details on how to install OSM on OpenShift, refer to the [installation guide
 
 In this section we will deploy 4 different Pods, and we will apply policies to control the traffic between them.
 
-- `bookbuyer` is an HTTP client makeing requests to `bookstore`. This traffic is **permitted**.
+- `bookbuyer` is an HTTP client making requests to `bookstore`. This traffic is **permitted**.
 - `bookthief` is an HTTP client and much like `bookbuyer` also makes HTTP requests to `bookstore`. This traffic should be **blocked**.
 - `bookstore` is a server, which responds to HTTP requests. It is also a client making requests to the `bookwarehouse` service.
 - `bookwarehouse` is a server and should respond only to `bookstore`. Both `bookbuyer` and `bookthief` should be blocked.
@@ -344,7 +345,7 @@ EOF
 
 ### Checkpoint: What Got Installed?
 
-A Kubernetes Service, Deployment, and Service Account for applications `bookbuyer`, `bookthief`, `bookstore` and `bookwarehouse`.
+A Kubernetes Deployment and Pods for each of `bookbuyer`, `bookthief`, `bookstore` and `bookwarehouse`. Also, Kubernetes Services and Endpoints for `bookstore` and `bookwarehouse`.
 
 To view these resources on your cluster, run the following commands:
 
@@ -359,24 +360,20 @@ kubectl get pods -n bookthief
 kubectl get pods -n bookstore
 kubectl get pods -n bookwarehouse
 
-kubectl get services -n bookbuyer
-kubectl get services -n bookthief
 kubectl get services -n bookstore
 kubectl get services -n bookwarehouse
 
-kubectl get endpoints -n bookbuyer
-kubectl get endpoints -n bookthief
 kubectl get endpoints -n bookstore
 kubectl get endpoints -n bookwarehouse
 ```
 
-In addition to Kubernetes Services and Deployments, a [Kubernetes Service Account](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) was also created for each Deployment. The Service Account services as the application's identity which will be used later in the demo to create service to service access control policies.
+In addition, a [Kubernetes Service Account](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) was also created for each application. The Service Account serves as the application's identity which will be used later in the demo to create service-to-service access control policies.
 
 ### View the Application UIs
 
 Set up client port forwarding with the following steps to access the applications in the Kubernetes cluster. It is best to start a new terminal session for running the port forwarding script to maintain the port forwarding session, while using the original terminal to continue to issue commands. The port-forward-all.sh script will look for a `.env` file for environment variables needed to run the script. The `.env` creates the necessary variables that target the previously created namespaces. We will use the reference `.env.example` file and then run the port forwarding script.
 
-In a new terminal session, run the following commands to enable port forwarding into the Kubernetes cluster from the root of the project directory.
+In a new terminal session, run the following commands to enable port forwarding into the Kubernetes cluster from the root of the project directory (your local clone of https://github.com/openservicemesh/osm).
 
 ```bash
 cp .env.example .env
