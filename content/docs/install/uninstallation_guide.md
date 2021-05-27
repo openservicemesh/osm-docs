@@ -24,7 +24,6 @@ OSM Envoy sidecars and related secrets will be removed in the following steps:
 
 1. [Disable automatic sidecar injection](#disable-automatic-sidecar-injection)
 1. [Restart pods](#restart-pods)
-1. [Update Ingress Resources](#update-ingress-resources)
 1. [Delete Envoy bootsrap secrets](#delete-envoy-bootsrap-secrets)
 
 ### Disable Automatic Sidecar Injection
@@ -68,16 +67,6 @@ Now, there should be no OSM Envoy sidecar containers running as part of the appl
 longer managed by the OSM control plane with the `mesh-name` used above. During this process, your applications may experience some downtime
 as all the Pods are restarting.
 
-### Update Ingress Resources
-
-There may be ingress resources in the cluster that are configured to allow traffic from outside the cluster to an application that was
-once part of the mesh. Identify these resources by using the `kubectl get ingress -n <namespace>` command in each namespace that was
-removed from the mesh earlier.
-
-If there are ingress resources and they are configured to allow HTTPS traffic, SSL related annotations will need to be updated appropriately.
-
-Applications may be unavailable from outside the cluster for some time if ingress resources need to be reconfigured.
-
 ### Delete Envoy Bootsrap Secrets
 
 Once the sidecar is removed, there is no need for the Envoy bootstrap config secrets OSM created. These are stored in the application namespace and can be deleted manually with `kubectl`. These secrets have the prefix `envoy-bootstrap-config` followed by some unique ID: `envoy-bootstrap-config-<some-id-here>`.
@@ -86,7 +75,7 @@ Once the sidecar is removed, there is no need for the Envoy bootstrap config sec
 
 Run the following `helm uninstall` command.
 ```console
-$ helm uninstall <mesh name> --namespace <osm namespace> 
+$ helm uninstall <mesh name> --namespace <osm namespace>
 ```
 
 Run `helm uninstall --help` for more options.
