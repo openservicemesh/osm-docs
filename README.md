@@ -11,6 +11,10 @@
 
 docs.openservicemesh.io is a static site. The documentation content needs to be located at `content/docs/`.
 
+The content served on [https://docs.openservicemesh.io](https://docs.openservicemesh.io) is served from the main branch of this repo. Most updates should be made only in main.
+
+If it's necessary to change published release-specific docs, those changes should be made in the release-specific branch serving those docs. Once configured as described in [Adding release-specific docs](#adding-release-specific-docs), PRs to that branch will auto-build just like PRs to main.
+
 To ensure the docs content renders correctly in the theme, each page will need to have [front matter](https://gohugo.io/content-management/front-matter/) metadata. Example front matter:
 
 ```
@@ -27,6 +31,15 @@ type: docs
 
 * inclusion of `type: docs` is important for the theme to properly index the site contents
 * the `linkTitle` attribute allows you to simplify the name as it appears in the left-side nav bar - ideally it should be short and clear - whereas the title can handle longform names for pages/documents.
+
+## Adding release-specific docs
+
+Steps to add a release-specific version of the docs site:
+
+1. Create a release branch from main, named after the released major and minor version, like [release-v0.8](https://github.com/openservicemesh/osm-docs/tree/release-v0.8).
+1. List the new branch in the [config.toml](https://github.com/openservicemesh/osm-docs/blob/main/config.toml#L84-L89) for all currently-displayed versions.
+1. Open an issue in this repo asking for the Netlify config to be created and the site update to be completed.
+1. When published, the newly-added branch will function like [https://release-v0-8.docs.openservicemesh.io/](https://release-v0-8.docs.openservicemesh.io/)
 
 
 # Site Development
