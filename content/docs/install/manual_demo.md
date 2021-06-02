@@ -526,15 +526,12 @@ spec:
     methods:
     - GET
     headers:
-    - host: "bookstore.bookstore"
     - "user-agent": ".*-http-client/*.*"
     - "client-app": "bookbuyer"
   - name: buy-a-book
     pathRegex: ".*a-book.*new"
     methods:
     - GET
-    headers:
-    - host: "bookstore.bookstore"
 EOF
 ```
 
