@@ -69,7 +69,7 @@ Improving CRD upgrades is being tracked in [#893](https://github.com/openservice
 
 - Kubernetes cluster with the OSM control plane installed
 - `osm` CLI installed
-  - By default, the `osm` CLI will upgrade to the same chart version that it installs. e.g. v0.8.0 of the `osm` CLI will upgrade to v0.8.0 of the OSM Helm chart.
+  - By default, the `osm` CLI will upgrade to the same chart version that it installs. e.g. v0.9.0 of the `osm` CLI will upgrade to v0.9.0 of the OSM Helm chart.
 
 The `osm mesh upgrade` command performs a `helm upgrade` of the existing Helm release for a mesh.
 
@@ -79,7 +79,7 @@ $ osm mesh upgrade
 OSM successfully upgraded mesh osm
 ```
 
-This command will upgrade the mesh with the default mesh name in the default OSM namespace. Values from the previous release will carry over to the new release except for `OpenServiceMesh.image.registry` and `OpenServiceMesh.image.tag` which are overridden by default. For example, if OSM v0.7.0 is installed, `osm mesh upgrade` for v0.8.0 of the CLI will update the control plane images to v0.8.0 by default.
+This command will upgrade the mesh with the default mesh name in the default OSM namespace. Values from the previous release will carry over to the new release except for `OpenServiceMesh.image.registry` and `OpenServiceMesh.image.tag` which are overridden by default. For example, if OSM v0.7.0 is installed, `osm mesh upgrade` for v0.9.0 of the CLI will update the control plane images to v0.9.0 by default.
 
 See `osm mesh upgrade --help` for more details
 
@@ -93,7 +93,7 @@ See `osm mesh upgrade --help` for more details
 #### OSM Configuration
 When upgrading, any custom settings used to install or run OSM may be reverted to the default, this only includes any metrics deployments. Please ensure that you carefully follow the guide to prevent these values from being overwritten.
 
-To preserve any changes you've made to the OSM configuration, use the `helm --values` flag. Create a copy of the [values file](https://github.com/openservicemesh/osm/blob/release-v0.8/charts/osm/values.yaml) (make sure to use the version for the upgraded chart) and change any values you wish to customize. You can omit all other values.
+To preserve any changes you've made to the OSM configuration, use the `helm --values` flag. Create a copy of the [values file](https://github.com/openservicemesh/osm/blob/release-v0.9/charts/osm/values.yaml) (make sure to use the version for the upgraded chart) and change any values you wish to customize. You can omit all other values.
 
 **Note: Any configuration changes that go into the MeshConfig will not be applied during upgrade and the values will remain as is prior to the upgrade. If you wish to update any value in the MeshConfig you can do so by patching the resource after an upgrade.
 

@@ -12,7 +12,7 @@ The OSM manual demo install guide is a step by step set of instructions to quick
 
 
 ## Prerequisites
-This demo of OSM v0.8.4 requires:
+This demo of OSM v0.9.0 requires:
   - a cluster running Kubernetes v1.18 or greater (using a cloud provider of choice, [minikube](https://minikube.sigs.k8s.io/docs/start/), or similar)
   - a workstation capable of executing [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) scripts
   - [The Kubernetes command-line tool](https://kubernetes.io/docs/tasks/tools/#kubectl) - `kubectl`
@@ -29,19 +29,19 @@ The binary is available on the [OSM GitHub releases page](https://github.com/ope
 
 ### For GNU/Linux and macOS
 
-Download the 64-bit GNU/Linux or macOS binary of OSM v0.8.4:
+Download the 64-bit GNU/Linux or macOS binary of OSM v0.9.0:
 ```bash
 system=$(uname -s)
-release=v0.8.4
+release=v0.9.0
 curl -L https://github.com/openservicemesh/osm/releases/download/${release}/osm-${release}-${system}-amd64.tar.gz | tar -vxzf -
 ./${system}-amd64/osm version
 ```
 
 ### For Windows
 
-Download the 64-bit Windows OSM v0.8.4 binary via Powershell:
+Download the 64-bit Windows OSM v0.9.0 binary via Powershell:
 ```powershell
-wget  https://github.com/openservicemesh/osm/releases/download/v0.8.4/osm-v0.8.4-windows-amd64.zip -o osm.zip
+wget  https://github.com/openservicemesh/osm/releases/download/v0.9.0/osm-v0.9.0-windows-amd64.zip -o osm.zip
 unzip osm.zip
 .\windows-amd64\osm.exe version
 ```
@@ -194,7 +194,7 @@ spec:
       serviceAccountName: bookbuyer
       containers:
       - name: bookbuyer
-        image: openservicemesh/bookbuyer:v0.8.4
+        image: openservicemesh/bookbuyer:v0.9.0
         imagePullPolicy: Always
         command: ["/bookbuyer"]
         env:
@@ -226,7 +226,7 @@ spec:
       serviceAccountName: bookthief
       containers:
       - name: bookthief
-        image: openservicemesh/bookthief:v0.8.4
+        image: openservicemesh/bookthief:v0.9.0
         imagePullPolicy: Always
         command: ["/bookthief"]
         env:
@@ -278,7 +278,7 @@ spec:
       serviceAccountName: bookstore
       containers:
       - name: bookstore
-        image: openservicemesh/bookstore:v0.8.4
+        image: openservicemesh/bookstore:v0.9.0
         imagePullPolicy: Always
         ports:
           - containerPort: 14001
@@ -334,7 +334,7 @@ spec:
       serviceAccountName: bookwarehouse
       containers:
       - name: bookwarehouse
-        image: openservicemesh/bookwarehouse:v0.8.4
+        image: openservicemesh/bookwarehouse:v0.9.0
         imagePullPolicy: Always
         command: ["/bookwarehouse"]
 EOF
@@ -434,7 +434,7 @@ In permissive traffic policy mode, application connectivity within the mesh is a
 
 Before proceeding, [verify the traffic policy mode](#verify-the-traffic-policy-mode) and ensure the `enablePermissiveTrafficPolicyMode` key is set to `true` in the `osm-mesh-config` `MeshConfig` resource. Refer to the section above to enable permissive traffic policy mode.
 
-In step [Deploy the Bookstore Application](#deploy-the-bookstore-application), we have already deployed the applications needed to verify traffic flow in permissive traffic policy mode. The `bookstore` service we previously deployed is encoded with an identity of `bookstore-v1` for demo purpose, as can be seen in the [Deployment's manifest](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/docs/example/manifests/apps/bookstore.yaml). The identity reflects which counter increments in the `bookbuyer` and `bookthief` UI, and the identity displayed in the `bookstore` UI.
+In step [Deploy the Bookstore Application](#deploy-the-bookstore-application), we have already deployed the applications needed to verify traffic flow in permissive traffic policy mode. The `bookstore` service we previously deployed is encoded with an identity of `bookstore-v1` for demo purpose, as can be seen in the [Deployment's manifest](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/apps/bookstore.yaml). The identity reflects which counter increments in the `bookbuyer` and `bookthief` UI, and the identity displayed in the `bookstore` UI.
 
 The counter in the `bookbuyer`, `bookthief` UI for the books bought and stolen respectively from `bookstore v1` should now be incrementing:
 
@@ -546,7 +546,7 @@ That is because the SMI Traffic Target SMI HTTPRouteGroup resources deployed onl
 
 #### Allowing the Bookthief Application to access the Mesh
 
-Currently the Bookthief application has not been authorized to participate in the service mesh communication. We will now uncomment out the lines in the [docs/example/manifests/access/traffic-access-v1.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/docs/example/manifests/access/traffic-access-v1.yaml) to allow `bookthief` to communicate with `bookstore`. Then, re-apply the manifest and watch the change in policy propagate.
+Currently the Bookthief application has not been authorized to participate in the service mesh communication. We will now uncomment out the lines in the [docs/example/manifests/access/traffic-access-v1.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/access/traffic-access-v1.yaml) to allow `bookthief` to communicate with `bookstore`. Then, re-apply the manifest and watch the change in policy propagate.
 
 Current TrafficTarget spec with commented `bookthief` kind:
 
@@ -607,7 +607,7 @@ spec:
 Re-apply the access manifest with the updates.
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/docs/example/manifests/access/traffic-access-v1-allow-bookthief.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/access/traffic-access-v1-allow-bookthief.yaml
 ```
 
 The counter in the `bookthief` window will start incrementing.
@@ -618,7 +618,7 @@ Comment out the bookthief source lines in the Traffic Target object and re-apply
 
 ```bash
 # Re-apply original SMI TrafficTarget and HTTPRouteGroup resources
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/docs/example/manifests/access/traffic-access-v1.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/access/traffic-access-v1.yaml
 ```
 
 The counter in the `bookthief` window will stop incrementing.
@@ -636,7 +636,7 @@ To demonstrate usage of SMI traffic access and split policies, we will now deplo
 ```bash
 # Contains the bookstore-v2 Kubernetes Service, Service Account, Deployment and SMI Traffic Target resource to allow
 # bookbuyer to communicate with `bookstore-v2` pods
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/docs/example/manifests/apps/bookstore-v2.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/apps/bookstore-v2.yaml
 ```
 
 Wait for the `bookstore-v2` pod to be running in the `bookstore` namespace. Next, exit and restart the `./scripts/port-forward-all.sh` script in order to access v2 of bookstore.
