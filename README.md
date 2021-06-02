@@ -36,9 +36,11 @@ type: docs
 
 Steps to add a release-specific version of the docs site:
 
-1. Create a release branch from main, named after the released major and minor version, like [release-v0.8](https://github.com/openservicemesh/osm-docs/tree/release-v0.8).
+1. Create a release branch from `main` in your fork of this repo. Name this new branch after the released major and minor version, like [release-v0.8](https://github.com/openservicemesh/osm-docs/tree/release-v0.8).
+1. Push your newly-created release branch upstream to this repo on GitHub in order for the new branch to be usable by Netlify.
 1. List the new branch in the [config.toml](https://github.com/openservicemesh/osm-docs/blob/main/config.toml#L84-L89) for all currently-displayed versions.
 1. Open an issue in this repo asking for the Netlify config to be created and the site update to be completed.
+1. Netlify will deploy the branch to a url like [https://release-v0-8--osm-docs.netlify.app/](https://release-v0-8--osm-docs.netlify.app/). Use this to preview and test that this branch builds correctly.
 1. When published, the newly-added branch will function like [https://release-v0-8.docs.openservicemesh.io/](https://release-v0-8.docs.openservicemesh.io/)
 
 
