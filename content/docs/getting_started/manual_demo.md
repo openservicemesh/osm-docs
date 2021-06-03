@@ -13,7 +13,7 @@ The OSM manual demo install guide is a step by step set of instructions to quick
 
 ## Prerequisites
 This demo of OSM v0.9.0 requires:
-  - a cluster running Kubernetes v1.18 or greater (using a cloud provider of choice, [minikube](https://minikube.sigs.k8s.io/docs/start/), or similar)
+  - a cluster running Kubernetes v1.19 or greater (using a cloud provider of choice, [minikube](https://minikube.sigs.k8s.io/docs/start/), or similar)
   - a workstation capable of executing [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) scripts
   - [The Kubernetes command-line tool](https://kubernetes.io/docs/tasks/tools/#kubectl) - `kubectl`
   - the [OSM code repo](https://github.com/openservicemesh/osm/) available locally
