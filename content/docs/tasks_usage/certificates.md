@@ -233,7 +233,7 @@ installation documentation for cert-manager
 [here](https://cert-manager.io/docs/installation/).
 
 Once cert-manager is installed, configure an [issuer
-resource](https://cert-manager.io/docs/installation/) to serve certificate
+resource](https://cert-manager.io/docs/configuration/) to serve certificate
 requests. It is recommended to use an `Issuer` resource kind (rather than a
 `ClusterIssuer`) which should live in the OSM namespace (`osm-system` by
 default).
@@ -244,7 +244,7 @@ as a Kubernetes secret in the OSM namespace (`osm-system` by default) at the
 `osm install --set OpenServiceMesh.caBundleSecretName=my-secret-name` (typically `osm-ca-bundle`).
 
 ```bash
-kubectl create secret -n osm-system generic osm-ca-bundle --from-file ca.tls
+kubectl create secret -n osm-system generic osm-ca-bundle --from-file ca.crt
 ```
 
 #### Configure OSM with cert-manager
