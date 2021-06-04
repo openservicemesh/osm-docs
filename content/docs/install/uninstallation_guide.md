@@ -98,16 +98,16 @@ Use the `osm` CLI to uninstall the OSM control plane from a Kubernetes cluster. 
 1. Prometheus, Grafana, Jaeger, and Fluentbit resources installed by OSM
 1. Mutating webhook and validating webhook
 
-Run `osm uninstall`:
+Run `osm mesh uninstall`:
 
 ```console
 # Uninstall osm control plane components
-$ osm uninstall --mesh-name=<mesh-name>
+$ osm mesh uninstall --mesh-name=<mesh-name>
 Uninstall OSM [mesh name: <mesh-name>] ? [y/n]: y
 OSM [mesh name: <mesh-name>] uninstalled
 ```
 
-Run `osm uninstall --help` for more options.
+Run `osm mesh uninstall --help` for more options.
 
 ### Remove User Provided Resources
 
