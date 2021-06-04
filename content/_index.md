@@ -5,19 +5,19 @@ type: docs
 
 ---
 
-## Overview
+## What is OSM?
 
-OSM runs an Envoy based control plane on Kubernetes, can be configured with SMI APIs, and works by injecting an Envoy proxy as a sidecar container next to each instance of your application. The proxy contains and executes rules around access control policies, implements routing configuration, and captures metrics. The control plane continually configures proxies to ensure policies and routing rules are up to date and ensures proxies are healthy.
+Open Service Mesh (OSM) runs an Envoy based control plane on Kubernetes, can be configured with SMI APIs, and works by injecting an Envoy proxy as a sidecar container next to each instance of your application. The proxy contains and executes rules around access control policies, implements routing configuration, and captures metrics. The control plane continually configures proxies to ensure policies and routing rules are up to date and ensures proxies are healthy.
 
-## Core Principles
-* Simple to understand and contribute to
-* Effortless to install, maintain, and operate
-* Painless to troubleshoot
-* Easy to configure via Service Mesh Interface (SMI)
+OSM is designed with the following core principles:
+* Simple to understand and contribute.
+* Effortless to install, maintain, and operate.
+* Painless to troubleshoot.
+* Easy to configure via Service Mesh Interface (SMI).
 
 ## Features
 * Easily and transparently configure traffic shifting for deployments
-* Secure service to service communication by enabling mTLS
+* Secure service to service communication by enabling mutual TLS
 * Define and execute fine grained access control policies for services
 * Observability and insights into application metrics for debugging and monitoring services
 * Integrate with external certificate management services/solutions with a pluggable interface
@@ -25,23 +25,16 @@ OSM runs an Envoy based control plane on Kubernetes, can be configured with SMI 
 
 ## Install
 
-### Prerequisites
-- Kubernetes cluster running Kubernetes v1.18.0 or greater
-- kubectl current context is configured for the target cluster install
-  - ```kubectl config current-context```
+The `osm` CLI is the simplest way to install OSM on your Kubernetes cluster. To install the `osm` CLI, download and unpack the `osm` binary from the [Releases page](https://github.com/openservicemesh/osm/releases) and add it to `$PATH`. For more details on installing the `osm` CLI, see [Installation](/docs/install/).
 
-### Get the OSM CLI
+To install OSM on your cluster using the `osm` CLI, use the `install` command. For example:
 
-The simplest way of installing Open Service Mesh on a Kubernetes cluster is by using the `osm` CLI.
-
-Download the `osm` binary from the [Releases page](https://github.com/openservicemesh/osm/releases). Unpack the `osm` binary and add it to `$PATH` to get started.
-```shell
-sudo mv ./osm /usr/local/bin/osm
-```
-
-### Install OSM
 ```shell
 $ osm install
 ```
 
-![OSM Install Demo](https://github.com/openservicemesh/osm/raw/release-v0.8/img/osm-install-demo-v0.2.0.gif "OSM Install Demo")
+Alternatively, you can install OSM on your cluster using a Helm chart. You can also use the `osm` CLI to install OSM on OpenShift. For more details on installation options, see [Install OSM](/docs/install/#install-osm).
+
+## Next steps
+
+To run a sample application or see examples of what you can do with OSM, see [All OSM demos](/docs/getting_started/demos/).

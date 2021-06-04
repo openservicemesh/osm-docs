@@ -3,7 +3,7 @@ title: "Design & Concepts"
 description: "Detailed design and architecture of Open Service Mesh."
 type: docs
 aliases: ["design & concepts"]
-weight: 2
+weight: 3
 ---
 
 ## Overview

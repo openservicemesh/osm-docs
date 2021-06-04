@@ -1,10 +1,12 @@
 ---
-title: "OSM Manual Demo Guide"
+title: "Full feature demo - manual installation"
 description: "The manual demo is a step-by-step walkthrough set of instruction of the automated demo."
 type: docs
 weight: 2
+aliases: = ["/docs/install/manual_demo/"]
 ---
 
+# How to run the OSM manual demo
 
 The OSM Manual Install Demo Guide is a step by step set of instructions to quickly demo OSM's key features.
 
