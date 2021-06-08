@@ -1,19 +1,19 @@
 ---
-title: "OSM Automated Demo"
+title: "Full feature demo - automated installation"
 description: "The automated demo is a set of scripts anyone can run and shows how OSM can manage, secure and provide observability for microservice environments."
 type: docs
-aliases: ["OSM Automated Demo"]
+aliases: ["OSM Automated Demo","/docs/install/auto_demo/"]
 weight: 1
 ---
 
-# How to Run the OSM Automated Demo
+# How to run the OSM automated demo
 
 ## System Requirements
 
 - MacOS, Linux or WSL2 on Windows
 - GCC
 - Go version 1.15 or higher
-- Kubectl version 1.15 or higher
+- Kubectl version 1.18 or higher
 - Docker CLI
   - on a Debian based GNU/Linux system: `sudo apt-get install docker`
   - on a macOS use `brew install docker` or alternatively visit [Docker for Mac](https://docs.docker.com/docker-for-mac/install/)
@@ -27,7 +27,7 @@ weight: 1
 2. Setup `.env` environment variable file
    - From the root of the repository run `make .env`
    - It is already listed in `.gitignore` so that anything you put in it would not accidentally leak into a public git repo. Refer to `.env.example` in the root of this repo for the mandatory and optional environment variables.
-3. Provision access to a Kubernetes cluster. Any certified conformant Kubernetes cluster (version 1.15 or higher) can be used. Here are a couple of options:
+3. Provision access to a Kubernetes cluster. Any certified conformant Kubernetes cluster (version 1.18 or higher) can be used. Here are a couple of options:
 
    - **Option 1:** Local [kind](https://kind.sigs.k8s.io/) cluster
      - [Install kind](https://kind.sigs.k8s.io/docs/user/quick-start/#installation)
