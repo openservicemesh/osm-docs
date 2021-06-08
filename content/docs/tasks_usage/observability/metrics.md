@@ -50,7 +50,6 @@ The following section will document the additional steps needed to allow an alre
 
 - Already running an accessible Prometheus instance *outside* of the mesh.
 - A running OSM control plane instance, deployed without metrics stack.
-  - OSM controls the Envoy's Prometheus listener aperture through `prometheusScraping:true`, under OSM's MeshConfig. By default this is set to true, but do double check it has been enabled on the OSM meshconfig, or else Prometheus might not be able to reach the pods.
 - We will assume having Grafana reach Prometheus, exposing or forwarding Prometheus or Grafana web ports and configuring Prometheus to reach Kubernetes API services is taken care of or otherwise out of the scope of these steps.
 
 #### Configuration
@@ -133,14 +132,6 @@ For metrics to be scraped, the following prerequisites must be met:
 
 - The namespace must be a part of the mesh, ie. it must be labeled with the `openservicemesh.io/monitored-by` label with an appropriate mesh name. This can be done using the `osm namespace add` command.
 - A running service able to scrap Prometheus endpoints. OSM provides configuration for an [automatic bringup of Prometheus](#automatic-bring-up); alternatively users can [bring their own Prometheus](#byo-bring-your-own).
-- The `prometheusScraping` key in osm-controller's `osm-mesh-config` `MeshConfig` resource must be set to `true`, which is the default configuration.
-  - This setting causes the osm-injector to add the following annotations to meshed Pods:
-
-    ```yaml
-    prometheus.io/scrape: true
-    prometheus.io/port: 15010
-    prometheus.io/path: /stats/prometheus
-    ```
 
 
 To enable one or more namespaces for metrics scraping:
@@ -164,6 +155,15 @@ osm metrics disable --namespace "test1, test2"
 # With kubectl
 kubectl patch namespace test --type=merge -p '{"metadata": {"annotations": {"openservicemesh.io/metrics": null}}}'
 ```
+
+Enabling metrics scraping on a namespace also causes the osm-injector to add the following annotations to pods in that namespace:
+
+   ```yaml
+    prometheus.io/scrape: true
+    prometheus.io/port: 15010
+    prometheus.io/path: /stats/prometheus
+    ```
+
 
 ### Available Metrics
 

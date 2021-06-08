@@ -331,17 +331,6 @@ bool
 </tr>
 <tr>
 <td>
-<code>prometheusScraping</code><br/>
-<em>
-bool
-</em>
-</td>
-<td>
-<p>PrometheusScraping defines a boolean indicating if sidecars should be configured for Prometheus metrics scraping.</p>
-</td>
-</tr>
-<tr>
-<td>
 <code>tracing</code><br/>
 <em>
 <a href="#config.openservicemesh.io/v1alpha1.TracingSpec">
@@ -604,5 +593,5 @@ for all inbound and ingress traffic in the mesh.</p>
 <hr/>
 <p><em>
 Generated with <code>gen-crd-api-reference-docs</code>
-on git commit <code>b14458f9</code>.
+on git commit <code>3f794156</code>.
 </em></p>
