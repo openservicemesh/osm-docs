@@ -6,7 +6,7 @@ aliases: ["osm_mesh_config.md"]
 ---
 
 # OSM MeshConfig
-OSM deploys a MeshConfig resource `osm-mesh-config` as a part of its control plane (in the same namespace as that of the osm-controller pod) which can be updated by the mesh owner/operator at any time. The purpose of this MeshConfig is to provide the mesh owner/operator the ability to update some of the mesh configurations based on their needs. 
+OSM deploys a MeshConfig resource `osm-mesh-config` as a part of its control plane (in the same namespace as that of the osm-controller pod) which can be updated by the mesh owner/operator at any time. The purpose of this MeshConfig is to provide the mesh owner/operator the ability to update some of the mesh configurations based on their needs.
 
 At the time of install, the OSM MeshConfig is deployed from a preset MeshConfig (`preset-mesh-config`) which can be found under [charts/osm/templates](https://github.com/openservicemesh/osm/blob/main/charts/osm/templates/preset-mesh-config.yaml).
 To view your `osm-mesh-config` in CLI use the `kubectl get` command.
@@ -52,5 +52,5 @@ The MeshConfig "osm-mesh-config" is invalid: spec.traffic.enableEgress: Invalid 
 | spec.sidecar.logLevel | string | `"error"` | `kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"sidecar":{"logLevel":"error"}}}'  --type=merge` |
 | spec.sidecar.maxDataPlaneConnections | int | `0` | `kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"sidecar":{"maxDataPlaneConnections":"error"}}}'  --type=merge` |
 | spec.sidecar.envoyImage | string | `"envoyproxy/envoy-alpine:v1.17.2"` | `kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"sidecar":{"envoyImage":"envoyproxy/envoy-alpine:v1.17.2"}}}'  --type=merge` |
-| spec.sidecar.initContainerImage | string | `"openservicemesh/init:v0.8.4"` | `kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"sidecar":{"initContainerImage":"openservicemesh/envoy-alpine:v0.8.4"}}}'  --type=merge` |
+| spec.sidecar.initContainerImage | string | `"openservicemesh/init:v0.8.4"` | `kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"sidecar":{"initContainerImage":"openservicemesh/init:v0.8.4"}}}' --type=merge` |
 | spec.sidecar.configResyncInterval | string | `"0s"` | `kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"sidecar":{"configResyncInterval":"30s"}}}'  --type=merge` |
