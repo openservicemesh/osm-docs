@@ -2,7 +2,6 @@
 title: "Uninstall"
 description: "Uninstall"
 type: docs
-aliases: ["uninstallation_guide.md"]
 weight: 3
 ---
 
@@ -113,7 +112,7 @@ Run `osm uninstall --help` for more options.
 
 If any resources were provided or created for OSM at install time, they can be deleted at this point.
 
-For example, if [Hashicorp Vault](/docs/tasks_usage/certificates/#installing-hashi-vault) was deployed for the sole purpose of managing certificates for OSM, all related resources can be deleted.
+For example, if [Hashicorp Vault](/docs/tasks/certificates/#installing-hashi-vault) was deployed for the sole purpose of managing certificates for OSM, all related resources can be deleted.
 
 ### Delete OSM Namespace
 

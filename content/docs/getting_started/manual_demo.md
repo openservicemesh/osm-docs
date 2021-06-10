@@ -1,14 +1,14 @@
 ---
-title: "Full feature demo - manual installation"
+title: "OSM manual demo"
 description: "The manual demo is a step-by-step walkthrough set of instruction of the automated demo."
 type: docs
-weight: 2
+weight: 1
 aliases: = ["/docs/install/manual_demo/"]
 ---
 
 # How to run the OSM manual demo
 
-The OSM Manual Install Demo Guide is a step by step set of instructions to quickly demo OSM's key features.
+The OSM manual demo install guide is a step by step set of instructions to quickly demo OSM's key features.
 
 
 ## Prerequisites
@@ -76,11 +76,7 @@ osm install \
 This installed OSM Controller in the `osm-system` namespace.
 
 
-Read more on OSM's integrations with Prometheus, Grafana, and Jaeger in the [observability documentation](/docs/tasks_usage/observability/).
-
-### OpenShift
-For details on how to install OSM on OpenShift, refer to the [installation guide](/docs/install/#openshift)
-
+Read more on OSM's integrations with Prometheus, Grafana, and Jaeger in the [observability documentation](/docs/tasks/observability/).
 
 
 ## Deploy Applications

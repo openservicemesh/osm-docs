@@ -34,7 +34,3 @@ $ osm install
 ```
 
 Alternatively, you can install OSM on your cluster using a Helm chart. You can also use the `osm` CLI to install OSM on OpenShift. For more details on installation options, see [Install OSM](/docs/install/#install-osm).
-
-## Next steps
-
-To run a sample application or see examples of what you can do with OSM, see [All OSM demos](/docs/getting_started/demos/).

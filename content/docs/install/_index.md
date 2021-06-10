@@ -2,7 +2,6 @@
 title: "Installation"
 description: "This section describes how to install/uninstall Open Service Mesh (OSM) on a Kubernetes cluster using the `osm` CLI."
 type: docs
-aliases: ["installation guide"]
 weight: 2
 ---
 
@@ -65,7 +64,7 @@ The [OSM chart](https://github.com/openservicemesh/osm/tree/release-v0.8/charts/
 You can configure the OSM installation by overriding the values file.
 1. Create a copy of the [values file](https://github.com/openservicemesh/osm/blob/release-v0.8/charts/osm/values.yaml) (make sure to use the version for the chart you wish to install).
 1. Change any values you wish to customize. You can omit all other values.
-   - To see which values correspond to the MeshConfig settings, see the [OSM MeshConfig documentation](/docs/osm_mesh_config)
+   - To see which values correspond to the MeshConfig settings, see the [OSM MeshConfig documentation](/docs/concepts_features/osm_mesh_config)
 
    - For example, to set the `logLevel` field in the MeshConfig to `info`, save the following as `override.yaml`:
      ```
@@ -91,7 +90,7 @@ To install OSM on OpenShift:
     ```shell
     osm install --set="OpenServiceMesh.enablePrivilegedInitContainer=true"
     ```
-    - If you have already installed OSM without enabling privileged init containers, set `enablePrivilegedInitContainer` to `true` in the [OSM MeshConfig](/docs/osm_mesh_config) and restart any pods in the mesh.
+    - If you have already installed OSM without enabling privileged init containers, set `enablePrivilegedInitContainer` to `true` in the [OSM MeshConfig](/docs/concepts_features/osm_mesh_config) and restart any pods in the mesh.
 1. Add the `privileged` [security context constraint](https://docs.openshift.com/container-platform/4.7/authentication/managing-security-context-constraints.html) to each service account in the mesh.
     - Install the [oc CLI](https://docs.openshift.com/container-platform/4.7/cli_reference/openshift_cli/getting-started-cli.html).
     - Add the security context constraint to the service account
@@ -127,4 +126,4 @@ $ helm get manifest osm --namespace osm-system
 
 ## Next Steps
 
-Now that the OSM control plane is up and running, [add services](../tasks_usage/onboard_services.md) to the mesh.
+Now that the OSM control plane is up and running, [add services](../tasks/onboard_services.md) to the mesh.
