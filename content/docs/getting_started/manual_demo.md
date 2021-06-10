@@ -2,7 +2,7 @@
 title: "OSM manual demo"
 description: "The manual demo is a step-by-step walkthrough set of instruction of the automated demo."
 type: docs
-weight: 2
+weight: 1
 aliases: = ["/docs/install/manual_demo/"]
 ---
 

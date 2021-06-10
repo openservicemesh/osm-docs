@@ -3,7 +3,7 @@ title: "OSM automated demo"
 description: "The automated demo is a set of scripts anyone can run and shows how OSM can manage, secure and provide observability for microservice environments."
 type: docs
 aliases: "/docs/install/auto_demo/"
-weight: 1
+weight: 2
 ---
 
 # How to run the OSM automated demo
