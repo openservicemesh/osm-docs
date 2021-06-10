@@ -2,7 +2,7 @@
 title: "Concepts and Features"
 description: "Detailed design and architecture of Open Service Mesh."
 type: docs
-weight: 3
+weight: 4
 ---
 
 ## Overview
