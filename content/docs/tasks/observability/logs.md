@@ -74,6 +74,7 @@ Once logs have been sent to Log Analytics, they can also be consumed by Applicat
 
 You can now interact with your logs in either of these instances.
 
+*Note: Fluent Bit is not currently supported on OpenShift.*
 
 ### Configuring Outbound Proxy Support for Fluent Bit
 You may require outbound proxy support if your egress traffic is configured to go through a proxy server. There are two ways to enable this.
