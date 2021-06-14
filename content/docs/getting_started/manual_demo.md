@@ -131,215 +131,29 @@ on these namespaces, will start injecting all **new** pods with Envoy sidecars.
 
 ### Create Pods, Services, ServiceAccounts
 
-Create the service accounts:
+Create the `bookbuyer` service account and deployment:
+
 ```bash
-kubectl apply -f - <<EOF
----
-
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: bookbuyer
-  namespace: bookbuyer
-
----
-
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: bookthief
-  namespace: bookthief
-
----
-
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: bookstore
-  namespace: bookstore
-
----
-
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: bookwarehouse
-  namespace: bookwarehouse
-
-EOF
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/apps/bookbuyer.yaml
 ```
 
+Create the `bookthief` service account and deployment:
 
-Create the `bookbuyer` deployment:
 ```bash
-kubectl apply -f - <<EOF
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: bookbuyer
-  namespace: bookbuyer
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: bookbuyer
-      version: v1
-  template:
-    metadata:
-      labels:
-        app: bookbuyer
-        version: v1
-    spec:
-      serviceAccountName: bookbuyer
-      containers:
-      - name: bookbuyer
-        image: openservicemesh/bookbuyer:v0.9.0
-        imagePullPolicy: Always
-        command: ["/bookbuyer"]
-        env:
-        - name: "BOOKSTORE_NAMESPACE"
-          value: bookstore
-EOF
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/apps/bookthief.yaml
 ```
 
-Create the `bookthief` deployment:
+Create the `bookstore` service account, service, and deployment:
+
 ```bash
-kubectl apply -f - <<EOF
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: bookthief
-  namespace: bookthief
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: bookthief
-  template:
-    metadata:
-      labels:
-        app: bookthief
-        version: v1
-    spec:
-      serviceAccountName: bookthief
-      containers:
-      - name: bookthief
-        image: openservicemesh/bookthief:v0.9.0
-        imagePullPolicy: Always
-        command: ["/bookthief"]
-        env:
-        - name: "BOOKSTORE_NAMESPACE"
-          value: bookstore
-EOF
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/apps/bookstore.yaml
 ```
 
+Create the `bookwarehouse` service account, service, and deployment:
 
-Create bookstore service:
 ```bash
-kubectl apply -f - <<EOF
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: bookstore
-  namespace: bookstore
-  labels:
-    app: bookstore
-spec:
-  selector:
-    app: bookstore
-  ports:
-  - port: 14001
-    name: bookstore-port
-EOF
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/apps/bookwarehouse.yaml
 ```
-
-Create bookstore deployment:
-```bash
-kubectl apply -f - <<EOF
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: bookstore
-  namespace: bookstore
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: bookstore
-  template:
-    metadata:
-      labels:
-        app: bookstore
-    spec:
-      serviceAccountName: bookstore
-      containers:
-      - name: bookstore
-        image: openservicemesh/bookstore:v0.9.0
-        imagePullPolicy: Always
-        ports:
-          - containerPort: 14001
-        command: ["/bookstore"]
-        args: ["--path", "./", "--port", "14001"]
-        env:
-        - name: BOOKWAREHOUSE_NAMESPACE
-          value: bookwarehouse
-        - name: IDENTITY
-          value: bookstore-v1
-EOF
-```
-
-Create the `bookwarehouse` service:
-```bash
-kubectl apply -f - <<EOF
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: bookwarehouse
-  namespace: bookwarehouse
-  labels:
-    app: bookwarehouse
-spec:
-  selector:
-    app: bookwarehouse
-  ports:
-  - port: 14001
-EOF
-```
-
-Create the `bookwarehouse` deployment:
-```bash
-kubectl apply -f - <<EOF
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: bookwarehouse
-  namespace: bookwarehouse
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: bookwarehouse
-  template:
-    metadata:
-      labels:
-        app: bookwarehouse
-        version: v1
-    spec:
-      serviceAccountName: bookwarehouse
-      containers:
-      - name: bookwarehouse
-        image: openservicemesh/bookwarehouse:v0.9.0
-        imagePullPolicy: Always
-        command: ["/bookwarehouse"]
-EOF
-```
-
 
 ### Checkpoint: What Got Installed?
 
@@ -477,60 +291,10 @@ At this point, applications do not have access to each other because no access c
 
 Apply the [SMI Traffic Target][1] and [SMI Traffic Specs][2] resources to define access control and routing policies for the applications to communicate:
 
- Deploy SMI TrafficTarget
-```bash
-kubectl apply -f - <<EOF
----
-kind: TrafficTarget
-apiVersion: access.smi-spec.io/v1alpha3
-metadata:
-  name: bookstore
-  namespace: bookstore
-spec:
-  destination:
-    kind: ServiceAccount
-    name: bookstore
-    namespace: bookstore
-  rules:
-  - kind: HTTPRouteGroup
-    name: bookstore-service-routes
-    matches:
-    - buy-a-book
-    - books-bought
-  sources:
-  - kind: ServiceAccount
-    name: bookbuyer
-    namespace: bookbuyer
-# Bookthief is NOT allowed to talk to Bookstore
-#  - kind: ServiceAccount
-#    name: bookthief
-#    namespace: bookthief
-EOF
-```
+ Deploy SMI TrafficTarget and HTTPRouteGroup policy:
 
-Deploy HTTPRouteGroup policy
 ```bash
-kubectl apply -f - <<EOF
----
-apiVersion: specs.smi-spec.io/v1alpha4
-kind: HTTPRouteGroup
-metadata:
-  name: bookstore-service-routes
-  namespace: bookstore
-spec:
-  matches:
-  - name: books-bought
-    pathRegex: /books-bought
-    methods:
-    - GET
-    headers:
-    - "user-agent": ".*-http-client/*.*"
-    - "client-app": "bookbuyer"
-  - name: buy-a-book
-    pathRegex: ".*a-book.*new"
-    methods:
-    - GET
-EOF
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/access/traffic-access-v1.yaml
 ```
 
 The counters should now be incrementing for the `bookbuyer`, and `bookstore` applications:
@@ -650,19 +414,7 @@ The counter should _not_ be incrementing because no traffic is flowing yet to th
 Deploy the SMI traffic split policy to direct 100 percent of the traffic sent to the root `bookstore` service to the `bookstore` service backend:
 
 ```bash
-kubectl apply -f - <<EOF
----
-apiVersion: split.smi-spec.io/v1alpha2
-kind: TrafficSplit
-metadata:
-  name: bookstore-split
-  namespace: bookstore
-spec:
-  service: bookstore.bookstore # <root-service>.<namespace>
-  backends:
-  - service: bookstore
-    weight: 100
-EOF
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/split/traffic-split-v1.yaml
 ```
 
 _Note: The root service can be any Kubernetes service. It does not have any label selectors. It also doesn't need to overlap with any of the Backend services specified in the Traffic Split resource. The root service can be referred to in the SMI Traffic Split resource as the name of the service with or without the `.<namespace>` suffix._
@@ -678,21 +430,7 @@ kubectl describe trafficsplit bookstore-split -n bookstore
 Update the SMI Traffic Split policy to direct 50 percent of the traffic sent to the root `bookstore` service to the `bookstore` service and 50 perfect to `bookstore-v2` service by adding the `bookstore-v2` backend to the spec and modifying the weight fields.
 
 ```bash
-kubectl apply -f - <<EOF
----
-apiVersion: split.smi-spec.io/v1alpha2
-kind: TrafficSplit
-metadata:
-  name: bookstore-split
-  namespace: bookstore
-spec:
-  service: bookstore.bookstore # <root-service>.<namespace>
-  backends:
-  - service: bookstore
-    weight: 50
-  - service: bookstore-v2
-    weight: 50
-EOF
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/split/traffic-split-50-50.yaml
 ```
 
 Wait for the changes to propagate and observe the counters increment for `bookstore` and `bookstore-v2` in your browser windows. Both
@@ -706,21 +444,7 @@ counters should be incrementing:
 Update the SMI TrafficSplit policy for `bookstore` Service configuring all traffic to go to `bookstore-v2`:
 
 ```bash
-kubectl apply -f - <<EOF
----
-apiVersion: split.smi-spec.io/v1alpha2
-kind: TrafficSplit
-metadata:
-  name: bookstore-split
-  namespace: bookstore
-spec:
-  service: bookstore.bookstore # <root-service>.<namespace>
-  backends:
-  - service: bookstore
-    weight: 0
-  - service: bookstore-v2
-    weight: 100
-EOF
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/split/traffic-split-v2.yaml
 ```
 
 Wait for the changes to propagate and observe the counters increment for `bookstore-v2` and freeze for `bookstore` in your
