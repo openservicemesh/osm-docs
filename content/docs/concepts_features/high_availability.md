@@ -27,7 +27,7 @@ Multiple `osm-controller`s running will subscribe to the same set of objects and
   <img src="../images/ha/ha1.png" width="400" height="350"/>
 </p>
 
-### Restartability: 
+### Restartability
 The previous stateless design considerations should ensure OSM's control plane components are fully restartable.
 
 - A restarting instance will resynchronize all Kubernetes domain resources. Existing proxies will reconnect, and (assuming no changes occurred on the mesh topology or policy) the same configuration should be recomputed and pushed as a new version to the proxies.
@@ -59,3 +59,25 @@ Components `osm-controller` and `osm-injector` allow for separate horizontal sca
 
 
 [1] Headless: usually referred in the control-plane/data-plane design paradigm, refers to the concept that allows, when having a dependency between two components, for the depender agent to survive and keep running with latest state when the dependee dies or becomes unreachable.
+
+### Horizontal Pod Autoscaling - HPA
+HPA will automatically scale up or down control plane pods based on the average target CPU utilization (%). 
+To enable HPA, use the following command
+```
+osm install --set=OpenServiceMesh.<control_plane_pod>.autoScale.enable=true
+```
+> Note: control_plane_pod can be `osmController` or `injector`
+
+Additional parameters for HPA:
+- `minReplicas` (int): Minimum number of pods that the autoscaler can set (Allowed values: 1-10)
+- `maxReplicas` (int): Maximum number of pods that the autoscaler can set (Allowed values: 1-10)
+- `targetAverageUtilization` (int): The target value for CPU utilization, representated as a percentage (Allowed values: 0-100)
+
+### Pod Disruption Budget - PDB
+In order to prevent disruptions during planned outages, control plane pods `osm-controller` and `osm-injector` have a PDB that ensures there is always at least 1 pod corresponding to each control plane application. 
+
+To enable PDB, use the following command
+```
+osm install --set=OpenServiceMesh.<control_plane_pod>.enablePodDisruptionBudget=true
+```
+> Note: control_plane_pod can be `osmController` or `injector`
