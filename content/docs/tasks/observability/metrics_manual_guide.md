@@ -40,7 +40,7 @@ Let's replace the configuration of `stable-prometheus-server`
 kubectl edit configmap stable-prometheus-server
 ```
 
-Now with your editor of choice, look for the `prometheus.yaml` key entry and replace it with [OSM's scraping config](https://github.com/openservicemesh/osm/blob/release-v0.8/charts/osm/templates/prometheus-configmap.yaml) (proceed with care while formatting the yaml file):
+Now with your editor of choice, look for the `prometheus.yaml` key entry and replace it with [OSM's scraping config](https://github.com/openservicemesh/osm/blob/release-v0.9/charts/osm/templates/prometheus-configmap.yaml) (proceed with care while formatting the yaml file):
 ```
   (....)
   prometheus.yml: |
@@ -316,7 +316,7 @@ Saving and testing at this stage should already be enough, and Grafana should te
 
 ## Importing OSM Dashboards
 OSM Dashboards are available both through:
-- [our repository](https://github.com/openservicemesh/osm/tree/main/charts/osm/grafana), and are importable as json blobs through the web admin portal
+- [our repository](https://github.com/openservicemesh/osm/tree/release-v0.9/charts/osm/grafana), and are importable as json blobs through the web admin portal
 - or [online at Grafana.com](https://grafana.com/grafana/dashboards/14145)
 
 To import a dashboard, look for the `+` sign on the left menu and select `import`.

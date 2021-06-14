@@ -137,6 +137,6 @@ instances of that CRD will also be deleted.
 
 Run the following `kubectl` commands:
 
-kubectl delete -f [https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/charts/osm/crds/access.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/charts/osm/crds/access.yaml)
-kubectl delete -f [https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/charts/osm/crds/specs.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/charts/osm/crds/specs.yaml)
-kubectl delete -f [https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/charts/osm/crds/split.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/charts/osm/crds/split.yaml)
+kubectl delete -f [https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/access.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/access.yaml)
+kubectl delete -f [https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/specs.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/specs.yaml)
+kubectl delete -f [https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/split.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/split.yaml)

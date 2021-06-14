@@ -84,7 +84,7 @@ The following demo shows a `curl` client making HTTPS requests to the external `
     osm namespace add curl
 
     # Deploy curl client in the curl namespace
-    kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/samples/curl/curl.yaml -n curl
+    kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/samples/curl/curl.yaml -n curl
     ```
 
     Confirm the `curl` client pod is up and running.

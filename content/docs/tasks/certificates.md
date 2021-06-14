@@ -13,10 +13,10 @@ There are a few kinds of certificates used in OSM:
 
 | Cert Type | Where it is issued | How it is used | Validity duration | Sample CommonName |
 |---|---|---|---|---|
-| xDS bootstrap | [pkg/injector/patch.go → createPatch()](https://github.com/openservicemesh/osm/blob/release-v0.6/pkg/injector/patch.go#L35-L37) | used for [Envoy-to-xDS connections](https://github.com/openservicemesh/osm/blob/release-v0.6/pkg/envoy/ads/stream.go#L21-L30); identifies Envoy (Pod) to the xDS control plane. | [XDSCertificateValidityPeriod](https://github.com/openservicemesh/osm/blob/release-v0.6/pkg/constants/constants.go) → a decade | `7b2359d7-f201-4d3f-a217-73fd6e44e39b.bookstore-v2.bookstore` |
-| service | [pkg/envoy/sds/response.go → createDiscoveryResponse()](https://github.com/openservicemesh/osm/blob/release-v0.6/pkg/envoy/sds/response.go#L66-L67) | used for east-west communication between Envoys; identifies Service Accounts| [defined in MeshConfig; default 24h](https://github.com/openservicemesh/osm/blob/release-v0.6/charts/osm/values.yaml#L27) | `bookstore-v2.bookstore.cluster.local` |
-| mutating webhook handler | [pkg/injector/webhook.go → NewWebhook()](https://github.com/openservicemesh/osm/blob/release-v0.6/pkg/injector/webhook.go#L58-L59) | used by the webhook handler; **note**: this cert does not have to be related to the Envoy certs, but it does have to match the CA in the MutatingWebhookConfiguration | [XDSCertificateValidityPeriod](https://github.com/openservicemesh/osm/blob/release-v0.6/pkg/constants/constants.go) → a decade |  `osm-controller.osm-system.svc` |
-| validating webhook handler | [pkg/configurator/validating_webhook.go → NewValidatingWebhook()](https://github.com/openservicemesh/osm/blob/a48de43463c99c03e3662670bf7f2b99166e1388/pkg/configurator/validating_webhook.go#L85-L86) | used by the validating webhook handler; (same note as MWH cert) | [XDSCertificateValidityPeriod](https://github.com/openservicemesh/osm/blob/release-v0.6/pkg/constants/constants.go) → a decade | `osm-config-validator.osm-system.svc` |
+| xDS bootstrap | [pkg/injector/patch.go → createPatch()](https://github.com/openservicemesh/osm/blob/release-v0.9/pkg/injector/patch.go#L25-L28) | used for [Envoy-to-xDS connections](https://github.com/openservicemesh/osm/blob/release-v0.9/pkg/envoy/ads/stream.go#L27); identifies Envoy (Pod) to the xDS control plane. | [XDSCertificateValidityPeriod](https://github.com/openservicemesh/osm/blob/release-v0.9/pkg/constants/constants.go) → a decade | `7b2359d7-f201-4d3f-a217-73fd6e44e39b.bookstore-v2.bookstore` |
+| service | [pkg/envoy/sds/response.go → createDiscoveryResponse()](https://github.com/openservicemesh/osm/blob/release-v0.9/pkg/envoy/secrets/types.go#L39) | used for east-west communication between Envoys; identifies Service Accounts| [defined in MeshConfig; default 24h](https://github.com/openservicemesh/osm/blob/release-v0.9/charts/osm/values.yaml#L82) | `bookstore-v2.bookstore.cluster.local` |
+| mutating webhook handler | [pkg/injector/webhook.go → NewWebhook()](https://github.com/openservicemesh/osm/blob/release-v0.9/pkg/injector/webhook.go#L67-L69) | used by the webhook handler; **note**: this cert does not have to be related to the Envoy certs, but it does have to match the CA in the MutatingWebhookConfiguration | [XDSCertificateValidityPeriod](https://github.com/openservicemesh/osm/blob/release-v0.9/pkg/constants/constants.go) → a decade |  `osm-controller.osm-system.svc` |
+| validating webhook handler | [pkg/configurator/validating_webhook.go → NewValidatingWebhook()](https://github.com/openservicemesh/osm/blob/a48de43463c99c03e3662670bf7f2b99166e1388/pkg/configurator/validating_webhook.go#L85-L86) | used by the validating webhook handler; (same note as MWH cert) | [XDSCertificateValidityPeriod](https://github.com/openservicemesh/osm/blob/release-v0.9/pkg/constants/constants.go) → a decade | `osm-config-validator.osm-system.svc` |
 
 ### Root Certificate
 The root certificate for the service mesh is stored in an Opaque Kubernetes Secret named `osm-ca-bundle` in the OSM Namespace (in most cases `osm-system`). 
@@ -34,12 +34,12 @@ data:
   private.key: <base64 encoded private key>
 ```
 
-For details and code where this is used see [osm-controller.go](https://github.com/openservicemesh/osm/blob/release-v0.6/cmd/osm-controller/osm-controller.go#L194-L200).
+For details and code where this is used see [osm-controller.go](https://github.com/openservicemesh/osm/blob/release-v0.9/cmd/osm-controller/osm-controller.go#L182-L183).
 
 ## Issuing Certificates
 
 Open Service Mesh supports 4 methods of issuing certificates:
-  - using an internal OSM package, called [Tresor](https://github.com/openservicemesh/osm/tree/release-v0.8/pkg/certificate/providers/tresor). This is the default for a first time installation.
+  - using an internal OSM package, called [Tresor](https://github.com/openservicemesh/osm/tree/release-v0.9/pkg/certificate/providers/tresor). This is the default for a first time installation.
   - using [Hashicorp Vault](https://www.vaultproject.io/)
   - using [Azure Key Vault](https://azure.microsoft.com/en-us/services/key-vault/)
   - using [cert-manager](https://cert-manager.io)
@@ -47,7 +47,7 @@ Open Service Mesh supports 4 methods of issuing certificates:
 
 ### Using OSM's Tresor certificate issuer
 
-Open Service Mesh includes a package, [tresor](https://github.com/openservicemesh/osm/tree/release-v0.8/pkg/certificate/providers/tresor). This is a minimal implementation of the `certificate.Manager` interface. It issues certificates leveraging the `crypto` Go library, and stores these certificates as Kubernetes secrets.
+Open Service Mesh includes a package, [tresor](https://github.com/openservicemesh/osm/tree/release-v0.9/pkg/certificate/providers/tresor). This is a minimal implementation of the `certificate.Manager` interface. It issues certificates leveraging the `crypto` Go library, and stores these certificates as Kubernetes secrets.
 
   - To use the `tresor` package during development set `export CERT_MANAGER=tresor` in the `.env` file of this repo.
 
@@ -82,7 +82,7 @@ Additionally:
 
 Installation of Hashi Vault is out of scope for the Open Service Mesh project. Typically this is the responsibility of dedicated security teams. Documentation on how to deploy Vault securely and make it highly available is available on [Vault's website](https://learn.hashicorp.com/vault/getting-started/install).
 
-This repository does contain a [script (deploy-vault.sh)](https://github.com/openservicemesh/osm/tree/release-v0.8/demo/deploy-vault.sh), which is used to automate the deployment of Hashi Vault for continuous integration. This is strictly for development purposes only. Running the script will deploy Vault in a Kubernetes namespace defined by the `$K8S_NAMESPACE` environment variable in your [.env](https://github.com/openservicemesh/osm/blob/release-v0.8/.env.example) file. This script can be used for demonstration purposes. It requires the following environment variables:
+This repository does contain a [script (deploy-vault.sh)](https://github.com/openservicemesh/osm/tree/release-v0.9/demo/deploy-vault.sh), which is used to automate the deployment of Hashi Vault for continuous integration. This is strictly for development purposes only. Running the script will deploy Vault in a Kubernetes namespace defined by the `$K8S_NAMESPACE` environment variable in your [.env](https://github.com/openservicemesh/osm/blob/release-v0.9/.env.example) file. This script can be used for demonstration purposes. It requires the following environment variables:
 ```
 export K8S_NAMESPACE=osm-system-ns
 export VAULT_TOKEN=xyz

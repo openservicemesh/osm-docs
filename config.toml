@@ -88,6 +88,7 @@ project_home = "https://openservicemesh.io/"
   version = "v0.8"
   url = "https://release-v0-8.docs.openservicemesh.io/"
 
+
 [params.ui]
 navbar_logo = true
 sidebar_menu_compact = true
