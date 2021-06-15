@@ -131,6 +131,90 @@ response against the external authorization endpoint.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="config.openservicemesh.io/v1alpha1.FeatureFlags">FeatureFlags
+</h3>
+<p>
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfigSpec">MeshConfigSpec</a>)
+</p>
+<div>
+<p>FeatureFlags is a type to represent OSM&rsquo;s feature flags.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>enableWASMStats</code><br/>
+<em>
+bool
+</em>
+</td>
+<td>
+<p>EnableWASMStats defines if WASM Stats are enabled.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>enableEgressPolicy</code><br/>
+<em>
+bool
+</em>
+</td>
+<td>
+<p>EnableEgressPolicy defines if OSM&rsquo;s Egress policy is enabled.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>enableMulticlusterMode</code><br/>
+<em>
+bool
+</em>
+</td>
+<td>
+<p>EnableMulticlusterMode defines if Multicluster mode is enabled.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>enableSnapshotCacheMode</code><br/>
+<em>
+bool
+</em>
+</td>
+<td>
+<p>EnableSnapshotCacheMode defines if XDS server starts with snapshot cache.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>enableOSMGateway</code><br/>
+<em>
+bool
+</em>
+</td>
+<td>
+<p>EnableOSMGateway defines if OSM gateway is enabled.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>enableAsyncProxyServiceMapping</code><br/>
+<em>
+bool
+</em>
+</td>
+<td>
+<p>EnableAsyncProxyServiceMapping defines if OSM will map proxies to services asynchronously.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="config.openservicemesh.io/v1alpha1.MeshConfig">MeshConfig
 </h3>
 <div>
@@ -227,6 +311,19 @@ CertificateSpec
 <p>Certificate defines the certificate management configurations for a mesh instance.</p>
 </td>
 </tr>
+<tr>
+<td>
+<code>featureFlags</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha1.FeatureFlags">
+FeatureFlags
+</a>
+</em>
+</td>
+<td>
+<p>FeatureFlags defines the feature flags for a mesh instance.</p>
+</td>
+</tr>
 </table>
 </td>
 </tr>
@@ -298,6 +395,19 @@ CertificateSpec
 </td>
 <td>
 <p>Certificate defines the certificate management configurations for a mesh instance.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>featureFlags</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha1.FeatureFlags">
+FeatureFlags
+</a>
+</em>
+</td>
+<td>
+<p>FeatureFlags defines the feature flags for a mesh instance.</p>
 </td>
 </tr>
 </tbody>
@@ -554,6 +664,17 @@ bool
 </tr>
 <tr>
 <td>
+<code>inboundPortExclusionList</code><br/>
+<em>
+[]int
+</em>
+</td>
+<td>
+<p>InboundPortExclusionList defines a global list of ports to exclude from inbound traffic interception by the sidecar proxy.</p>
+</td>
+</tr>
+<tr>
+<td>
 <code>useHTTPSIngress</code><br/>
 <em>
 bool
@@ -593,5 +714,5 @@ for all inbound and ingress traffic in the mesh.</p>
 <hr/>
 <p><em>
 Generated with <code>gen-crd-api-reference-docs</code>
-on git commit <code>3f794156</code>.
+on git commit <code>47c1d926</code>.
 </em></p>
