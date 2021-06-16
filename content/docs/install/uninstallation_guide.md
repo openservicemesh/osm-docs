@@ -13,7 +13,7 @@ This guide describes how to uninstall Open Service Mesh (OSM) from a Kubernetes 
 
 - Kubernetes cluster with OSM installed
 - The `kubectl` CLI
-- The [`osm` CLI](/docs/install/#set-up-the-osm-cli) or the helm 3 CLI
+- The [`osm` CLI](/docs/install/#set-up-the-osm-cli) or the Helm 3 CLI
 
 ## Remove Envoy Sidecars from Application Pods and Envoy Secrets
 
@@ -70,15 +70,6 @@ as all the Pods are restarting.
 
 Once the sidecar is removed, there is no need for the Envoy bootstrap config secrets OSM created. These are stored in the application namespace and can be deleted manually with `kubectl`. These secrets have the prefix `envoy-bootstrap-config` followed by some unique ID: `envoy-bootstrap-config-<some-id-here>`.
 
-### Using Helm
-
-Run the following `helm uninstall` command.
-```console
-$ helm uninstall <mesh name> --namespace <osm namespace>
-```
-
-Run `helm uninstall --help` for more options.
-
 ## Resource Management
 
 ## Uninstall OSM Control Plane and Remove User Provided Resources
@@ -108,6 +99,14 @@ OSM [mesh name: <mesh-name>] uninstalled
 
 Run `osm uninstall --help` for more options.
 
+Alternatively, if you used Helm to install the control plane, run the following `helm uninstall` command:
+
+```console
+$ helm uninstall <mesh name> --namespace <osm namespace>
+```
+
+Run `helm uninstall --help` for more options.
+
 ### Remove User Provided Resources
 
 If any resources were provided or created for OSM at install time, they can be deleted at this point.
@@ -130,13 +129,15 @@ Repeat the steps above for each mesh installed in the cluster. After there are n
 
 ## Remove OSM Cluster Wide resources
 
-OSM ensures that there the Service Mesh Interface Custom Resource Definitions(CRDs) exist in the cluster at install time. If they are not already installed, the `osm` CLI will install them before installing the rest of the control plane components. This is the same behavior when using the Helm charts to install OSM as well. CRDs are cluster-wide resources and may be used by other instances of OSM in the same cluster
-or other service meshes running in the same cluster. If there are no other instances of OSM or other service meshes running in the same
-cluster, these CRDs and instances of the SMI custom resources can be removed from the cluster using `kubectl`. When the CRD is deleted, all
-instances of that CRD will also be deleted.
+OSM ensures that the Service Mesh Interface Custom Resource Definitions (CRDs) exist in the cluster at install time. If they are not already installed, the `osm` CLI will install them before installing the rest of the control plane components. This is the same behavior when using the Helm charts to install OSM as well. CRDs are cluster-wide resources and may be used by other instances of OSM in the same cluster or other service meshes running in the same cluster. If there are no other instances of OSM or other service meshes running in the same cluster, these CRDs and instances of the SMI custom resources can be removed from the cluster using `kubectl`. When the CRD is deleted, all instances of that CRD will also be deleted.
 
 Run the following `kubectl` commands:
 
-kubectl delete -f [https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/access.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/access.yaml)
-kubectl delete -f [https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/specs.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/specs.yaml)
-kubectl delete -f [https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/split.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/split.yaml)
+```console
+kubectl delete -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/access.yaml
+kubectl delete -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/httproutegroup.yaml
+kubectl delete -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/meshconfig.yaml
+kubectl delete -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/policy.yaml
+kubectl delete -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/split.yaml
+kubectl delete -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/tcproute.yaml
+```
