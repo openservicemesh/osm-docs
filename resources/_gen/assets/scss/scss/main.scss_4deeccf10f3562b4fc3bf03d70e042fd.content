@@ -14129,7 +14129,7 @@ footer {
   margin: 0;
   text-align: center;
   z-index: 1450;
-  display: block; }
+  display: none; }
   #banner p {
     color: white;
     padding: 0.333rem 0 0.35rem;
@@ -14144,6 +14144,8 @@ footer {
         transition: none; } }
 body.has-banner {
   padding-top: 1.5rem; }
+  body.has-banner #banner {
+    display: block; }
   body.has-banner .td-navbar {
     top: 1.5rem; }
 

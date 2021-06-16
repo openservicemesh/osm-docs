@@ -436,6 +436,7 @@ footer {
   margin: 0;
   text-align: center;
   z-index: 1450;
+  display: none;
 
   p {
     color: white;
@@ -449,12 +450,14 @@ footer {
     @include transition;
     border-bottom: 2px solid rgba(255,255,255,0.5);
   }
-
-  display: block;
 }
 
 body.has-banner {
   padding-top: 1.5rem;
+
+  #banner {
+    display: block;
+  }
 
   .td-navbar {
     top: 1.5rem;
