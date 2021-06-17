@@ -83,6 +83,21 @@ Patch the MeshConfig by setting useHTTPSIngress:false.
 kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"useHTTPSIngress":false}}}'  --type=merge
 ```
 
+### Ignoring an ingress resource
+
+When an ingress resource is applied in a namespace that is monitored by OSM, OSM control plane will process the resource and configure the corresponding backends specified in the ingress resource based on the ingress rules. In some scenarios, it may be required to inform the OSM control plane to ignore certain ingress resources, such as when an ingress resource is only meant to program an ingress controller and not an application backend managed by OSM. An ingress resource can be ignored using the `openservicemesh.io/ignore` label.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: httpbin-ingress
+  namespace: httpbin
+  labels:
+    openservicemesh.io/ignore: true
+```
+> Note: The value applied to this label does not matter.
+
 ## How it works
 
 ### Exposing an HTTP or HTTPS service using Ingress
