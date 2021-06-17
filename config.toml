@@ -96,7 +96,7 @@ sidebar_search_disable = false
 [[params.versions]]
   version = "v0.8"
   url = "https://release-v0-8.docs.openservicemesh.io/"
-[params.oldversion]
+[params.versionbanner]
 	show = true
 	archive = "v0.8"
 	latest = "https://docs.openservicemesh.io/"
