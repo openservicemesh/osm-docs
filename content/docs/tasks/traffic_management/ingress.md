@@ -31,7 +31,7 @@ Currently, OSM supports HTTP ingress. HTTPS ingress support is experimental, wit
 
 ## Supported Kubernetes Ingress API versions
 
-Since OSM only supports Kubernetes cluster versions >= v1.18.0, the API version for the Kubernetes Ingress resource must be precisely one of `networking.k8s.io/v1` or `networking.k8s.io/v1beta1`. OSM controller dynamically negotiates the Ingress API versions served by the Kubernetes API server and enables the same versions to be served in OSM.
+Since OSM only supports Kubernetes cluster versions >= v1.19.0, the API version for the Kubernetes Ingress resource must be precisely one of `networking.k8s.io/v1` or `networking.k8s.io/v1beta1`. OSM controller dynamically negotiates the Ingress API versions served by the Kubernetes API server and enables the same versions to be served in OSM.
 
 > Note: If either of these versions are not served by the Kubernetes API server for some reason, OSM controller will exit on failing to initialize its ingress client. This likely indicates an unsupported Kubernetes version on the cluster.
 
