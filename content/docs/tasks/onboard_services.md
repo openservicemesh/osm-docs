@@ -37,7 +37,7 @@ The following guide describes how to onboard a Kubernetes microservice to an OSM
 
     To disable automatic sidecar injection as a part of enrolling a namespace into the mesh, use `osm namespace add <namespace> --disable-sidecar-injection`.
     <!-- Please do not replace the link of `sidecar_injection.md` this format in order to work on osm website first -->
-    Once a namespace has been on-boarded, pods can be enrolled in the mesh by configuring automatic sidecar injection. See the [Sidecar Injection](../sidecar_injection.md) document for more details.
+    Once a namespace has been on-boarded, pods can be enrolled in the mesh by configuring automatic sidecar injection. See the [Sidecar Injection](../sidecar_injection) document for more details.
 
     For an example on how to onboard and join namespaces to the OSM mesh, please see the following example:
     - [demo/join-namespaces.sh](https://github.com/openservicemesh/osm/blob/release-v0.9/demo/join-namespaces.sh)
