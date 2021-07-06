@@ -161,7 +161,7 @@ Enabling metrics scraping on a namespace also causes the osm-injector to add the
     prometheus.io/scrape: true
     prometheus.io/port: 15010
     prometheus.io/path: /stats/prometheus
-    ```
+   ```
 
 
 ### Available Metrics
