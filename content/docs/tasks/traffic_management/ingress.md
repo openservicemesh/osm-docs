@@ -94,7 +94,7 @@ metadata:
   name: httpbin-ingress
   namespace: httpbin
   labels:
-    openservicemesh.io/ignore: true
+    openservicemesh.io/ignore: "true"
 ```
 > Note: The value applied to this label does not matter.
 
