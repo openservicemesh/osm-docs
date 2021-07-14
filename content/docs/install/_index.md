@@ -124,4 +124,4 @@ $ helm get manifest osm --namespace osm-system
 
 ## Next Steps
 
-Now that the OSM control plane is up and running, [add services](../tasks/onboard_services.md) to the mesh.
+Now that the OSM control plane is up and running, [add services](/docs/tasks/onboard_services) to the mesh.
