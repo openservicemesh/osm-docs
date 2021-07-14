@@ -5,7 +5,7 @@ type: docs
 ---
 
 ## Table of Contents
-- [Egress](./egress.md)
-- [Ingress](./ingress.md)
-- [Iptables Redirection](./iptables_redirection.md)
-- [Permissive Traffic Policy Mode](./permissive_traffic_policy_mode.md)
+- [Egress](/docs/tasks/traffic_management/egress)
+- [Ingress](/docs/tasks/traffic_management/ingress)
+- [Iptables Redirection](/docs/tasks/traffic_management/iptables_redirection)
+- [Permissive Traffic Policy Mode](/docs/tasks/traffic_management/permissive_traffic_policy_mode)

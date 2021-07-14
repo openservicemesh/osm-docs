@@ -24,7 +24,7 @@ Changes to `osm-mesh-config` can be made using the `kubectl patch` command.
 # Replace osm-system with osm-controller's namespace if using a non-default namespace
 kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enableEgress":true}}}'  --type=merge
 ```
-Refer to the [Config API reference](/docs/apidocs/config/v1alpha1.md) for more information.
+Refer to the [Config API reference](/docs/apidocs/config/v1alpha1) for more information.
 
 If an incorrect value is used, validations on the [MeshConfig CRD](https://github.com/openservicemesh/osm/blob/release-v0.9/charts/osm/crds/meshconfig.yaml) will prevent the change with an error message explaining why the value is invalid.
 For example, the below command shows what happens if we patch `enableEgress` to a non-boolean value.
