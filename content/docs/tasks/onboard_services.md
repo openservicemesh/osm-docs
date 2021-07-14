@@ -8,7 +8,7 @@ weight: 1
 # Onboard Services
 The following guide describes how to onboard a Kubernetes microservice to an OSM instance.
 
-1. Refer to the [application requirements](../../application_requirements.md) guide before onboarding applications.
+1. Refer to the [application requirements](/docs/concepts_features/app_prereqs) guide before onboarding applications.
 
 1. Configure and Install [Service Mesh Interface (SMI) policies](https://github.com/servicemeshinterface/smi-spec)
 
@@ -19,9 +19,9 @@ The following guide describes how to onboard a Kubernetes microservice to an OSM
     - [demo/deploy-traffic-split.sh](https://github.com/openservicemesh/osm/blob/release-v0.9/demo/deploy-traffic-split.sh)
     - [demo/deploy-traffic-target.sh](https://github.com/openservicemesh/osm/blob/release-v0.9/demo/deploy-traffic-target.sh)
 
-1. Onboard Kubernetes Namespaces to enable OSM
+1. Onboard Kubernetes Namespaces to OSM
 
-    To onboard a namespace containing services to enable for OSM, run the `osm namespace add` command, which does the equivalent of the following:
+    To onboard a namespace containing applications to be managed by OSM, run the `osm namespace add` command, which does the equivalent of the following:
 
     ```console
     $ kubectl label namespace <namespace> openservicemesh.io/monitored-by=<mesh-name>
@@ -36,23 +36,12 @@ The following guide describes how to onboard a Kubernetes microservice to an OSM
     ```
 
     To disable automatic sidecar injection as a part of enrolling a namespace into the mesh, use `osm namespace add <namespace> --disable-sidecar-injection`.
-    <!-- Please do not replace the link of `sidecar_injection.md` this format in order to work on osm website first -->
-    Once a namespace has been on-boarded, pods can be enrolled in the mesh by configuring automatic sidecar injection. See the [Sidecar Injection](../sidecar_injection) document for more details.
+    Once a namespace has been on-boarded, pods can be enrolled in the mesh by configuring automatic sidecar injection. See the [Sidecar Injection](/docs/tasks/sidecar_injection) document for more details.
 
-    For an example on how to onboard and join namespaces to the OSM mesh, please see the following example:
-    - [demo/join-namespaces.sh](https://github.com/openservicemesh/osm/blob/release-v0.9/demo/join-namespaces.sh)
+1.  Deploy new applications or redeploy existing applications
 
-1.  Inject the Proxy Sidecars
-
-    At the moment to onboard your Kubernetes services to OSM, a restart of the pods backing the services is needed. In the near future, manual sidecar injection will be supported no longer requiring this step.
-
-    For an example on how to invoke a rolling restart of your services' pods, please see the following example:
-    - [demo/rolling-restart.sh](https://github.com/openservicemesh/osm/blob/release-v0.9/demo/rolling-restart.sh)
-
-1. Verify the new behavior
-
-    The OSM control plane supports Prometheus, Grafana and Jaeger instances that can be used to help make sure the application is working properly. **These are disabled by default**. More details can be found in the [Observability](../observability/) documents.
-
+    By default, new deployments in onboarded namespaces are enabled for automatic sidecar injection. This means that when a new Pod is created in a managed namespace, OSM will automatically inject the sidecar proxy to the Pod.
+    Existing deployments need to be restarted so that OSM can automatically inject the sidecar proxy upon Pod re-creation. Pods managed by a Deployment can be restarted using the `kubectl rollout restart deploy` command.
 
 #### Note: Removing Namespaces
 Namespaces can be removed from the OSM mesh with the `osm namespace remove` command, which does the equivalent of the following:
