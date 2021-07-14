@@ -5,6 +5,6 @@ type: docs
 ---
 
 ## Table of Contents
-- [Iptables redirection troubleshooting](./iptables_redirection.md)
-- [Egress troubleshooting](./egress.md)
-- [Permissive traffic policy mode troubleshooting](./permissive_traffic_policy_mode.md)
+- [Iptables redirection troubleshooting](/docs/tasks/traffic_management/troubleshooting/iptables_redirection)
+- [Egress troubleshooting](/docs/tasks/traffic_management/troubleshooting/egress)
+- [Permissive traffic policy mode troubleshooting](/docs/tasks/traffic_management/troubleshooting/permissive_traffic_policy_mode)
