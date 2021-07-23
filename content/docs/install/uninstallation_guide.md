@@ -87,6 +87,7 @@ Use the `osm` CLI to uninstall the OSM control plane from a Kubernetes cluster. 
 1. OSM controller resources (deployment, service, config map, and RBAC)
 1. Prometheus, Grafana, Jaeger, and Fluentbit resources installed by OSM
 1. Mutating webhook and validating webhook
+1. CRDs installed/required by OSM: [CRDs for OSM](https://github.com/openservicemesh/osm/tree/main/charts/osm/crds). This will also remove all Custom Resources related to those CRDs. Refer to [Removal of OSM Cluster Wide resources](#remove-osm-cluster-wide-resources) for more details
 
 Run `osm uninstall`:
 
@@ -127,17 +128,6 @@ namespace "<namespace>" deleted
 
 Repeat the steps above for each mesh installed in the cluster. After there are no OSM control planes remaining, move to following step.
 
-## Remove OSM Cluster Wide resources
+## Removal of OSM Cluster Wide resources
 
-OSM ensures that the Service Mesh Interface Custom Resource Definitions (CRDs) exist in the cluster at install time. If they are not already installed, the `osm` CLI will install them before installing the rest of the control plane components. This is the same behavior when using the Helm charts to install OSM as well. CRDs are cluster-wide resources and may be used by other instances of OSM in the same cluster or other service meshes running in the same cluster. If there are no other instances of OSM or other service meshes running in the same cluster, these CRDs and instances of the SMI custom resources can be removed from the cluster using `kubectl`. When the CRD is deleted, all instances of that CRD will also be deleted.
-
-Run the following `kubectl` commands:
-
-```console
-kubectl delete -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/access.yaml
-kubectl delete -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/httproutegroup.yaml
-kubectl delete -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/meshconfig.yaml
-kubectl delete -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/policy.yaml
-kubectl delete -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/split.yaml
-kubectl delete -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/charts/osm/crds/tcproute.yaml
-```
+Uninstalling OSM will remove all the CRDs mentioned [here](https://github.com/openservicemesh/osm/tree/main/charts/osm/crds). This is the same behavior when using the Helm charts to uninstall OSM as well because OSM has a pre-delete helm hook that removes the CRDs. If there are other service meshes running in the same cluster, please ensure that you back the Custom Resources and re-apply the required CRDs and Custom Resources to the cluster using `kubectl` post a successful uninstallation of OSM.
