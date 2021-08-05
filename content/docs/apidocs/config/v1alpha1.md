@@ -11,9 +11,9 @@ type: docs
 </li>
 </ul>
 <h2 id="config.openservicemesh.io/v1alpha1">config.openservicemesh.io/v1alpha1</h2>
-<div>
+<p>
 <p>Package v1alpha1 is the v1alpha1 version of the API.</p>
-</div>
+</p>
 Resource Types:
 <ul></ul>
 <h3 id="config.openservicemesh.io/v1alpha1.CertificateSpec">CertificateSpec
@@ -21,9 +21,9 @@ Resource Types:
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
-<div>
-<p>CertificateSpec is type to reperesent OSM&rsquo;s certificate management configuration.</p>
-</div>
+<p>
+<p>CertificateSpec is the type to reperesent OSM&rsquo;s certificate management configuration.</p>
+</p>
 <table>
 <thead>
 <tr>
@@ -43,6 +43,31 @@ string
 <p>ServiceCertValidityDuration defines the service certificate validity duration.</p>
 </td>
 </tr>
+<tr>
+<td>
+<code>certKeyBitSize</code><br/>
+<em>
+int
+</em>
+</td>
+<td>
+<p>CertKeyBitSize defines the certicate key bit size.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>ingressGateway</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha1.IngressGatewayCertSpec">
+IngressGatewayCertSpec
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>IngressGateway defines the certificate specification for an ingress gateway.</p>
+</td>
+</tr>
 </tbody>
 </table>
 <h3 id="config.openservicemesh.io/v1alpha1.ExternalAuthzSpec">ExternalAuthzSpec
@@ -50,9 +75,9 @@ string
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.TrafficSpec">TrafficSpec</a>)
 </p>
-<div>
+<p>
 <p>ExternalAuthzSpec is a type to represent external authorization configuration.</p>
-</div>
+</p>
 <table>
 <thead>
 <tr>
@@ -136,9 +161,9 @@ response against the external authorization endpoint.</p>
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
-<div>
+<p>
 <p>FeatureFlags is a type to represent OSM&rsquo;s feature flags.</p>
-</div>
+</p>
 <table>
 <thead>
 <tr>
@@ -193,17 +218,6 @@ bool
 </tr>
 <tr>
 <td>
-<code>enableOSMGateway</code><br/>
-<em>
-bool
-</em>
-</td>
-<td>
-<p>EnableOSMGateway defines if OSM gateway is enabled.</p>
-</td>
-</tr>
-<tr>
-<td>
 <code>enableAsyncProxyServiceMapping</code><br/>
 <em>
 bool
@@ -213,13 +227,101 @@ bool
 <p>EnableAsyncProxyServiceMapping defines if OSM will map proxies to services asynchronously.</p>
 </td>
 </tr>
+<tr>
+<td>
+<code>enableValidatingWebhook</code><br/>
+<em>
+bool
+</em>
+</td>
+<td>
+<p>EnableValidatingWebhook defines if the OSM controller will create a validating webhook handler.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>enableIngressBackendPolicy</code><br/>
+<em>
+bool
+</em>
+</td>
+<td>
+<p>EnableIngressBackendPolicy defines if OSM will use the IngressBackend API to allow ingress traffic to
+service mesh backends.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>enableEnvoyActiveHealthChecks</code><br/>
+<em>
+bool
+</em>
+</td>
+<td>
+<p>EnableEnvoyActiveHealthChecks defines if OSM will Envoy active health
+checks between services allowed to communicate.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="config.openservicemesh.io/v1alpha1.IngressGatewayCertSpec">IngressGatewayCertSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.CertificateSpec">CertificateSpec</a>)
+</p>
+<p>
+<p>IngressGatewayCertSpec is the type to represent the certificate specification for an ingress gateway.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>subjectAltNames</code><br/>
+<em>
+[]string
+</em>
+</td>
+<td>
+<p>SubjectAltNames defines the Subject Alternative Names (domain names and IP addresses) secured by the certificate.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>validityDuration</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>ValidityDuration defines the validity duration of the certificate.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>secret</code><br/>
+<em>
+<a href="https://v1-20.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#secretreference-v1-core">
+Kubernetes core/v1.SecretReference
+</a>
+</em>
+</td>
+<td>
+<p>Secret defines the secret in which the certificate is stored.</p>
+</td>
+</tr>
 </tbody>
 </table>
 <h3 id="config.openservicemesh.io/v1alpha1.MeshConfig">MeshConfig
 </h3>
-<div>
+<p>
 <p>MeshConfig is the type used to represent the mesh configuration.</p>
-</div>
+</p>
 <table>
 <thead>
 <tr>
@@ -334,9 +436,9 @@ FeatureFlags
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfig">MeshConfig</a>)
 </p>
-<div>
+<p>
 <p>MeshConfigSpec is the spec for OSM&rsquo;s configuration.</p>
-</div>
+</p>
 <table>
 <thead>
 <tr>
@@ -417,9 +519,9 @@ FeatureFlags
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
-<div>
+<p>
 <p>ObservabilitySpec is the type to represent OSM&rsquo;s observability configurations.</p>
-</div>
+</p>
 <table>
 <thead>
 <tr>
@@ -428,6 +530,17 @@ FeatureFlags
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<code>osmLogLevel</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>OSMLogLevel defines the log level for OSM control plane logs.</p>
+</td>
+</tr>
 <tr>
 <td>
 <code>enableDebugServer</code><br/>
@@ -459,9 +572,9 @@ TracingSpec
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
-<div>
+<p>
 <p>SidecarSpec is the type used to represent the specifications for the proxy sidecar.</p>
-</div>
+</p>
 <table>
 <thead>
 <tr>
@@ -501,6 +614,17 @@ string
 </td>
 <td>
 <p>EnvoyImage defines the container image used for the Envoy proxy sidecar.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>envoyWindowsImage</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>EnvoyWindowsImage defines the windows container image used for the Envoy proxy sidecar.</p>
 </td>
 </tr>
 <tr>
@@ -556,9 +680,9 @@ Kubernetes core/v1.ResourceRequirements
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.ObservabilitySpec">ObservabilitySpec</a>)
 </p>
-<div>
+<p>
 <p>TracingSpec is the type to represent OSM&rsquo;s tracing configuration.</p>
-</div>
+</p>
 <table>
 <thead>
 <tr>
@@ -618,9 +742,9 @@ string
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
-<div>
+<p>
 <p>TrafficSpec is the type used to represent OSM&rsquo;s traffic management configuration.</p>
-</div>
+</p>
 <table>
 <thead>
 <tr>
@@ -714,5 +838,5 @@ for all inbound and ingress traffic in the mesh.</p>
 <hr/>
 <p><em>
 Generated with <code>gen-crd-api-reference-docs</code>
-on git commit <code>47c1d926</code>.
+on git commit <code>8ed34b1d</code>.
 </em></p>
