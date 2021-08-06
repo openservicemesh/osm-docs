@@ -3,6 +3,7 @@ title: "Upgrade Guide"
 description: "Upgrade Guide"
 aliases: ["/docs/upgrade_guide","/docs/troubleshooting/cli/mesh_upgrade"]
 type: docs
+weight: 3
 ---
 
 # Upgrade Guide

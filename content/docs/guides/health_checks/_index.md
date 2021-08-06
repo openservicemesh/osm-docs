@@ -2,5 +2,5 @@
 title: "Health Checks"
 description: "Health Checks for Open Service Mesh (OSM)"
 type: docs
-weight: 9
+weight: 10
 ---
