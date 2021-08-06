@@ -8,7 +8,7 @@ weight: 3
 # Onboard Services
 The following guide describes how to onboard a Kubernetes microservice to an OSM instance.
 
-1. Refer to the [application requirements](/docs/concepts_features/app_prereqs) guide before onboarding applications.
+1. Refer to the [application requirements](/docs/guides/app_onboarding/prereqs) guide before onboarding applications.
 
 1. Configure and Install [Service Mesh Interface (SMI) policies](https://github.com/servicemeshinterface/smi-spec)
 
@@ -36,7 +36,7 @@ The following guide describes how to onboard a Kubernetes microservice to an OSM
     ```
 
     To disable automatic sidecar injection as a part of enrolling a namespace into the mesh, use `osm namespace add <namespace> --disable-sidecar-injection`.
-    Once a namespace has been on-boarded, pods can be enrolled in the mesh by configuring automatic sidecar injection. See the [Sidecar Injection](/docs/tasks/sidecar_injection) document for more details.
+    Once a namespace has been on-boarded, pods can be enrolled in the mesh by configuring automatic sidecar injection. See the [Sidecar Injection](/docs/guides/app_onboarding/sidecar_injection) document for more details.
 
 1.  Deploy new applications or redeploy existing applications
 

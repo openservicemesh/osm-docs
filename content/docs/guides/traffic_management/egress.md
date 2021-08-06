@@ -171,4 +171,4 @@ OSM supports configuring fine grained policies for traffic destined to external 
 osm install --set=OpenServiceMesh.featureFlags.enableEgressPolicy=true
 ```
 
-Refer to the [Egress policy v1alpha1 API documentation](/docs/apidocs/policy/v1alpha1) to configure egress policies and [sample demos using the Egress policy API](/docs/tasks/traffic_management/demos/egress_policy_demo).
+Refer to the [Egress policy v1alpha1 API documentation](/docs/apidocs/policy/v1alpha1) to configure egress policies and [sample demos using the Egress policy API](/docs/demos/egress_policy).

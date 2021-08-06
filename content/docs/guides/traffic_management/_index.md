@@ -6,7 +6,7 @@ weight: 6
 ---
 
 ## Table of Contents
-- [Egress](/docs/tasks/traffic_management/egress)
-- [Ingress](/docs/tasks/traffic_management/ingress)
-- [Iptables Redirection](/docs/tasks/traffic_management/iptables_redirection)
-- [Permissive Traffic Policy Mode](/docs/tasks/traffic_management/permissive_traffic_policy_mode)
+- [Egress](/docs/guides/traffic_management/egress)
+- [Ingress](/docs/guides/traffic_management/ingress)
+- [Iptables Redirection](/docs/guides/traffic_management/iptables_redirection)
+- [Permissive Mode](/docs/guides/traffic_management/permissive_mode)
