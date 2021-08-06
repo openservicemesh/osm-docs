@@ -4,9 +4,3 @@ description: "OSM's traffic management stack support two distinct traffic policy
 type: docs
 weight: 6
 ---
-
-## Table of Contents
-- [Egress](/docs/guides/traffic_management/egress)
-- [Ingress](/docs/guides/traffic_management/ingress)
-- [Iptables Redirection](/docs/guides/traffic_management/iptables_redirection)
-- [Permissive Mode](/docs/guides/traffic_management/permissive_mode)
