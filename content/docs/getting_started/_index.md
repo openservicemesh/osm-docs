@@ -21,11 +21,11 @@ OSM runs an Envoy based control plane on Kubernetes, can be configured with SMI 
 ## Features
 
 1. Easily and transparently configure [traffic shifting](https://github.com/servicemeshinterface/smi-spec/blob/v0.6.0/apis/traffic-split/v1alpha2/traffic-split.md) for deployments
-1. Secure service to service communication by [enabling mTLS](/docs/tasks/certificates/)
+1. Secure service to service communication by [enabling mTLS](/docs/guides/certificates/)
 1. Define and execute fine grained [access control](https://github.com/servicemeshinterface/smi-spec/blob/v0.6.0/apis/traffic-access/v1alpha3/traffic-access.md) policies for services
-1. [Observability](/docs/tasks/observability/) and insights into application metrics for debugging and monitoring services
-1. Integrate with [external certificate management](/docs/tasks/certificates/) services/solutions with a pluggable interface
-1. Onboard applications onto the mesh by enabling [automatic sidecar injection](/docs/tasks/sidecar_injection) of Envoy proxy
+1. [Observability](/docs/guides/observability/) and insights into application metrics for debugging and monitoring services
+1. Integrate with [external certificate management](/docs/guides/certificates/) services/solutions with a pluggable interface
+1. Onboard applications onto the mesh by enabling [automatic sidecar injection](/docs/guides/app_onboarding/sidecar_injection) of Envoy proxy
 
 ## Project Status
 

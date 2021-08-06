@@ -76,7 +76,7 @@ osm install \
 This installed OSM Controller in the `osm-system` namespace.
 
 
-Read more on OSM's integrations with Prometheus, Grafana, and Jaeger in the [observability documentation](/docs/tasks/observability/).
+Read more on OSM's integrations with Prometheus, Grafana, and Jaeger in the [observability documentation](/docs/guides/observability/).
 
 
 ## Deploy Applications
