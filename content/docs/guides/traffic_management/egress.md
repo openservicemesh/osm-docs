@@ -2,6 +2,7 @@
 title: "Egress"
 description: "Enable access to the Internet and services external to the service mesh."
 type: docs
+weight: 4
 ---
 
 # Allowing access to the Internet and out-of-mesh services (Egress)

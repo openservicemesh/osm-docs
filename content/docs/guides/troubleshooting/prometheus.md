@@ -3,6 +3,7 @@ title: "Troubleshoot Prometheus"
 description: "How to fix common issues with OSM's Prometheus integration"
 aliases: "/docs/troubleshooting/observability/prometheus"
 type: docs
+weight: 2
 ---
 
 ## Prometheus is unreachable

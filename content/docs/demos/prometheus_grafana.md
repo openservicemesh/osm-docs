@@ -1,10 +1,11 @@
 ---
-title: "Manual deployment of OSM's Prometheus and Grafana stack"
+title: "Prometheus & Grafana"
 description: "Describes basic steps to get up and running a Prometheus and Grafana stack with OSM specific configuration and Dashboards"
 type: docs
+weight: 1
 ---
 
-# Manual deployment of OSM's Prometheus and Grafana stack
+# OSM's Prometheus and Grafana stack
 
 ## Overview
 The following doc walks through the process of creating a simple Prometheus and Grafana stack to enable observability and monitoring of OSM's service mesh.

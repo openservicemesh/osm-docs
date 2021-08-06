@@ -1,8 +1,8 @@
 ---
-title: "Onboard Services"
+title: "Application onboarding"
 description: "Onboard Services"
 type: docs
-weight: 1
+weight: 3
 ---
 
 # Onboard Services

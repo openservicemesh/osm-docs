@@ -2,6 +2,7 @@
 title: "Metrics"
 description: "Metrics"
 type: docs
+weight: 1
 ---
 
 ## Metrics Overview

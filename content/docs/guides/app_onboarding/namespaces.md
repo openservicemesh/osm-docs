@@ -1,8 +1,9 @@
 ---
-title: "Onboarding Namespaces"
+title: "Namespace addition"
 description: "This section describes how and why OSM monitors Kubernetes namespaces"
 aliases: "/docs/tasks/namespace_monitoring"
 type: docs
+weight: 2
 ---
 
 ## Overview

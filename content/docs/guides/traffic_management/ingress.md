@@ -2,6 +2,7 @@
 title: "Ingress"
 description: "Exposing services outside the cluster using Kubernetes Ingress"
 type: docs
+weight: 3
 ---
 
 # Exposing services outside the cluster using Kubernetes Ingress

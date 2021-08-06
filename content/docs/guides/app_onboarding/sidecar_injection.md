@@ -1,7 +1,8 @@
 ---
-title: "Configuring Sidecar Injection"
+title: "Sidecar Injection"
 description: "This section describes the sidecar injection workflow in OSM."
 type: docs
+weight: 3
 ---
 
 # Sidecar Injection

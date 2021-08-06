@@ -1,7 +1,8 @@
 ---
-title: "Permissive Traffic Policy Mode"
+title: "Permissive Mode"
 description: "Permissive Traffic Policy Mode"
 type: docs
+weight: 2
 ---
 
 # Permissive Traffic Policy Mode

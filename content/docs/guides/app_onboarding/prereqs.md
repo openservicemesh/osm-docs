@@ -1,8 +1,9 @@
 ---
-title: "Application Requirements"
+title: "Prerequisites"
 description: "Application Requirements"
 type: docs
 aliases: ["/docs/application_requirements"]
+weight: 1
 ---
 
 # Application Requirements
