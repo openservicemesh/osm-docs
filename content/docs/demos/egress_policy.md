@@ -1,6 +1,6 @@
 ---
-title: "Egress Policy Demo"
-description: "Accesing external services using Egress policies."
+title: "Egress Policy"
+description: "Accesing external services using Egress policies"
 type: docs
 ---
 
