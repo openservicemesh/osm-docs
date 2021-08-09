@@ -1,387 +1,188 @@
 ---
 title: "Ingress"
-description: "Exposing services outside the cluster using Kubernetes Ingress"
+description: "Using Ingress to manage external access to services within the cluster"
 type: docs
 weight: 3
 ---
 
-# Exposing services outside the cluster using Kubernetes Ingress
+# Using Ingress to manage external access to services within the cluster
 
-The OSM ingress guide is a walkthrough on exposing HTTP and HTTPS routes on services within the mesh externally using the Kubernetes Ingress API.
 
-## Prerequisites
-- An instance of OSM must be running in the cluster.
-- The service needing to be exposed using Ingress needs to belong to a namespace monitored by OSM. Refer to the [Readme][1] for details.
-- The ingress resource must belong to the same namespace as the backend service.
-- A sidecar must be injected to the pod hosting the service, either using automatic sidecar injection or by manually annotating the pod spec for sidecar injection. Refer to the [Readme][1] for details.
-- An ingress controller must be running in the cluster.
+## Introduction
 
-## What is ingress?
+Ingress refers to managing external access to services within the cluster, typically HTTP/HTTPS services. OSM's ingress capability allows cluster administrators and application owners to route traffic from clients external to the service mesh to service mesh backends using a set of rules depending on the mechanism used to perform ingress.
 
-Ingress refers to providing external access to services inside the cluster, typically HTTP/HTTPS services. In kubernetes, Ingress consists of an Ingress API resource and an Ingress controller. The Kubernetes Ingress API manifest consists of declarations of how external clients are routed to a service inside the cluster, and the Ingress controller executes the routing declarations specified in the manifest.
 
-## Why do you need ingress on your cluster?
+## IngressBackend API
 
-Initially, when you group pods under a service, this service is only accessible inside of the cluster. One option, of course, is to use a load balancer. However, the downside of this approach is that each service would require a new hosted load balancer, meaning more consumption of cloud resources.
+OSM leverages its [IngressBackend API][1] to configure a backend service to accept ingress traffic from trusted sources. The specification enables configuring how specific backends must authorize ingress traffic depending on the protocol used, HTTP or HTTPS. When the backend protocol is `http`, the source specified must be a `Service` kind whose endpoints will be authorized to connect to the backend. When the backend protocol is `https`, the source specified must be an `AuthenticatedPrincipal` kind which defines the Subject Alternative Name (SAN) encoded in the client's certificate that the backend will authenticate. A source with the kind `Service` is optional for `https` backends. For `https` backends, client certificate validation is performed by default and can be disabled by setting `skipClientCertValidation: true` in the `tls` field for the backend.
 
-Ingress allows you to easily establish rules for traffic routing without creating several load balancers. The Ingress Controller is built using reverse proxies, allowing it to act as a load balancer. Though the Ingress Controller requires a service to expose them to services outside of the cluster, this will be the only entrypoint that outside services need to access all the internal services on your cluster, as the Ingress Controller will redirect this traffic to the internal pods as specified in the Ingress Manifest.
-
-## What types of ingress are supported by OSM v0.9.0?
-
-Currently, OSM supports HTTP ingress. HTTPS ingress support is experimental, with support for one-way TLS authentication to backend services.
-
-## Supported Kubernetes Ingress API versions
-
-Since OSM only supports Kubernetes cluster versions >= v1.19.0, the API version for the Kubernetes Ingress resource must be precisely one of `networking.k8s.io/v1` or `networking.k8s.io/v1beta1`. OSM controller dynamically negotiates the Ingress API versions served by the Kubernetes API server and enables the same versions to be served in OSM.
-
-> Note: If either of these versions are not served by the Kubernetes API server for some reason, OSM controller will exit on failing to initialize its ingress client. This likely indicates an unsupported Kubernetes version on the cluster.
-
-## Ingress controller compatibility
-
-Ingress in OSM has been tested with the following ingress controllers:
-- [Kubernetes Nginx Ingress Controller][2]
-- [Azure Application Gateway Ingress Controller][3]
-- [Gloo API Gateway][5]
-
-Other ingress controllers might also work as long as they use the Kubernetes Ingress API. In addition, ingress controllers must allow provisioning a custom root certificate for backend server certificate validation while using HTTPS ingress.
-
-## Configuring Ingress
-
-### Enabling HTTP or HTTPS Ingress
-
-By default, OSM configures HTTP as the backend protocol for services when an ingress resource is applied with a backend service that belongs to the mesh. A mesh-wide configuration setting in OSM's `osm-mesh-config` `MeshConfig` custom resource enables configuring ingress with the backend protocol to be HTTPS.
-
-#### HTTP ingress
-HTTP based ingress is provisioned in OSM by default.
-
-#### HTTPS ingress
-HTTPs Ingress is disabled by default when OSM is installed. However, HTTPS ingress can be enabled by updating the `osm-mesh-config` custom resource in `osm-controller`'s namespace (`osm-system` by default).
-
-Patch the `osm-mesh-config` resource to set `useHTTPSIngress` to `true`.
-
+Note that when the `Kind` for a source in an `IngressBackend` configuration is set to `Service`, OSM controller will attempt to discover the endpoints of that service. For OSM to be able to discover the endpoints of a service, the namespace in which the service resides needs to be a monitored namespace. Enable the namespace to be monitored using:
 ```bash
-# Replace osm-system with osm-controller's namespace if using a non default namespace
-kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"useHTTPSIngress":true}}}'  --type=merge
+kubectl label ns <namespace> openservicemesh.io/monitored-by=<mesh name>
 ```
 
-> Note: Enabling HTTPS ingress will disable HTTP ingress.
+Refer to the following sections to understand how the `IngressBackend` configuration looks like for `http` and `https` backends.
+
+## Choices to perform Ingress
+
+OSM supports multiple options to expose mesh services externally using ingress. The following sections describe the various options.
 
 
-### Disabling HTTP or HTTPS Ingress
+### 1. Using Contour Ingress Controller and Gateway
 
-#### HTTP ingress
+Using [Contour](https://projectcontour.io/) ingress controller and edge proxy is the preferred approach to performing Ingress in an OSM managed service mesh. With Contour, users get a high performance ingress controller with rich policy specifications for a variety of use cases while maintaining a lightweight profile. Enabling Contour in OSM also allows traffic routed from Contour's edge proxy to service mesh backends to be encrypted using mutual-TLS (mTLS) to provide end-to-end security within the service mesh.
 
-HTTP ingress can be disabled by enabling HTTPS ingress.
 
-#### HTTPs ingress
-
-Patch the MeshConfig by setting useHTTPSIngress:false.
-
-> Note: Disabling HTTPS ingress will enable HTTP ingress.
-
+To use Contour for ingress, enable it during install using:
 ```bash
-# Replace osm-system with osm-controller's namespace if using a non default namespace
-kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"useHTTPSIngress":false}}}'  --type=merge
+osm install --set contour.enabled=true
 ```
 
-### Ignoring an ingress resource
+If you wish to secure the connections from Contour's edge proxy to service mesh backend applications using mTLS, OSM provides the option to bootstrap Contour's edge proxy with a trusted client certificate issued from the certificate provider used in OSM, that Contour uses while proxying to backends over TLS. Contour's client certificate can be provisioned during install or post-install, as described below.
 
-When an ingress resource is applied in a namespace that is monitored by OSM, OSM control plane will process the resource and configure the corresponding backends specified in the ingress resource based on the ingress rules. In some scenarios, it may be required to inform the OSM control plane to ignore certain ingress resources, such as when an ingress resource is only meant to program an ingress controller and not an application backend managed by OSM. An ingress resource can be ignored using the `openservicemesh.io/ignore` label.
+To provision Contour's Envoy client certificate during install:
+```bash
+osm install --set contour.enabled=true \
+    -set contour.configInline.tls.envoy-client-certificate.name=osm-contour-envoy-client-cert \
+    --set contour.configInline.tls.envoy-client-certificate.namespace=<osm install namespace, osm-system if --osm-namespace not set>
+```
 
+To provision Contour's Envoy client certificate if not provisioned during install, edit Contour's ConfigMap to specify the `tls.envoy-client-certificate` field and restart the Contour control plane.
 ```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: httpbin-ingress
-  namespace: httpbin
-  labels:
-    openservicemesh.io/ignore: "true"
+apiVersion: v1
+kind: ConfigMap
+data:
+  contour.yaml: |
+    tls:
+      envoy-client-certificate:
+        name: osm-contour-envoy-client-cert
+        namespace: osm-system # Namespace where OSM is installed; please check your deployment and set this appropriately
 ```
-> Note: The value applied to this label does not matter.
+```bash
+kubectl rollout restart deploy osm-contour-contour -n <osm namespace>
+```
 
-## How it works
+In addition to configuring Contour's edge proxy using the appropriate APIs, a service mesh backend in OSM will only accept traffic from authorized edge proxies or gateways. OSM's [IngressBackend specification][1] allows cluster administrators and application owners to explicitly specify how a service mesh backend should authorize ingress traffic. The following sections describe how the `IngressBackend` and `HTTPProxy` APIs can be used in conjunction to allow HTTP and HTTPS ingress traffic to be routed to mesh backends.
 
-### Exposing an HTTP or HTTPS service using Ingress
-A service can expose HTTP or HTTPS routes outside the cluster using Kubernetes Ingress along with an ingress controller. Once an ingress resource is configured to expose HTTP routes outside the cluster to a service within the cluster, OSM will configure the sidecar proxy on pods to allow ingress traffic to the service based on the ingress routing rules defined by the Kubernetes Ingress resource.
+It is recommended to always limit ingress traffic to authorized clients. For this purpose, enable OSM to monitor the endpoints of Contour's edge proxy residing in the namespace OSM was installed in:
+```bash
+kubectl label ns <osm namespace> openservicemesh.io/monitored-by=<mesh name>
+```
 
-Note:
-1. This behavior opens up HTTP-based access to any client that is not a part of the service mesh, not just ingress.
-1. The ingress resource that allows external HTTP access to a particular service must be in the same namespace as that service.
+#### HTTP Ingress with Contour
 
-### HTTP path matching semantics
+A minimal [HTTPProxy][2] configuration and OSM's `IngressBackend`[1] specification to route ingress traffic to a mesh service `foo` in the namespace `test` might look like:
+```yaml
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: basic
+  namespace: test
+spec:
+  virtualhost:
+    fqdn: foo-basic.bar.com
+  routes:
+    - conditions:
+      - prefix: /
+      services:
+        - name: foo
+          port: 80
+---
+kind: IngressBackend
+apiVersion: policy.openservicemesh.io/v1alpha1
+metadata:
+  name: basic
+  namespace: test
+spec:
+  backends:
+  - name: foo
+    port:
+      number: 80
+      protocol: http # http implies no TLS
+  sources:
+  - kind: Service
+    namespace: osm-system
+    name: osm-contour-envoy
+```
 
-The Kubernetes Ingress API allows specifying a [pathType](https://kubernetes.io/docs/concepts/services-networking/ingress/#path-types) for each HTTP `path` specified in an ingress rule. OSM enforces different HTTP path matching semantics depending on the `pathType` attribute specified. This allows OSM to operate with a number of different ingress controllers.
+The above configurations allow external clients to access the `foo` service in the `test` namespace as follows:
+1. The HTTPProxy configuration will route incoming HTTP traffic originating externally with a `Host:` header for `foo-basic.bar.com` to a service named `foo` on port `80` in the `test` namespace.
+1. The IngressBackend configuration will allow access to the `foo` service on port `80` in the `test` namespace only if the source originating the traffic is an endpoint of the `osm-contour-envoy` service in the `osm-system` namespace.
 
-The following path matching semantics correspond to the value of the `pathType` attribute:
+#### HTTPS Ingress with Contour (mTLS and TLS)
 
-- `Exact`: With this path type, the `:path` header in the HTTP request is matched exactly to the `path` specified in the ingress rule.
+To enable HTTPS proxying (over TLS or mTLS) between Contour edge proxy and service mesh backends, Contour's [upstream TLS configuration](https://projectcontour.io/docs/v1.18.0/config/upstream-tls/) can be used in conjunction with OSM's IngressBackend configuration to perfrom peer certificate validation.
 
-- `Prefix`: With this path type, the `:path` header in the HTTP request is matched as an element wise prefix of the `path` specified in the ingress rule, as defined in the [Kubernetes ingress API specification](https://kubernetes.io/docs/concepts/services-networking/ingress/#path-types).
+A minimal configuration might look like:
+```yaml
+apiVersion: projectcontour.io/v1
+kind: TLSCertificateDelegation
+metadata:
+  name: osm-ca-secret
+  namespace: osm-system
+spec:
+  delegations:
+    - secretName: osm-ca-bundle
+      targetNamespaces:
+      - test
+---
+apiVersion: projectcontour.io/v1
+kind: basic
+metadata:
+  name: foo
+  namespace: test
+spec:
+  virtualhost:
+    fqdn:  foo-basic.bar.com
+  routes:
+  - services:
+    - name: foo
+      port: 80
+      validation:
+        caSecret: osm-system/osm-ca-bundle
+        subjectName: foo-service-account.test.cluster.local
+---
+kind: IngressBackend
+apiVersion: policy.openservicemesh.io/v1alpha1
+metadata:
+  name: basic
+  namespace: test
+spec:
+  backends:
+  - name: foo
+    port:
+      number: 80
+      protocol: https # https implies TLS
+    tls:
+      skipClientCertValidation: false # mTLS (optional, default: false)
+  sources:
+  - kind: Service
+    namespace: osm-system
+    name: osm-contour-envoy
+  - kind: AuthenticatedPrincipal
+    name: osm-contour-envoy.osm-system.cluster.local
+```
 
-- `ImplementationSpecific`: With this path type, the `:path` header in the HTTP request is matched differently depending on the `path` specified in the ingress rule. If the specified `path` ~looks like a regex~ (has one of the following characters: `^$*+[]%|`), the `:path` header in the HTTP request is matched against the `path` specified in the ingress rule as a regex match using the [Google RE2 regex syntax](https://github.com/google/re2/wiki/Syntax). If the specified `path` ~does not look like a regex~, the `:path` header in the HTTP request is matched as a string prefix of the specified `path` in the ingress rule.
+The above configurations allow external clients to access the `foo` service in the `test` namespace as follows:
+1. The TLSCertificateDelegation configuration will allow Contour access to the `osm-ca-bundle` secret residing in the `osm-system` namespace when parsing HTTPProxy configurations residing in the `test` namespace.
 
-By default, if the `pathType` attribute is not set for a `path` in an ingress rule, OSM will default the `pathType` as `ImplementationSpecific`.
+1. The HTTPProxy configuration will route incoming HTTP traffic originating externally with a `Host:` header for `foo-basic.bar.com` to a service named `foo` on port `80` in the `test` namespace over TLS. The vadidation field specified will ensure Contour's Envoy edge proxy validates the TLS certificate presented by the `foo` backend service using the TLS CA certificate stored in the `osm-system/osm-ca-bundle` k8s secret, and that the Subject Alternative Name (SAN) in the server certificate presented by the backend service matches `foo-service-account.test.cluster.local`.
+    > Note: Certificates issued by OSM have a SAN of the form `<service-account>.<namespace>.cluster.local`
 
-## Sample demo
+1. The IngressBackend configuration will allow access to the `foo` service on port `80` in the `test` namespace only if the source originating the traffic is an endpoint of the `osm-contour-envoy` service in the `osm-system` namespace and the client certificate has a Subject Alternative Name matching `osm-contour-envoy.osm-system.cluster.local`.
+    > Note: Client certificate validation on the backend can be skipped by setting `skipClientCertValidation: true` in the IngressBackend configuration.
 
-### HTTP traffic with ingress
+#### Examples
 
-The following demo sends a request from an external IP to a httpbin service inside the cluster.
-
-1. Install OSM.
-    ```bash
-    osm install
-    ```
-
-1. Install the [nginx ingress controller](https://kubernetes.github.io/ingress-nginx/deploy/#installation-guide)
-
-1. Deploy the `httpbin` service into the `httpbin` namespace after enrolling its namespace to the mesh. The `httpbin` service runs on port `14001`.
-    ```bash
-    # Create the httpbin namespace
-    kubectl create namespace httpbin
-
-    # Add the namespace to the mesh
-    osm namespace add httpbin
-
-    # Deploy httpbin service in the httpbin namespace
-    kubectl apply -f docs/example/manifests/samples/httpbin/httpbin.yaml -n httpbin
-    ```
-
-    Confirm the `httpbin` service and pods are up and running.
-
-    ```console
-    $ kubectl get pods -n httpbin
-    NAME                       READY   STATUS    RESTARTS   AGE
-    httpbin-74677b7df7-zzlm2   2/2     Running   0          11h
-    ```
-
-    ```console
-    $ kubectl get svc -n httpbin
-    NAME      TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)     AGE
-    httpbin   ClusterIP   10.0.22.196   <none>        14001/TCP   11h
-    ```
-
-1. Apply an ingress configuration yaml to expose the HTTP path `/status/200` on the `httpbin` service with `kubectl apply -f`:
-
-    > Note: Use the appropriate ingress resource based on the desired API version.
-
-    Ingress v1 resource:
-    ```yaml
-    apiVersion: networking.k8s.io/v1
-    kind: Ingress
-    metadata:
-      name: httpbin-ingress
-      namespace: httpbin
-    spec:
-      ingressClassName: nginx
-      rules:
-      - http:
-          paths:
-          - path: /status/200
-            pathType: ImplementationSpecific # Must be one of: Exact, Prefix, ImplementationSpecific
-            backend:
-              service:
-                name: httpbin
-                port:
-                  number: 14001
-    ```
-
-    Ingress v1beta1 resource:
-    ```yaml
-    apiVersion: networking.k8s.io/v1beta1
-    kind: Ingress
-    metadata:
-      name: httpbin-ingress
-      namespace: httpbin
-      annotations:
-        kubernetes.io/ingress.class: nginx
-    spec:
-      rules:
-      - http:
-          paths:
-          - path: /status/200
-            pathType: ImplementationSpecific # Must be one of: Exact, Prefix, ImplementationSpecific
-            backend:
-              serviceName: httpbin
-              servicePort: 14001
-    ```
-
-    Confirm that the httpbin-ingress has been successfully deployed.
-
-    ```console
-    $ kubectl get ingress -n httpbin
-    NAME              CLASS    HOSTS   ADDRESS         PORTS   AGE
-    httpbin-ingress   <none>   *       20.72.132.186   80      11h
-    ```
-
-1. Confirm that a request to the httpbin service from the external IP address of the Ingress resource succeeds (in this case, the external address would be `20.72.132.186`)
-
-    ```bash
-    curl http://<external-ip>/status/200
-    ```
-
-1. Update the existing ingress with a host specified by applying the following yaml, and confirm that the request succeeds:
-
-    > Note: Use the appropriate ingress resource based on the desired API version.
-
-    Ingress v1 resource:
-    ```yaml
-    apiVersion: networking.k8s.io/v1
-    kind: Ingress
-    metadata:
-      name: httpbin-ingress
-      namespace: httpbin
-    spec:
-      ingressClassName: nginx
-      rules:
-      - host: httpbin.com
-        http:
-          paths:
-          - path: /status/200
-            pathType: ImplementationSpecific # Must be one of: Exact, Prefix, ImplementationSpecific
-            backend:
-              service:
-                name: httpbin
-                port:
-                  number: 14001
-    ```
-
-    Ingress v1beta1 resource:
-    ```yaml
-    apiVersion: networking.k8s.io/v1beta1
-    kind: Ingress
-    metadata:
-      name: httpbin-ingress
-      namespace: httpbin
-      annotations:
-        kubernetes.io/ingress.class: nginx
-    spec:
-      rules:
-      - host: httpbin.com
-        http:
-          paths:
-          - path: /status/200
-            pathType: ImplementationSpecific # Must be one of: Exact, Prefix, ImplementationSpecific
-            backend:
-              serviceName: httpbin
-              servicePort: 14001
-    ```
-
-    ```bash
-    curl http://<external-ip>/status/200 -H "Host: httpbin.com"
-    ```
+Refer to the [Ingress with Contour demo](/docs/demos/ingress_contour_demo) for examples on how to expose mesh services externally using Contour in OSM.
 
 
-## Sample Ingress Configurations
+### 2. Bring your own Ingress Controller and Gateway
 
-The following section describes sample ingress configurations used to expose services managed by OSM outside the cluster. The configuration might differ based on the ingress controller being used.
+If using OSM with Contour for ingress is not feasible for your use case, OSM provides the facility to use your own ingress controller and edge gateway for routing external traffic to service mesh backends. Much like how ingress is configured above, in addition to configuring the ingress controller to route traffic to service mesh backends, an IngressBackend configuration is required to authorize clients responsible for proxying traffic originating externally.
 
-The example configurations describe how to expose HTTP and HTTPS routes for the `httpbin` service running on a pod with the service account `httpbin` on port `14001` in the `httpbin` namespace, outside the cluster. The ingress configuration will expose the HTTP path `/status/200` on the `httpbin` service.
 
-Since OSM uses its own root certificate, the ingress controller must be provisioned with OSM's root certificate to be able to authenticate the certificate presented by backend servers when using HTTPS ingress. With `Tresor` as the certificate provider, OSM stores the CA root certificate in a Kubernetes secret named `osm-ca-bundle` with the key `ca.crt` in the namespace OSM is deployed (`osm-system` by default). When using other certificate providers such as `cert-manager.io` or `Hashicorp Vault`, the `osm-ca-bundle` secret must be created by the user with the base64 encoded root certificate stored as the value to the `ca.crt` attribute in the secret's data.
 
-### Prerequisites
-- Install [nginx ingress controller](https://kubernetes.github.io/ingress-nginx/deploy/#installation-guide)
-- Specify the ingress controller as nginx using the annotation `kubernetes.io/ingress.class: nginx`.
-
-For HTTPS ingress, additional annotations are required.
-- Specify the backend protocol as HTTPS using the annotation `nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"`.
-- Specify the SAN to use to verify the HTTPS backend using the annotation `nginx.ingress.kubernetes.io/configuration-snippet`.
-- Specify the secret corresponding to the root certificate using the annotation `nginx.ingress.kubernetes.io/proxy-ssl-secret`.
-- Specify the passing of TLS Server Name Indication (SNI) to proxied HTTPS backends using the annotation `nginx.ingress.kubernetes.io/proxy-ssl-server-name`. This is optional.
-- Enable SSL verification of backend service using the annotation `nginx.ingress.kubernetes.io/proxy-ssl-verify`.
-
-### Examples
-
-1. HTTP ingress resource with wildcard host:
-    ```yaml
-    apiVersion: networking.k8s.io/v1beta1
-    kind: Ingress
-    metadata:
-      name: httpbin-ingress
-      namespace: httpbin
-      annotations:
-        kubernetes.io/ingress.class: nginx
-    spec:
-      rules:
-      - http:
-          paths:
-          - path: /status/200
-            backend:
-              serviceName: httpbin
-              servicePort: 14001
-    ```
-
-    Accessing the service:
-    ```bash
-    curl http://<external-ingress-ip>/status/200
-    ```
-
-1. HTTP ingress resource with host specified:
-    ```yaml
-    apiVersion: networking.k8s.io/v1beta1
-    kind: Ingress
-    metadata:
-      name: httpbin-ingress
-      namespace: httpbin
-      annotations:
-        kubernetes.io/ingress.class: nginx
-    spec:
-      rules:
-      - host: httpbin.com
-        http:
-          paths:
-          - path: /status/200
-            backend:
-              serviceName: httpbin
-              servicePort: 14001
-    ```
-
-    Accessing the service:
-    ```bash
-    curl http://<external-ingress-ip>/status/200 -H "Host: httpbin.com"
-    ```
-
-1. HTTPS ingress with host specified:
-
-    Here, the requests to the backend are proxied over HTTPS. As a result, the root CA certificate used to verify the certificate presented by the backend must be configured, along with other SSL parameters.
-    ```yaml
-    apiVersion: networking.k8s.io/v1beta1
-    kind: Ingress
-    metadata:
-      name: httpbin-ingress
-      namespace: httpbin
-      annotations:
-        kubernetes.io/ingress.class: nginx
-        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-        # proxy_ssl_name for a service is of the form <service-account>.<namespace>.cluster.local
-        nginx.ingress.kubernetes.io/configuration-snippet: |
-          proxy_ssl_name "httpbin.httpbin.cluster.local";
-        # k8s secret with CA certificate stored with key ca.crt
-        nginx.ingress.kubernetes.io/proxy-ssl-secret: "osm-system/osm-ca-bundle"
-        nginx.ingress.kubernetes.io/proxy-ssl-server-name: "on" # optional
-        nginx.ingress.kubernetes.io/proxy-ssl-verify: "on"
-    spec:
-      rules:
-      - host: httpbin.com
-        http:
-          paths:
-          - path: /status/200
-            backend:
-              serviceName: httpbin
-              servicePort: 14001
-    ```
-    Accessing the service:
-    ```bash
-    curl http://<external-ingress-ip>/status/200 -H "Host: httpbin.com"
-    ```
-
-## Other Ingress configurations
-
-Demos for using OSM with other Ingress resources, such as Azure Application Gateway and Gloo Edge, can be found in the [demos folder](/docs/demos)
-
-[1]: https://github.com/openservicemesh/osm/blob/release-v0.9/README.md
-[2]: https://kubernetes.github.io/ingress-nginx/
-[3]: https://azure.github.io/application-gateway-kubernetes-ingress/
-[4]: https://github.com/Azure/application-gateway-kubernetes-ingress/blob/master/docs/annotations.md#appgw-trusted-root-certificate
-[5]: https://docs.solo.io/gloo/latest/
+[1]: /docs/api_reference/policy/v1alpha1/#policy.openservicemesh.io/v1alpha1.IngressBackendSpec
+[2]: https://projectcontour.io/docs/v1.18.0/config/fundamentals/
