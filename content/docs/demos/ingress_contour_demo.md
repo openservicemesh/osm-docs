@@ -2,6 +2,7 @@
 title: "Ingress with Contour"
 description: "HTTP and HTTPS ingress with Contour ingress controller"
 type: docs
+weight: 3
 ---
 
 OSM provides the option to use [Contour](https://projectcontour.io) ingress controller and Envoy based edge proxy to route external traffic to service mesh backends. This guide will demonstrate how to configure HTTP and HTTPS ingress to a service part of an OSM managed service mesh.
