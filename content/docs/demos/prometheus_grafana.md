@@ -279,7 +279,7 @@ And followingly access locally through `http://localhost:9090/targets`.
 Here you should see most of the endpoints connected, up and running for scrape.
 
 <p align="center">
-  <img src="../../../images/byo_guide/prom_targets.png" width="100%"/>
+  <img src="/docs/images/byo_guide/prom_targets.png" width="100%"/>
 </p>
 <center><i>Targets with specific relabeling config established by OSM should be "up"</i></center><br>
 
@@ -311,7 +311,7 @@ On the new tab that will open, we just need to point to the Prometheus FQDN from
 Saving and testing at this stage should already be enough, and Grafana should tell you if the connection succeeded.
 
 <p align="center">
-  <img src="../../../images/byo_guide/data_source.png" width="450" height="500"/>
+  <img src="/docs/images/byo_guide/data_source.png" width="450" height="500"/>
 </p>
 <center><i>"Save and test" should greet you with that green banner</i></center><br>
 
@@ -324,7 +324,7 @@ To import a dashboard, look for the `+` sign on the left menu and select `import
 You can directly import dashboard by their ID on `Grafana.com`. For example, our `OSM Mesh Details` dashboard uses id `14145`, you can use the ID directly on the form and click `load`:
 
 <p align="center">
-  <img src="../../../images/byo_guide/grafana_import.png" width="50%">
+  <img src="/docs/images/byo_guide/grafana_import.png" width="50%">
 </p>
 <center><i>Should show our dashboard in Grafana.com</i></center><br>
 
@@ -333,7 +333,7 @@ Last step is to configure Prometheus source for the imported dashboard (bottom o
 As soon as you click import, it will bring you automatically to your imported dashboard.
 
 <p align="center">
-  <img src="../../../images/byo_guide/meshdetails.png" width="80%"/>
+  <img src="/docs/images/byo_guide/meshdetails.png" width="80%"/>
 </p>
 <center><i>Ready to go. Happy monitoring!</i></center><br>
 
