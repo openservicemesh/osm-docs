@@ -1,6 +1,6 @@
 ---
-title: 'OSM CLI'
-description: 'This section describes installing and using the `osm` CLI.'
+title: "OSM CLI"
+description: "This section describes installing and using the `osm` CLI."
 type: docs
 weight: 1
 ---
