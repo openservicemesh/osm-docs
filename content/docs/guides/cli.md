@@ -31,18 +31,16 @@ curl -sL "https://github.com/openservicemesh/osm/releases/download/$OSM_VERSION/
 curl -sL "https://github.com/openservicemesh/osm/releases/download/$OSM_VERSION/osm-$OSM_VERSION-darwin-amd64.tar.gz" | tar -vxzf -
 ```
 
-The `osm` client binary runs on your client machine and allows you to manage OSM in your AKS cluster. Use the following commands to install the OSM `osm` client binary in a bash-based shell on Linux or [Windows Subsystem for Linux](https://docs.microsoft.com/windows/wsl/about). These commands copy the `osm` client binary to the standard user program location in your `PATH`.
+The `osm` client binary runs on your client machine and allows you to manage OSM in your Kubernetes cluster. Use the following commands to install the OSM `osm` client binary in a bash-based shell on Linux or [Windows Subsystem for Linux](https://docs.microsoft.com/windows/wsl/about). These commands copy the `osm` client binary to the standard user program location in your `PATH`.
 
 ```console
 sudo mv ./linux-amd64/osm /usr/local/bin/osm
-sudo chmod +x /usr/local/bin/osm
 ```
 
 For **macOS** use the following commands:
 
 ```console
 sudo mv ./darwin-amd64/osm /usr/local/bin/osm
-sudo chmod +x /usr/local/bin/osm
 ```
 
 You can verify the `osm` client library has been correctly added to your path and its version number with the following command.
@@ -64,7 +62,7 @@ $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -URI "https://github
 Expand-Archive -Path "osm-$OSM_VERSION.zip" -DestinationPath .
 ```
 
-The `osm` client binary runs on your client machine and allows you to manage the OSM controller in your AKS cluster. Use the following commands to install the OSM `osm` client binary in a PowerShell-based shell on Windows. These commands copy the `osm` client binary to an OSM folder and then make it available both immediately (in current shell) and permanently (across shell restarts) via your `PATH`. You don't need elevated (Admin) privileges to run these commands and you don't need to restart your shell.
+The `osm` client binary runs on your client machine and allows you to manage the OSM controller in your Kubernetes cluster. Use the following commands to install the OSM `osm` client binary in a PowerShell-based shell on Windows. These commands copy the `osm` client binary to an OSM folder and then make it available both immediately (in current shell) and permanently (across shell restarts) via your `PATH`. You don't need elevated (Admin) privileges to run these commands and you don't need to restart your shell.
 
 ```console
 # Copy osm.exe to C:\OSM
