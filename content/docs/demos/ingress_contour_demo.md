@@ -122,7 +122,7 @@ x-envoy-upstream-service-time: 3
 vary: Accept-Encoding
 ```
 
-### HTTP Ingress (mTLS and TLS)
+### HTTPS Ingress (mTLS and TLS)
 
 To proxy connections to TLS backends using HTTPS, the backend service must be annotated with the port as follows:
 ```bash
