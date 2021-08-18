@@ -175,7 +175,7 @@ The above configurations allow external clients to access the `foo` service in t
 
 #### Examples
 
-Refer to the [Ingress with Contour demo](/docs/demos/ingress_contour_demo) for examples on how to expose mesh services externally using Contour in OSM.
+Refer to the [Ingress with Contour demo](/docs/demos/ingress_contour) for examples on how to expose mesh services externally using Contour in OSM.
 
 
 ### 2. Bring your own Ingress Controller and Gateway
