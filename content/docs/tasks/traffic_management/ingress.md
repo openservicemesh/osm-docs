@@ -25,7 +25,7 @@ Initially, when you group pods under a service, this service is only accessible 
 
 Ingress allows you to easily establish rules for traffic routing without creating several load balancers. The Ingress Controller is built using reverse proxies, allowing it to act as a load balancer. Though the Ingress Controller requires a service to expose them to services outside of the cluster, this will be the only entrypoint that outside services need to access all the internal services on your cluster, as the Ingress Controller will redirect this traffic to the internal pods as specified in the Ingress Manifest.
 
-## What types of ingress are supported by OSM v0.9.0?
+## What types of ingress are supported by OSM v0.9.2?
 
 Currently, OSM supports HTTP ingress. HTTPS ingress support is experimental, with support for one-way TLS authentication to backend services.
 

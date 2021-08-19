@@ -69,7 +69,7 @@ Improving CRD upgrades is being tracked in [#893](https://github.com/openservice
 
 - Kubernetes cluster with the OSM control plane installed
 - `osm` CLI installed
-  - By default, the `osm` CLI will upgrade to the same chart version that it installs. e.g. v0.9.0 of the `osm` CLI will upgrade to v0.9.0 of the OSM Helm chart.
+  - By default, the `osm` CLI will upgrade to the same chart version that it installs. e.g. v0.9.2 of the `osm` CLI will upgrade to v0.9.2 of the OSM Helm chart.
 
 The `osm mesh upgrade` command performs a `helm upgrade` of the existing Helm release for a mesh.
 
@@ -79,7 +79,7 @@ $ osm mesh upgrade
 OSM successfully upgraded mesh osm
 ```
 
-This command will upgrade the mesh with the default mesh name in the default OSM namespace. Values from the previous release will carry over to the new release except for `OpenServiceMesh.image.registry` and `OpenServiceMesh.image.tag` which are overridden by default. For example, if OSM v0.7.0 is installed, `osm mesh upgrade` for v0.9.0 of the CLI will update the control plane images to v0.9.0 by default.
+This command will upgrade the mesh with the default mesh name in the default OSM namespace. Values from the previous release will carry over to the new release except for `OpenServiceMesh.image.registry` and `OpenServiceMesh.image.tag` which are overridden by default. For example, if OSM v0.7.0 is installed, `osm mesh upgrade` for v0.9.2 of the CLI will update the control plane images to v0.9.2 by default.
 
 See `osm mesh upgrade --help` for more details
 
