@@ -204,6 +204,14 @@ In addition, the `osm_request_total` metric has a `response_code` label represen
 - Metrics are only recorded for traffic where both endpoints are part of the mesh. Ingress and egress traffic do not have statistics recorded.
 - Metrics are recorded in Prometheus with all instances of '-' and '.' in tags converted to '\_'. This is because proxy-wasm adds tags to metrics through the name of the metric and Prometheus does not allow '-' or '.' in metric names, so Envoy converts them all to '\_' for the Prometheus format. This means a pod named 'abc-123' is labeled in Prometheus as 'abc\_123' and metrics for pods 'abc-123' and 'abc.123' would be tracked as a single pod 'abc\_123' and only distinguishable by the 'instance' label containing the pod's IP address.
 
+#### Error Code Metrics
+
+When an error occurs in the OSM control plane the ErrCodeCounter Prometheus metric is incremented for the related OSM error code. For the complete list of error codes and their descriptions, see [OSM Control Plane Error Code Troubleshooting Guide](/docs/guides/troubleshooting/control_plane_error_codes).
+
+The fully-qualified name of the error code metric is `osm_error_err_code_count`.
+
+> Note: Metrics corresponding to errors that result in process restarts might not be scraped in time.
+
 ### Querying metrics from Prometheus
 
 #### Before you begin
