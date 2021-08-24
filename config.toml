@@ -82,7 +82,7 @@ prism_syntax_highlighting = true
 project_home = "https://openservicemesh.io/"
 
 [[params.versions]]
-  version = "latest"
+  version = "latest (unreleased)"
   url = "https://docs.openservicemesh.io/"
 [[params.versions]]
   version = "v0.9"
