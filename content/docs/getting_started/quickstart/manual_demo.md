@@ -155,6 +155,12 @@ Create the `bookwarehouse` service account, service, and deployment:
 kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/apps/bookwarehouse.yaml
 ```
 
+The `bookwarehouse` service uses MySQL to store books. Create resources for `mysql` service account, service, StatefulSet, and SMI traffic policies.
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/mysql.yaml
+```
+
 ### Checkpoint: What Got Installed?
 
 A Kubernetes Deployment and Pods for each of `bookbuyer`, `bookthief`, `bookstore` and `bookwarehouse`. Also, Kubernetes Services and Endpoints for `bookstore` and `bookwarehouse`.
