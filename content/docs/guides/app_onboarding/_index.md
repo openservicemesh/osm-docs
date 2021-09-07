@@ -43,6 +43,8 @@ The following guide describes how to onboard a Kubernetes microservice to an OSM
     By default, new deployments in onboarded namespaces are enabled for automatic sidecar injection. This means that when a new Pod is created in a managed namespace, OSM will automatically inject the sidecar proxy to the Pod.
     Existing deployments need to be restarted so that OSM can automatically inject the sidecar proxy upon Pod re-creation. Pods managed by a Deployment can be restarted using the `kubectl rollout restart deploy` command.
 
+    In order to route protocol specific traffic correctly to service ports, configure the application protocol to use. Refer to the [application protocol selection guide](/docs/guides/app_onboarding/app_protocol_selection) to learn more.
+
 #### Note: Removing Namespaces
 Namespaces can be removed from the OSM mesh with the `osm namespace remove` command, which does the equivalent of the following:
 
