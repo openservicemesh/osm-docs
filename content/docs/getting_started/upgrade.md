@@ -60,6 +60,7 @@ Please check the `CRD Updates` section of the [release notes](https://github.com
 **Pre-requisites**
 
 - Kubernetes cluster with the OSM control plane installed
+    - Ensure that the Kubernetes cluster has the minimum Kubernetes version required by the new OSM chart. This can be found in the [Installation Pre-requisites](/docs/getting_started/install#Pre-requisites)
 - `osm` CLI installed
   - By default, the `osm` CLI will upgrade to the same chart version that it installs. e.g. v0.9.2 of the `osm` CLI will upgrade to v0.9.2 of the OSM Helm chart.
 
