@@ -14,6 +14,12 @@ weight: 2
 
 Use the `osm` CLI to install the OSM control plane on to a Kubernetes cluster.
 
+#### OSM CLI and Chart Compatibility
+
+Each version of the OSM CLI is designed to work only with the matching version of the OSM Helm chart. Many operations may still work when some version skew exists, but those scenarios are not tested and issues that arise when using different CLI and chart versions may not get fixed even if reported.
+
+#### Running the CLI
+
 Run `osm install`.
 
 ```console
