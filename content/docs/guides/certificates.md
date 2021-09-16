@@ -37,6 +37,43 @@ data:
 
 For details and code where this is used see [osm-controller.go](https://github.com/openservicemesh/osm/blob/release-v0.9/cmd/osm-controller/osm-controller.go#L182-L183).
 
+### Rotate the Root Certificate (Tresor)
+
+The self-signed root certificate, which is created via the Tresor package within OSM, will expire in a decade. To rotate the root cert, the following steps should be followed: 
+
+1. Delete the `osm-ca-bundle` certificate in the osm namesapce
+   ```console
+   export osm_namespace=<osm-namespace> # Replace <osm-namespace> with the namespace where OSM is installed
+   kubectl delete secret osm-ca-bundle -n $osm_namespace
+   ```
+2. Restart the control plane components in the osm-namespace
+   ```console
+   kubectl rollout restart deploy osm-controller -n $osm_namespace
+   kubectl rollout restart deploy osm-injector -n $osm_namespace
+   kubectl rollout restart deploy osm-bootstrap -n $osm_namespace
+   ```
+
+When the components gets re-deployed, you should be able to eventually see the new `osm-ca-bundle` secret in the osm-namespace:
+
+```console
+kubectl get secrets -n $osm_namespace
+```
+
+```
+NAME                           TYPE                                  DATA   AGE
+osm-ca-bundle                  Opaque                                3      74m
+```
+
+The new expiration date can be found with the following command:
+
+```console
+kubectl get secrets -n $osm_namespace osm-ca-bundle -o json | jq -r '.data.expiration' | base64 -d
+```
+
+#### Other certificate issuers
+
+For certificate providers other than Tresor, the process of rotating the root certificate will be different. For Hashicorp Vault and cert-manager.io, users will need to rotate the root certificate themselves outside of OSM.
+
 ## Issuing Certificates
 
 Open Service Mesh supports 4 methods of issuing certificates:
