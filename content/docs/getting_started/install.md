@@ -73,6 +73,10 @@ To install OSM on OpenShift:
 
 ### Pod Security Policy
 
+**Deprecated: PSP support has been deprecated in OSM since v0.10.0**
+
+**PSP support will be removed in OSM 1.0.0**
+
 If you are running OSM in a cluster with PSPs enabled, pass in `--set OpenServiceMesh.pspEnabled=true` to your `osm install` or `helm install` CLI command.
 
 ## Inspect OSM Components
