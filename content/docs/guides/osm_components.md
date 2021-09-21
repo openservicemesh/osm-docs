@@ -131,7 +131,7 @@ A service can have zero or more endpoints, and each endpoint can have only one s
 Proxies, fronting endpoints, which form a given service will share the certificate for the given service.
 This certificate is used to establish mTLS connection with peer proxies fronting endpoints of **other services** within the service mesh.
 The service certificate is short-lived.
-Each service certificate's lifetime will be [approximately 48 hours](#certificate-lifetime), which eliminates the need for a certificate revocation facility.
+Each service certificate's lifetime will be [approximately 24 hours](#certificate-lifetime), which eliminates the need for a certificate revocation facility.
 OSM declares a type `ServiceCertificate` for these certificates.
 `ServiceCertificate` is how this kind of certificate is referred to in the [Interfaces](#interfaces) section of the developer documentation.
 
@@ -163,9 +163,9 @@ spec:
 
 ### Certificate lifetime
 
-The service certificates issued by the [Certificate Manager](#2-certificate-manager) are short-lived certificates, with a validity of approximately 48 hours.
+The service certificates issued by the [Certificate Manager](#2-certificate-manager) are short-lived certificates, with a validity of approximately 24 hours.
 The short certificate expiration eliminates the need for an explicit revocation mechanism.
-A given certificate's expiration will be randomly shortened or extended from the 48 hours, in order to avoid [thundering herd problem](https://en.wikipedia.org/wiki/Thundering_herd_problem) inflicted on the underlying certificate management system. Proxy certificates, on the other hand, are long-lived certificates.
+A given certificate's expiration will be randomly shortened or extended from the 24 hours, in order to avoid [thundering herd problem](https://en.wikipedia.org/wiki/Thundering_herd_problem) inflicted on the underlying certificate management system. Proxy certificates, on the other hand, are long-lived certificates.
 
 ### Proxy Certificate, Proxy, and Endpoint relationship
 
