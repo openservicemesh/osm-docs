@@ -5,10 +5,43 @@ type: docs
 ---
 
 # Logs
-Open Service Mesh (OSM) collects logs that are sent to stdout by default. When enabled, Fluent Bit can collect these logs, process them and send them to an output of the user's choice such as Elasticsearch, Azure Log Analytics, BigQuery, etc.
+Open Service Mesh (OSM) control plane components log diagnostic messages to stdout to aid in managing a mesh.
 
+In the logs, users can expect to see the following kinds of information
+alongside messages:
+- Kubernetes resource metadata, like names and namespaces
+- mTLS certificate common names
+
+OSM will **not** log sensitive information, such as:
+- Kubernetes Secret data
+- entire Kubernetes resources
+
+## Verbosity
+
+Log verbosity controls when certain log messages are written, for example to
+include more messages for debugging or to include fewer messages that only point
+to critical errors.
+
+OSM defines the following log levels in order of increasing verbosity:
+
+Log level | Purpose
+-|-
+disabled | Disables logging entirely
+panic    | *Currently unused*
+fatal    | For unrecoverable errors resulting in termination, usually on startup
+error    | For errors that may require user action to resolve
+warn     | For recovered errors or unexpected conditions that may lead to errors
+info     | For messages indicating normal behavior, such as acknowledging some user action
+debug    | For extra information useful in figuring out why a mesh may not be working as expected
+trace    | For extra verbose messages, used primarily for development
+
+Each of the above log levels can be configured in the MeshConfig at
+`spec.observability.osmLogLevel` or on install with the
+`OpenServiceMesh.controllerLogLevel` chart value.
 
 ## Fluent Bit
+When enabled, Fluent Bit can collect these logs, process them and send them to an output of the user's choice such as Elasticsearch, Azure Log Analytics, BigQuery, etc.
+
 [Fluent Bit](https://fluentbit.io/) is an open source log processor and forwarder which allows you to collect data/logs and send them to multiple destinations. It can be used with OSM to forward OSM controller logs to a variety of outputs/log consumers by using its output plugins.
 
 OSM provides log forwarding by optionally deploying a Fluent Bit sidecar to the OSM controller using the `--set=OpenServiceMesh.enableFluentbit=true` flag during installation. The user can then define where OSM logs should be forwarded using any of the available [Fluent Bit output plugins](https://docs.fluentbit.io/manual/pipeline/outputs).
