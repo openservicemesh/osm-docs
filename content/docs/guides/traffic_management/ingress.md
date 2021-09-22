@@ -112,7 +112,7 @@ The above configurations allow external clients to access the `foo` service in t
 
 #### HTTPS Ingress with Contour (mTLS and TLS)
 
-To enable HTTPS proxying (over TLS or mTLS) between Contour edge proxy and service mesh backends, Contour's [upstream TLS configuration](https://projectcontour.io/docs/v1.18.0/config/upstream-tls/) can be used in conjunction with OSM's IngressBackend configuration to perfrom peer certificate validation.
+To enable HTTPS proxying (over TLS or mTLS) between Contour edge proxy and service mesh backends, Contour's [upstream TLS configuration](https://projectcontour.io/docs/v1.18.0/config/upstream-tls/) can be used in conjunction with OSM's IngressBackend configuration to perform peer certificate validation.
 
 A minimal configuration might look like:
 ```yaml
@@ -128,9 +128,9 @@ spec:
       - test
 ---
 apiVersion: projectcontour.io/v1
-kind: basic
+kind: HTTPProxy
 metadata:
-  name: foo
+  name: basic
   namespace: test
 spec:
   virtualhost:
