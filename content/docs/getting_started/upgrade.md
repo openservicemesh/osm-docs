@@ -81,12 +81,12 @@ See `osm mesh upgrade --help` for more details
 #### Pre-requisites
 
 - Kubernetes cluster with the OSM control plane installed
-- The [helm 3 CLI](https://helm.sh/docs/intro/install/) 
+- The [helm 3 CLI](https://helm.sh/docs/intro/install/)
 
 #### OSM Configuration
 When upgrading, any custom settings used to install or run OSM may be reverted to the default, this only includes any metrics deployments. Please ensure that you carefully follow the guide to prevent these values from being overwritten.
 
-To preserve any changes you've made to the OSM configuration, use the `helm --values` flag. Create a copy of the [values file](https://github.com/openservicemesh/osm/blob/release-v0.9/charts/osm/values.yaml) (make sure to use the version for the upgraded chart) and change any values you wish to customize. You can omit all other values.
+To preserve any changes you've made to the OSM configuration, use the `helm --values` flag. Create a copy of the [values file](https://github.com/openservicemesh/osm/blob/release-v0.10/charts/osm/values.yaml) (make sure to use the version for the upgraded chart) and change any values you wish to customize. You can omit all other values.
 
 **Note: Any configuration changes that go into the MeshConfig will not be applied during upgrade and the values will remain as is prior to the upgrade. If you wish to update any value in the MeshConfig you can do so by patching the resource after an upgrade.
 
