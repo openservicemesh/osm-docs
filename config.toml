@@ -1,4 +1,4 @@
-title = "Open Service Mesh"
+title = "Open Service Mesh v0.10"
 baseURL = "https://docs.openservicemesh.io/"
 languageCode = "en-us"
 description = "Documentation for Open Service Mesh (OSM)"
@@ -84,6 +84,9 @@ project_home = "https://openservicemesh.io/"
 [[params.versions]]
   version = "latest (unreleased)"
   url = "https://docs.openservicemesh.io/"
+[[params.versions]]
+  version = "v0.10"
+  url = "https://release-v0-10.docs.openservicemesh.io/"
 [[params.versions]]
   version = "v0.9"
   url = "https://release-v0-9.docs.openservicemesh.io/"
