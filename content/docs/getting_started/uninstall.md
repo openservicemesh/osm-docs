@@ -87,7 +87,7 @@ Use the `osm` CLI to uninstall the OSM control plane from a Kubernetes cluster. 
 1. OSM controller resources (deployment, service, config map, and RBAC)
 1. Prometheus, Grafana, Jaeger, and Fluentbit resources installed by OSM
 1. Mutating webhook and validating webhook
-1. CRDs installed/required by OSM: [CRDs for OSM](https://github.com/openservicemesh/osm/tree/main/charts/osm/crds). This will also remove all Custom Resources related to those CRDs. Refer to [Removal of OSM Cluster Wide resources](#remove-osm-cluster-wide-resources) for more details
+1. The conversion webhook fields patched by OSM to the CRDs installed/required by OSM: [CRDs for OSM](https://github.com/openservicemesh/osm/tree/main/cmd/osm-bootstrap/crds) will be unpatched. Refer to [Removal of OSM Cluster Wide resources](#remove-osm-cluster-wide-resources) for more details
 
 Run `osm uninstall`:
 
@@ -130,4 +130,19 @@ Repeat the steps above for each mesh installed in the cluster. After there are n
 
 ## Removal of OSM Cluster Wide resources
 
-Uninstalling OSM will remove all the CRDs mentioned [here](https://github.com/openservicemesh/osm/tree/main/charts/osm/crds). This is the same behavior when using the Helm charts to uninstall OSM as well because OSM has a pre-delete helm hook that removes the CRDs. If there are other service meshes running in the same cluster, please ensure that you back the Custom Resources and re-apply the required CRDs and Custom Resources to the cluster using `kubectl` post a successful uninstallation of OSM.
+OSM ensures that all the CRDs mentioned [here](https://github.com/openservicemesh/osm/tree/main/cmd/osm-bootstrap/crds) exist in the cluster at install time. If they are not already installed, the `osm-bootstrap` pod will install them before the rest of the control plane components are running. This is the same behavior when using the Helm charts to install OSM as well. Uninstalling OSM will only remove/un-patch the conversion webhook fields from all the CRDs (which OSM adds to support multiple CR versions) and will not deleted them for primarily two reasons: 1. CRDs are cluster-wide resources and may be used by other service meshes running in the same cluster, 2. deletion of a CRD will cause all custom resources corresponding to that CRD to also be deleted. 
+
+If there are no other service meshes running in the same cluster and the required custom resources have been backed up, the CRDs can be removed from the cluster using `kubectl`.
+
+Run the following `kubectl` commands:
+
+```console
+kubectl delete crd meshconfigs.config.openservicemesh.io
+kubectl delete crd multiclusterservices.config.openservicemesh.io
+kubectl delete crd egresses.policy.openservicemesh.io
+kubectl delete crd ingressbackends.policy.openservicemesh.io
+kubectl delete crd httproutegroups.specs.smi-spec.io
+kubectl delete crd tcproutes.specs.smi-spec.io
+kubectl delete crd traffictargets.access.smi-spec.io
+kubectl delete crd trafficsplits.split.smi-spec.io
+```
