@@ -51,7 +51,7 @@ For OSM versions `x.y.z` where `x >= 1`:
 The recommended way to upgrade a mesh is with the `osm` CLI. For advanced use cases, `helm` may be used.
 
 ### CRD Upgrades
-Because Helm does not manage CRDs beyond the initial installation, OSM leverages a helm hook to update existing and new CRDs during an upgrade. If the new release contains updates to existing CRDs or adds new CRDs, the [crd-upgrade-hook](https://github.com/openservicemesh/osm/blob/main/charts/osm/templates/crds-upgrade-hook.yaml) will update the CRDs. The associated Custom Resources will remain as is, requiring no additional action prior or immediately after the upgrade.
+Because Helm does not manage CRDs beyond the initial installation, OSM leverages an init-container on the `osm-bootstrap` pod to to update existing and add new CRDs during an upgrade. If the new release contains updates to existing CRDs or adds new CRDs, the `init-osm-bootstrap` on the `osm-bootstrap` pod will update the CRDs. The associated Custom Resources will remain as is, requiring no additional action prior to or immediately after the upgrade.
 
 Please check the `CRD Updates` section of the [release notes](https://github.com/openservicemesh/osm/releases) to see if any updates have been made to the CRDs used by OSM. If the version of the Custom Resources are within the versions the updated CRD supports, no immediate action is required. OSM implements a conversion webhook for all of its CRDs, ensuring support for older versions and providing the flexibilty to update Custom Resources at a later point in time.
 
