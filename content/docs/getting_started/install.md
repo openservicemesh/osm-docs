@@ -85,6 +85,10 @@ To install OSM on OpenShift:
 
 If you are running OSM in a cluster with PSPs enabled, pass in `--set OpenServiceMesh.pspEnabled=true` to your `osm install` or `helm install` CLI command.
 
+### Enable Reconciler in OSM
+
+If you wish to enable a reconcielr in OSM, pass in `--set OpenServiceMesh.enableReconciler=true` to your `osm install` or `helm install` CLI command. More information on the reconciler can be found in the [Reconciler Guide](/docs/guides/reconciler).
+
 ## Inspect OSM Components
 
 A few components will be installed by default into the `osm-system` Namespace. Inspect them by using the following `kubectl` command:
