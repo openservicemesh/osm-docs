@@ -3,7 +3,7 @@ title: "Mesh configuration"
 description: "OSM MeshConfig"
 type: docs
 aliases: ["/docs/osm_mesh_config/"]
-weight: 5
+weight: 7
 ---
 
 # OSM MeshConfig
