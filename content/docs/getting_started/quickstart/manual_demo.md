@@ -83,29 +83,28 @@ Read more on OSM's integrations with Prometheus, Grafana, and Jaeger in the [obs
 
 In this section we will deploy 4 different Pods, and we will apply policies to control the traffic between them.
 
-- `bookbuyer` is an HTTP client making requests to `bookstore`. This traffic is **permitted**.
-- `bookthief` is an HTTP client and much like `bookbuyer` also makes HTTP requests to `bookstore`. This traffic should be **blocked**.
-- `bookstore` is a server, which responds to HTTP requests. It is also a client making requests to the `bookwarehouse` service.
-- `bookwarehouse` is a server and should respond only to `bookstore`. Both `bookbuyer` and `bookthief` should be blocked.
+- `bookbuyer` is an HTTP client making requests to `bookstore-v1`. This traffic is **permitted**.
+- `bookthief` is an HTTP client and much like `bookbuyer` also makes HTTP requests to `bookstore-v1`. This traffic should be **blocked**.
+- `bookstore-v1` is a server, which responds to HTTP requests. It is also a client making requests to the `bookwarehouse` service.
+- `bookwarehouse` is a server and should respond only to `bookstore-v1`. Both `bookbuyer` and `bookthief` should be blocked.
 
 
 We are going to craft SMI policies, which will bring us to this final desired
 state of allowed and blocked traffic between pods:
 
-| from  /   to: | bookbuyer | bookthief | bookstore | bookwarehouse |
-|---------------|-----------|-----------|-----------|---------------|
-| bookbuyer     |     \     |     ❌     |     ✔    |       ❌       |
-| bookthief     |     ❌     |     \     |     ❌     |       ❌       |
-| bookstore     |     ❌     |     ❌     |     \     |       ✔      |
-| bookwarehouse |     ❌     |     ❌     |     ❌     |      \        |
+| from  /   to: | bookbuyer | bookthief | bookstore-v1 | bookwarehouse |
+|---------------|-----------|-----------|--------------|---------------|
+| bookbuyer     |     \     |     ❌    |     ✔        |      ❌       |
+| bookthief     |     ❌    |     \     |     ❌       |      ❌       |
+| bookstore-v1  |     ❌    |     ❌    |     \        |      ✔        |
+| bookwarehouse |     ❌    |     ❌    |     ❌       |      \        |
 
 
 To show SMI Traffic Split, we will deploy an additional application:
 
-- `bookstore-v2` - this is the same container as the first `bookstore` we deployed, but for this demo we will assume that it is a new version of the app we need to upgrade to.
+- `bookstore-v2` - this is the same container as the first `bookstore-v1` we deployed, but for this demo we will assume that it is a new version of the app we need to upgrade to.
 
-The `bookbuyer`, `bookthief`, `bookstore`, and `bookwarehouse` Pods will be in separate Kubernetes Namespaces with
-the same names. Each new Pod in the service mesh will be injected with an Envoy sidecar container.
+The `bookbuyer`, `bookthief`, `bookstore-v1`, and `bookwarehouse` Pods will be in separate Kubernetes Namespaces. Each new Pod in the service mesh will be injected with an Envoy sidecar container.
 
 ### Create the Namespaces
 
@@ -146,7 +145,7 @@ kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v
 Create the `bookstore` service account, service, and deployment:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/apps/bookstore.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/apps/bookstore-v1.yaml
 ```
 
 Create the `bookwarehouse` service account, service, and deployment:
@@ -157,7 +156,7 @@ kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v
 
 ### Checkpoint: What Got Installed?
 
-A Kubernetes Deployment and Pods for each of `bookbuyer`, `bookthief`, `bookstore` and `bookwarehouse`. Also, Kubernetes Services and Endpoints for `bookstore` and `bookwarehouse`.
+A Kubernetes Deployment and Pods for each of `bookbuyer`, `bookthief`, `bookstore-v1` and `bookwarehouse`. Also, Kubernetes Services and Endpoints for `bookstore-v1`, and `bookwarehouse`.
 
 To view these resources on your cluster, run the following commands:
 
@@ -192,17 +191,17 @@ cp .env.example .env
 ./scripts/port-forward-all.sh
 ```
 
-_Note: To override the default ports, prefix the `BOOKBUYER_LOCAL_PORT`, `BOOKSTORE_LOCAL_PORT`, `BOOKSTOREv1_LOCAL_PORT`, `BOOKSTOREv2_LOCAL_PORT`, and/or `BOOKTHIEF_LOCAL_PORT` variable assignments to the `port-forward` scripts. For example:_
+_Note: To override the default ports, prefix the `BOOKBUYER_LOCAL_PORT`, `BOOKSTOREv1_LOCAL_PORT`, `BOOKSTOREv2_LOCAL_PORT`, and/or `BOOKTHIEF_LOCAL_PORT` variable assignments to the `port-forward` scripts. For example:_
 
 ```bash
-BOOKBUYER_LOCAL_PORT=7070 BOOKSTOREv1_LOCAL_PORT=7071 BOOKSTOREv2_LOCAL_PORT=7072 BOOKTHIEF_LOCAL_PORT=7073 BOOKSTORE_LOCAL_PORT=7074 ./scripts/port-forward-all.sh
+BOOKBUYER_LOCAL_PORT=7070 BOOKSTOREv1_LOCAL_PORT=7071 BOOKSTOREv2_LOCAL_PORT=7072 BOOKTHIEF_LOCAL_PORT=7073 ./scripts/port-forward-all.sh
 ```
 
 In a browser, open up the following urls:
 
 - [http://localhost:8080](http://localhost:8080) - **bookbuyer**
 - [http://localhost:8083](http://localhost:8083) - **bookthief**
-- [http://localhost:8084](http://localhost:8084) - **bookstore**
+- [http://localhost:8081](http://localhost:8081) - **bookstore-v1**
 - [http://localhost:8082](http://localhost:8082) - **bookstore-v2**
   - _Note: This page will not be available at this time in the demo. This will become available during the SMI Traffic Split configuration set up_
 
@@ -248,20 +247,20 @@ In permissive traffic policy mode, application connectivity within the mesh is a
 
 Before proceeding, [verify the traffic policy mode](#verify-the-traffic-policy-mode) and ensure the `enablePermissiveTrafficPolicyMode` key is set to `true` in the `osm-mesh-config` `MeshConfig` resource. Refer to the section above to enable permissive traffic policy mode.
 
-In step [Deploy the Bookstore Application](#deploy-the-bookstore-application), we have already deployed the applications needed to verify traffic flow in permissive traffic policy mode. The `bookstore` service we previously deployed is encoded with an identity of `bookstore-v1` for demo purpose, as can be seen in the [Deployment's manifest](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/apps/bookstore.yaml). The identity reflects which counter increments in the `bookbuyer` and `bookthief` UI, and the identity displayed in the `bookstore` UI.
+In step [Deploy the Bookstore Application](#deploy-the-bookstore-application), we have already deployed the applications needed to verify traffic flow in permissive traffic policy mode. The `bookstore-v1` service we previously deployed is encoded with an identity of `bookstore-v1` for demo purpose, as can be seen in the [Deployment's manifest](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/apps/bookstore-v1.yaml). The identity reflects which counter increments in the `bookbuyer` and `bookthief` UI, and the identity displayed in the bookstores' UIs.
 
 The counter in the `bookbuyer`, `bookthief` UI for the books bought and stolen respectively from `bookstore v1` should now be incrementing:
 
 - [http://localhost:8080](http://localhost:8080) - **bookbuyer**
 - [http://localhost:8083](http://localhost:8083) - **bookthief**
 
-The counter in the `bookstore` UI for the books sold should also be incrementing:
+The counter in the `bookstore-v1` UI for the books sold should also be incrementing:
 
-- [http://localhost:8084](http://localhost:8084) - **bookstore**
+- [http://localhost:8081](http://localhost:8081) - **bookstore-v1**
 
-The `bookbuyer` and `bookthief` applications are able to buy and steal books respectively from the newly deployed `bookstore` application because permissive traffic policy mode is enabled, thereby allowing connectivity between applications without the need for SMI traffic access policies.
+The `bookbuyer` and `bookthief` applications are able to buy and steal books respectively from the newly deployed `bookstore-v1` application because permissive traffic policy mode is enabled, thereby allowing connectivity between applications without the need for SMI traffic access policies.
 
-This can be demonstrated further by disabling permissive traffic policy mode and verifying that the counter for books bought from `bookstore` is not incrementing anymore:
+This can be demonstrated further by disabling permissive traffic policy mode and verifying that the counter for books bought from `bookstore-v1` is not incrementing anymore:
 
 ```bash
 kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}'  --type=merge
@@ -287,7 +286,7 @@ kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"
 
 ### Deploy SMI Access Control Policies
 
-At this point, applications do not have access to each other because no access control policies have been applied. Confirm this by verifying that none of the counters in the `bookbuyer`, `bookthief`, `bookstore`, and `bookstore-v2` UI are incrementing.
+At this point, applications do not have access to each other because no access control policies have been applied. Confirm this by verifying that none of the counters in the `bookbuyer`, `bookthief`, `bookstore-v1`, and `bookstore-v2` UI are incrementing.
 
 Apply the [SMI Traffic Target][1] and [SMI Traffic Specs][2] resources to define access control and routing policies for the applications to communicate:
 
@@ -297,20 +296,20 @@ Apply the [SMI Traffic Target][1] and [SMI Traffic Specs][2] resources to define
 kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/access/traffic-access-v1.yaml
 ```
 
-The counters should now be incrementing for the `bookbuyer`, and `bookstore` applications:
+The counters should now be incrementing for the `bookbuyer`, and `bookstore-v1` applications:
 
 - [http://localhost:8080](http://localhost:8080) - **bookbuyer**
-- [http://localhost:8084](http://localhost:8084) - **bookstore**
+- [http://localhost:8081](http://localhost:8081) - **bookstore-v1**
 
 Note that the counter is _not_ incrementing for the `bookthief` application:
 
 - [http://localhost:8083](http://localhost:8083) - **bookthief**
 
-That is because the SMI Traffic Target SMI HTTPRouteGroup resources deployed only allow `bookbuyer` to communicate with the `bookstore`.
+That is because the SMI Traffic Target SMI HTTPRouteGroup resources deployed only allow `bookbuyer` to communicate with the `bookstore-v1`.
 
 #### Allowing the Bookthief Application to access the Mesh
 
-Currently the Bookthief application has not been authorized to participate in the service mesh communication. We will now uncomment out the lines in the [docs/example/manifests/access/traffic-access-v1.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/access/traffic-access-v1.yaml) to allow `bookthief` to communicate with `bookstore`. Then, re-apply the manifest and watch the change in policy propagate.
+Currently the Bookthief application has not been authorized to participate in the service mesh communication. We will now uncomment out the lines in the [docs/example/manifests/access/traffic-access-v1.yaml](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/access/traffic-access-v1.yaml) to allow `bookthief` to communicate with `bookstore-v1`. Then, re-apply the manifest and watch the change in policy propagate.
 
 Current TrafficTarget spec with commented `bookthief` kind:
 
@@ -323,7 +322,7 @@ metadata:
 spec:
   destination:
     kind: ServiceAccount
-    name: bookstore
+    name: bookstore-v1
     namespace: bookstore
   rules:
   - kind: HTTPRouteGroup
@@ -351,7 +350,7 @@ metadata:
 spec:
  destination:
    kind: ServiceAccount
-   name: bookstore
+   name: bookstore-v1
    namespace: bookstore
  rules:
  - kind: HTTPRouteGroup
@@ -391,16 +390,25 @@ The counter in the `bookthief` window will stop incrementing.
 
 ### Configure Traffic Split between Two Services
 
-We will now demonstrate how to balance traffic between two Kubernetes services, commonly known as a traffic split. We will be splitting the traffic directed to the root `bookstore` service between the backends `bookstore` service and `bookstore-v2` service.
+We will now demonstrate how to balance traffic between two Kubernetes services, commonly known as a traffic split. We will be splitting the traffic directed to the root `bookstore` service between the backend services `bookstore-v1` and `bookstore-v2`.
 
 ### Deploy bookstore v2 application
 
-To demonstrate usage of SMI traffic access and split policies, we will now deploy version v2 of the bookstore application (`bookstore-v2`) - remember that if you are using openshift, you must add the security context constraint to the bookstore-v2 service account as specified in the [installation guide](/docs/install/#openshift).
+To demonstrate usage of SMI traffic access and split policies, we will now deploy version v2 of the bookstore application (`bookstore-v2`) - remember that if you are using openshift, you must add the security context constraint to the bookstore-v2 service account as specified in the [installation guide](/docs/install/#openshift). A `bookstore` service will also be created to serve as the root of our traffic split between `bookstore-v1` and `bookstore-v2`.
 
 ```bash
 # Contains the bookstore-v2 Kubernetes Service, Service Account, Deployment and SMI Traffic Target resource to allow
 # bookbuyer to communicate with `bookstore-v2` pods
 kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/apps/bookstore-v2.yaml
+# Contains the bookstore Kubernetes Service
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/apps/bookstore.yaml
+```
+
+Next, update `bookbuyer` and `bookthief` to send requests to the `bookstore` service instead of the `bookstore-v1` service. This will restart each deployment and reset the displayed counts of books bought to 0:
+
+```bash
+kubectl set env -n bookbuyer deployment/bookbuyer -c bookbuyer BOOKSTORE_SVC=bookstore
+kubectl set env -n bookthief deployment/bookthief -c bookthief BOOKSTORE_SVC=bookstore
 ```
 
 Wait for the `bookstore-v2` pod to be running in the `bookstore` namespace. Next, exit and restart the `./scripts/port-forward-all.sh` script in order to access v2 of bookstore.
@@ -411,7 +419,7 @@ The counter should _not_ be incrementing because no traffic is flowing yet to th
 
 #### Create SMI Traffic Split
 
-Deploy the SMI traffic split policy to direct 100 percent of the traffic sent to the root `bookstore` service to the `bookstore` service backend:
+Deploy the SMI traffic split policy to direct 100 percent of the traffic sent to the root `bookstore` service to the `bookstore-v1` service backend:
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/split/traffic-split-v1.yaml
@@ -419,7 +427,7 @@ kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v
 
 _Note: The root service can be any Kubernetes service. It does not have any label selectors. It also doesn't need to overlap with any of the Backend services specified in the Traffic Split resource. The root service can be referred to in the SMI Traffic Split resource as the name of the service with or without the `.<namespace>` suffix._
 
-The count for the books sold from the `bookstore-v2` browser window should remain at 0. This is because the current traffic split policy is currently weighted 100 for `bookstore` in addition to the fact that `bookbuyer` is sending traffic to the `bookstore` service and no application is sending requests to the `bookstore-v2` service. You can verify the traffic split policy by running the following and viewing the **Backends** properties:
+The count for the books sold from the `bookstore-v2` browser window should remain at 0. This is because the current traffic split policy is currently weighted 100 for `bookstore-v1` in addition to the fact that `bookbuyer` is sending traffic to the `bookstore` service and no application is sending requests to the `bookstore-v2` service. You can verify the traffic split policy by running the following and viewing the **Backends** properties:
 
 ```bash
 kubectl describe trafficsplit bookstore-split -n bookstore
@@ -427,16 +435,16 @@ kubectl describe trafficsplit bookstore-split -n bookstore
 
 #### Split Traffic to Bookstore v2
 
-Update the SMI Traffic Split policy to direct 50 percent of the traffic sent to the root `bookstore` service to the `bookstore` service and 50 perfect to `bookstore-v2` service by adding the `bookstore-v2` backend to the spec and modifying the weight fields.
+Update the SMI Traffic Split policy to direct 50 percent of the traffic sent to the root `bookstore` service to the `bookstore-v1` service and 50 perfect to `bookstore-v2` service by adding the `bookstore-v2` backend to the spec and modifying the weight fields.
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/split/traffic-split-50-50.yaml
 ```
 
-Wait for the changes to propagate and observe the counters increment for `bookstore` and `bookstore-v2` in your browser windows. Both
+Wait for the changes to propagate and observe the counters increment for `bookstore-v1` and `bookstore-v2` in your browser windows. Both
 counters should be incrementing:
 
-- [http://localhost:8084](http://localhost:8084) - **bookstore**
+- [http://localhost:8081](http://localhost:8081) - **bookstore-v1**
 - [http://localhost:8082](http://localhost:8082) - **bookstore-v2**
 
 #### Split All Traffic to Bookstore v2
@@ -447,11 +455,11 @@ Update the SMI TrafficSplit policy for `bookstore` Service configuring all traff
 kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/split/traffic-split-v2.yaml
 ```
 
-Wait for the changes to propagate and observe the counters increment for `bookstore-v2` and freeze for `bookstore` in your
+Wait for the changes to propagate and observe the counters increment for `bookstore-v2` and freeze for `bookstore-v1` in your
 browser windows:
 
 - [http://localhost:8082](http://localhost:8082) - **bookstore-v2**
-- [http://localhost:8083](http://localhost:8084) - **bookstore**
+- [http://localhost:8083](http://localhost:8081) - **bookstore-v1**
 
 Now, all traffic directed to the `bookstore` service is flowing to `bookstore-v2`.
 
