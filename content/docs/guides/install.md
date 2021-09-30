@@ -102,7 +102,7 @@ $ kubectl get pods,svc,secrets,meshconfigs,serviceaccount --namespace osm-system
 A few cluster wide (non Namespaced components) will also be installed. Inspect them using the following `kubectl` command:
 
 ```console
-kubectl get clusterrolebinding,clusterrole,mutatingwebhookconfiguration
+kubectl get clusterrolebinding,clusterrole,mutatingwebhookconfiguration,validatingwebhookconfigurations -l app.kubernetes.io/name=openservicemesh.io
 ```
 
 Under the hood, `osm` is using [Helm](https://helm.sh) libraries to create a Helm `release` object in the control plane Namespace. The Helm `release` name is the mesh-name. The `helm` CLI can also be used to inspect Kubernetes manifests installed in more detail. Goto https://helm.sh for instructions to install Helm.

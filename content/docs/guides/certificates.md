@@ -2,7 +2,7 @@
 title: "Certificate Management"
 description: "OSM uses mTLS for encryption of data between pods as well as Envoy and service identity."
 type: docs
-weight: 7
+weight: 10
 ---
 
 # mTLS and Certificate Issuance

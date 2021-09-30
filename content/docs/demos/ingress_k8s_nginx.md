@@ -28,9 +28,9 @@ nginx_ingress_host="$(kubectl -n "$nginx_ingress_namespace" get service "$nginx_
 nginx_ingress_port="$(kubectl -n "$nginx_ingress_namespace" get service "$nginx_ingress_service" -o jsonpath='{.spec.ports[?(@.name=="http")].port}')"
 ```
 
-To restrict ingress traffic on backends to authorized clients, we will set up the IngressBackend configuration such that only ingress traffic from the endpoints of the Nginx Ingress Controller service can route traffic to the service backend. To be able to discover the endpoints of this service, we need OSM controller to monitor the corresponding namespace.
+To restrict ingress traffic on backends to authorized clients, we will set up the IngressBackend configuration such that only ingress traffic from the endpoints of the Nginx Ingress Controller service can route traffic to the service backend. To be able to discover the endpoints of this service, we need OSM controller to monitor the corresponding namespace. However, Nginx must NOT be injected with an Envoy sidecar to function properly.
 ```bash
-kubectl label ns "$nginx_ingress_namespace" openservicemesh.io/monitored-by="$osm_mesh_name"
+osm namespace add "$nginx_ingress_namespace" --mesh-name "$osm_mesh_name" --disable-sidecar-injection
 ```
 
 Next, we will deploy the sample `httpbin` service.

@@ -2,7 +2,7 @@
 title: "OSM control plane components"
 description: "Components"
 type: docs
-weight: 2
+weight: 5
 ---
 
 ## Inspect OSM Components
