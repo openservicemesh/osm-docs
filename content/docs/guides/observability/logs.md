@@ -47,7 +47,7 @@ When enabled, Fluent Bit can collect these logs, process them and send them to a
 OSM provides log forwarding by optionally deploying a Fluent Bit sidecar to the OSM controller using the `--set OpenServiceMesh.enableFluentbit=true` flag during installation. The user can then define where OSM logs should be forwarded using any of the available [Fluent Bit output plugins](https://docs.fluentbit.io/manual/pipeline/outputs).
 
 ### Configuring Log Forwarding with Fluent Bit
-By default, the Fluent Bit sidecar is configured to simply send logs to the Fluent Bit container's stdout. If you have installed OSM with Fluent Bit enabled, you may access these logs using `kubectl logs -n osm-system <osm-controller-name> -c fluentbit-logger`. This command will also help you find how your logs are formatted in case you need to change your parsers and filters. 
+By default, the Fluent Bit sidecar is configured to simply send logs to the Fluent Bit container's stdout. If you have installed OSM with Fluent Bit enabled, you may access these logs using `kubectl logs -n osm-system <osm-controller-name> -c fluentbit-logger`. This command will also help you find how your logs are formatted in case you need to change your parsers and filters.
 
 To quickly bring up Fluent Bit with default values, use:
 ```console
@@ -85,7 +85,7 @@ Fluent Bit has an Azure output plugin that can be used to send logs to an Azure 
 
 2. Navigate to your new workspace in Azure Portal. Find your Workspace ID and Primary key in your workspace under Agents management. In `values.yaml`, under `fluentBit`, update the `outputPlugin` to `azure` and keys `workspaceId` and `primaryKey` with the corresponding values from Azure Portal (without quotes). Alternatively, you may replace entire output section in `fluentbit-configmap.yaml` as you would for any other output plugin.
 
-3. Run through steps 2-5 above. 
+3. Run through steps 2-5 above.
 
 4. Once you run OSM with Fluent Bit enabled, logs will populate under the Logs > Custom Logs section in your Log Analytics workspace. There, you may run the following query to view most recent logs first:
     ```
@@ -114,7 +114,11 @@ You may require outbound proxy support if your egress traffic is configured to g
 
 If you have already built OSM with the MeshConfig changes above, you can simply enable proxy support using the OSM CLI, replacing your values in the command below:
 ```
-osm install --set OpenServiceMesh.enableFluentbit=true,OpenServiceMesh.fluentBit.enableProxySupport=true,OpenServiceMesh.fluentBit.httpProxy=<http-proxy-host:port>,OpenServiceMesh.fluentBit.httpsProxy=<https-proxy-host:port>
+osm install \
+    --set OpenServiceMesh.enableFluentbit=true \
+    --set ServiceMesh.fluentBit.enableProxySupport=true \
+    --set ServiceMesh.fluentBit.httpProxy=<http-proxy-host:port> \
+    --set ServiceMesh.fluentBit.httpsProxy=<https-proxy-host:port>
 ```
 
 Alternatively, you may change the values in the Helm chart by updating the following in `values.yaml`:
