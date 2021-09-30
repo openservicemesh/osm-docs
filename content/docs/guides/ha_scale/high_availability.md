@@ -64,7 +64,7 @@ Components `osm-controller` and `osm-injector` allow for separate horizontal sca
 HPA will automatically scale up or down control plane pods based on the average target CPU utilization (%). 
 To enable HPA, use the following command
 ```
-osm install --set=OpenServiceMesh.<control_plane_pod>.autoScale.enable=true
+osm install --set OpenServiceMesh.<control_plane_pod>.autoScale.enable=true
 ```
 > Note: control_plane_pod can be `osmController` or `injector`
 
@@ -78,6 +78,6 @@ In order to prevent disruptions during planned outages, control plane pods `osm-
 
 To enable PDB, use the following command
 ```
-osm install --set=OpenServiceMesh.<control_plane_pod>.enablePodDisruptionBudget=true
+osm install --set OpenServiceMesh.<control_plane_pod>.enablePodDisruptionBudget=true
 ```
 > Note: control_plane_pod can be `osmController` or `injector`

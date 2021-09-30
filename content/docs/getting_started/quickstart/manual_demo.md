@@ -67,10 +67,10 @@ will be injected with Envoy, but traffic will flow through the proxy and will no
 
 ```bash
 osm install \
-    --set=OpenServiceMesh.enablePermissiveTrafficPolicy=true \
-    --set=OpenServiceMesh.deployPrometheus=true \
-    --set=OpenServiceMesh.deployGrafana=true \
-    --set=OpenServiceMesh.deployJaeger=true
+    --set OpenServiceMesh.enablePermissiveTrafficPolicy=true \
+    --set OpenServiceMesh.deployPrometheus=true \
+    --set OpenServiceMesh.deployGrafana=true \
+    --set OpenServiceMesh.deployJaeger=true
 ```
 
 This installed OSM Controller in the `osm-system` namespace.
@@ -236,7 +236,7 @@ In permissive traffic policy mode, application connectivity within the mesh is a
 
 1. During install using `osm` CLI:
   ```bash
-  osm install --set=OpenServiceMesh.enablePermissiveTrafficPolicy=true
+  osm install --set OpenServiceMesh.enablePermissiveTrafficPolicy=true
   ```
 
 1. Post install by patching the `osm-mesh-config` custom resource in the control plane's namespace (`osm-system` by default)
