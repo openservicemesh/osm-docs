@@ -30,6 +30,8 @@ OSM installed successfully in namespace [osm-system] with mesh name [osm]
 
 Run `osm install --help` for more options.
 
+_Note: Installing OSM via the CLI enforces deploying only one mesh in the cluster. OSM installs and manages the CRDs by adding a conversion webhook field to all the CRDs to support multiple API versions, which ties the CRDs to a specific instance of OSM. Hence, for OSM's correct operation it is **strongly recommended** to have only one OSM mesh per cluster._
+
 ### Using the Helm CLI
 
 The [OSM chart](https://github.com/openservicemesh/osm/tree/release-v0.9/charts/osm) can be installed directly via the [Helm CLI](https://helm.sh/docs/intro/install/).
