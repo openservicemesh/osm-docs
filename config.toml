@@ -85,6 +85,9 @@ project_home = "https://openservicemesh.io/"
   version = "latest (unreleased)"
   url = "https://docs.openservicemesh.io/"
 [[params.versions]]
+  version = "v0.11"
+  url = "https://release-v0-11.docs.openservicemesh.io/"
+[[params.versions]]
   version = "v0.10"
   url = "https://release-v0-10.docs.openservicemesh.io/"
 [[params.versions]]
