@@ -15,9 +15,9 @@ The following guide describes how to onboard a Kubernetes microservice to an OSM
     OSM conforms to the SMI specification. By default, OSM denies all traffic communications between Kubernetes services unless explicitly allowed by SMI policies. This behavior can be overridden with the `--set=OpenServiceMesh.enablePermissiveTrafficPolicy=true` flag on the `osm install` command, allowing SMI policies not to be enforced while allowing traffic and services to still take advantage of features such as mTLS-encrypted traffic, metrics, and tracing.
 
     For example SMI policies, please see the following examples:
-    - [demo/deploy-traffic-specs.sh](https://github.com/openservicemesh/osm/blob/release-v0.9/demo/deploy-traffic-specs.sh)
-    - [demo/deploy-traffic-split.sh](https://github.com/openservicemesh/osm/blob/release-v0.9/demo/deploy-traffic-split.sh)
-    - [demo/deploy-traffic-target.sh](https://github.com/openservicemesh/osm/blob/release-v0.9/demo/deploy-traffic-target.sh)
+    - [demo/deploy-traffic-specs.sh](https://github.com/openservicemesh/osm/blob/release-v0.11/demo/deploy-traffic-specs.sh)
+    - [demo/deploy-traffic-split.sh](https://github.com/openservicemesh/osm/blob/release-v0.11/demo/deploy-traffic-split.sh)
+    - [demo/deploy-traffic-target.sh](https://github.com/openservicemesh/osm/blob/release-v0.11/demo/deploy-traffic-target.sh)
 
 1. Onboard Kubernetes Namespaces to OSM
 

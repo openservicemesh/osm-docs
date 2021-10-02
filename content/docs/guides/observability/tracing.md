@@ -85,7 +85,7 @@ Navigate to `http://localhost:16686/` in a web browser to view the UI.
 ## Example of Tracing with Jaeger
 This section walks through the process of creating a simple Jaeger instance and enabling tracing with Jaeger in OSM.
 
-1. Run the [OSM Demo](https://github.com/openservicemesh/osm/blob/release-v0.9/demo/README.md) with Jaeger deployed. You have two options:
+1. Run the [OSM Demo](https://github.com/openservicemesh/osm/blob/release-v0.11/demo/README.md) with Jaeger deployed. You have two options:
     - For automatic provisioning of Jaeger, simply set `DEPLOY_JAEGER` in your `.env` file to true
     - For bring-your-own, you can deploy the sample instance [provided by Jaeger](https://www.jaegertracing.io/docs/1.22/getting-started/#all-in-one) using the commands below. If you wish to bring up Jaeger in a different namespace, make sure to update it below.
 

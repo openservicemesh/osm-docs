@@ -13,7 +13,7 @@ High Availability and Fault Tolerance are implemented and ensured by several des
 
 ### Statelessness
 OSM's control plane components do not own or have any state-dependent data that needs to be saved at runtime; with the controlled exceptions of:
-- CA / Root Certificate: The CA root certificate is required to be the same for multiple OSM instances when running multiple replica. For [Certificate Managers](https://github.com/openservicemesh/osm/blob/release-v0.9/DESIGN.md#2-certificate-manager) implementations that require the root CA to have been generated/provided prior OSM execution (Vault, Cert-Manager), the root CA will be fetched from the provider at boot by all instances.
+- CA / Root Certificate: The CA root certificate is required to be the same for multiple OSM instances when running multiple replica. For [Certificate Managers](https://github.com/openservicemesh/osm/blob/release-v0.11/DESIGN.md#2-certificate-manager) implementations that require the root CA to have been generated/provided prior OSM execution (Vault, Cert-Manager), the root CA will be fetched from the provider at boot by all instances.
 For other Certificate Providers that can autogenerate a CA when none is present (such as Tresor), atomicity and synchronization will be ensured during creation, ensuring all instances load the same CA.
 - Envoy Bootstrap Certificates (used by the proxies to authenticate against the control plane): these are created during injection webhook handling and inlined as part of the Proxy's bootstrap configuration. The configuration is stored as a kubernetes secret and mounted in the injected envoy pod as a volume, assuring idempotence for a single pod at any one time.
 
@@ -61,7 +61,7 @@ Components `osm-controller` and `osm-injector` allow for separate horizontal sca
 [1] Headless: usually referred in the control-plane/data-plane design paradigm, refers to the concept that allows, when having a dependency between two components, for the depender agent to survive and keep running with latest state when the dependee dies or becomes unreachable.
 
 ### Horizontal Pod Autoscaling - HPA
-HPA will automatically scale up or down control plane pods based on the average target CPU utilization (%). 
+HPA will automatically scale up or down control plane pods based on the average target CPU utilization (%).
 To enable HPA, use the following command
 ```
 osm install --set=OpenServiceMesh.<control_plane_pod>.autoScale.enable=true
@@ -74,7 +74,7 @@ Additional parameters for HPA:
 - `targetAverageUtilization` (int): The target value for CPU utilization, representated as a percentage (Allowed values: 0-100)
 
 ### Pod Disruption Budget - PDB
-In order to prevent disruptions during planned outages, control plane pods `osm-controller` and `osm-injector` have a PDB that ensures there is always at least 1 pod corresponding to each control plane application. 
+In order to prevent disruptions during planned outages, control plane pods `osm-controller` and `osm-injector` have a PDB that ensures there is always at least 1 pod corresponding to each control plane application.
 
 To enable PDB, use the following command
 ```

@@ -19,7 +19,7 @@ As a result, one may see this error during a subsequent install of a new mesh wi
 Error: rendered manifests contain a resource that already exists. Unable to continue with install: ClusterRole "<mesh-name>" in namespace "" exists and cannot be imported into the current release: invalid ownership metadata; annotation validation error: key "meta.helm.sh/release-namespace" must equal "<new-namespace>": current value is "<old-namespace>"
 ```
 
-In the case of this error, use the [cleanup script](https://github.com/openservicemesh/osm/blob/release-v0.9/scripts/cleanup/osm-cleanup.sh) located in the osm repository to delete any remaining resources.
+In the case of this error, use the [cleanup script](https://github.com/openservicemesh/osm/blob/release-v0.11/scripts/cleanup/osm-cleanup.sh) located in the osm repository to delete any remaining resources.
 
 To run the script, create a `.env` environment variable file to set the values specified at the top of the script. These values should match the values used to deploy the mesh.
 
