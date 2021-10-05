@@ -6,7 +6,7 @@ type: docs
 weight: 2
 ---
 
-# Namespace Additon
+# Namespace Addition
 
 ## Overview
 
