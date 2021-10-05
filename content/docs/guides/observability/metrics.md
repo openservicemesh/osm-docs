@@ -5,6 +5,8 @@ type: docs
 weight: 1
 ---
 
+# Metrics
+
 ## Metrics Overview
 
 Open Service Mesh (OSM) generates detailed metrics related to all traffic within the mesh. These metrics provide insights into the behavior of applications in the mesh helping users to troubleshoot, maintain and analyze their applications.
@@ -48,7 +50,7 @@ The following section will document the additional steps needed to allow an alre
 
 #### List of Prerequisites for BYO Prometheus
 
-- Already running an accessible Prometheus instance *outside* of the mesh.
+- Already running an accessible Prometheus instance _outside_ of the mesh.
 - A running OSM control plane instance, deployed without metrics stack.
 - We will assume having Grafana reach Prometheus, exposing or forwarding Prometheus or Grafana web ports and configuring Prometheus to reach Kubernetes API services is taken care of or otherwise out of the scope of these steps.
 
@@ -71,8 +73,8 @@ The following section will document the additional steps needed to allow an alre
 
 ```yaml
 annotations:
-        prometheus.io/scrape: 'true'
-        prometheus.io/port: '<API port for prometheus>' # Depends on deployment - OSM automatic deployment uses 7070 by default, controlled by `values.yaml`
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "<API port for prometheus>" # Depends on deployment - OSM automatic deployment uses 7070 by default, controlled by `values.yaml`
 ```
 
 - Amend Prometheus' configmap to reach the pods/Envoy endpoints. OSM automatically appends the port annotations to the pods and takes care of pushing the listener configuration to the pods for Prometheus to reach:
@@ -133,7 +135,6 @@ For metrics to be scraped, the following prerequisites must be met:
 - The namespace must be a part of the mesh, ie. it must be labeled with the `openservicemesh.io/monitored-by` label with an appropriate mesh name. This can be done using the `osm namespace add` command.
 - A running service able to scrap Prometheus endpoints. OSM provides configuration for an [automatic bringup of Prometheus](#automatic-bring-up); alternatively users can [bring their own Prometheus](#byo-bring-your-own).
 
-
 To enable one or more namespaces for metrics scraping:
 
 ```bash
@@ -158,12 +159,11 @@ kubectl patch namespace test --type=merge -p '{"metadata": {"annotations": {"ope
 
 Enabling metrics scraping on a namespace also causes the osm-injector to add the following annotations to pods in that namespace:
 
-   ```yaml
-    prometheus.io/scrape: true
-    prometheus.io/port: 15010
-    prometheus.io/path: /stats/prometheus
-   ```
-
+```yaml
+prometheus.io/scrape: true
+prometheus.io/port: 15010
+prometheus.io/path: /stats/prometheus
+```
 
 ### Available Metrics
 
@@ -202,7 +202,7 @@ In addition, the `osm_request_total` metric has a `response_code` label represen
 - HTTP requests that invoke a local response from Envoy have "unknown" `destination_*` labels on metrics.
   - In the demo, this includes requests from the bookthief to the bookstore.
 - Metrics are only recorded for traffic where both endpoints are part of the mesh. Ingress and egress traffic do not have statistics recorded.
-- Metrics are recorded in Prometheus with all instances of '-' and '.' in tags converted to '\_'. This is because proxy-wasm adds tags to metrics through the name of the metric and Prometheus does not allow '-' or '.' in metric names, so Envoy converts them all to '\_' for the Prometheus format. This means a pod named 'abc-123' is labeled in Prometheus as 'abc\_123' and metrics for pods 'abc-123' and 'abc.123' would be tracked as a single pod 'abc\_123' and only distinguishable by the 'instance' label containing the pod's IP address.
+- Metrics are recorded in Prometheus with all instances of '-' and '.' in tags converted to '\_'. This is because proxy-wasm adds tags to metrics through the name of the metric and Prometheus does not allow '-' or '.' in metric names, so Envoy converts them all to '\_' for the Prometheus format. This means a pod named 'abc-123' is labeled in Prometheus as 'abc_123' and metrics for pods 'abc-123' and 'abc.123' would be tracked as a single pod 'abc_123' and only distinguishable by the 'instance' label containing the pod's IP address.
 
 #### Error Code Metrics
 
@@ -221,11 +221,11 @@ Ensure that you have followed the steps to run [OSM Demo][2]
 #### Querying proxy metrics for request count
 
 1. Verify that the Prometheus service is running in your cluster
-    - In kubernetes, execute the following command: `kubectl get svc osm-prometheus -n osm-system`
-    ![image](https://user-images.githubusercontent.com/59101963/85906800-478b3580-b7c4-11ea-8eb2-63bd83647e5f.png)
+   - In kubernetes, execute the following command: `kubectl get svc osm-prometheus -n osm-system`
+     ![image](https://user-images.githubusercontent.com/59101963/85906800-478b3580-b7c4-11ea-8eb2-63bd83647e5f.png)
 2. Open up the Prometheus UI
-    - Ensure you are in root of the repository and execute the following script: `./scripts/port-forward-prometheus.sh`
-    - Visit the following url [http://localhost:7070][5] in your web browser
+   - Ensure you are in root of the repository and execute the following script: `./scripts/port-forward-prometheus.sh`
+   - Visit the following url [http://localhost:7070][5] in your web browser
 3. Execute a Prometheus query
    - In the "Expression" input box at the top of the web page, enter the text: `envoy_cluster_upstream_rq_xx{envoy_response_code_class="2"}` and click the execute button
    - This query will return the successful http requests
@@ -241,14 +241,14 @@ OSM provides some pre-cooked Grafana dashboards to display and track services re
 
 1. OSM Data Plane
    - **OSM Service to Service Metrics**: This dashboard lets you view the traffic metrics from a given source service to a given destination service
-   ![image](https://user-images.githubusercontent.com/59101963/85907233-a604e380-b7c5-11ea-95b5-9190fbc7967f.png)
+     ![image](https://user-images.githubusercontent.com/59101963/85907233-a604e380-b7c5-11ea-95b5-9190fbc7967f.png)
    - **OSM Pod to Service Metrics**: This dashboard lets you investigate the traffic metrics from a pod to all the services it connects/talks to
-   ![image](https://user-images.githubusercontent.com/59101963/85907338-03993000-b7c6-11ea-9e63-a4c189bb3080.png)
+     ![image](https://user-images.githubusercontent.com/59101963/85907338-03993000-b7c6-11ea-9e63-a4c189bb3080.png)
    - **OSM Workload to Service Metrics**: This dashboard provides the traffic metrics from a workload (deployment, replicaSet) to all the services it connects/talks to
-   ![image](https://user-images.githubusercontent.com/59101963/85907390-26c3df80-b7c6-11ea-98b8-5be96fc954c1.png)
+     ![image](https://user-images.githubusercontent.com/59101963/85907390-26c3df80-b7c6-11ea-98b8-5be96fc954c1.png)
 2. OSM Control Plane
    - **OSM Control Plane Metrics**: This dashboard provides traffic metrics from the given service to OSM's control plane
-   ![image](https://user-images.githubusercontent.com/59101963/85907465-71455c00-b7c6-11ea-9dea-f6258a1ea8d9.png)
+     ![image](https://user-images.githubusercontent.com/59101963/85907465-71455c00-b7c6-11ea-9dea-f6258a1ea8d9.png)
 
 ### Importing Dashboards on a BYO Grafana instance
 
@@ -265,10 +265,10 @@ Ensure that you have followed the steps to run [OSM Demo][2]
 
 1. Verify that the Prometheus service is running in your cluster
    - In kubernetes, execute the following command: `kubectl get svc osm-prometheus -n osm-system`
-   ![image](https://user-images.githubusercontent.com/59101963/85906800-478b3580-b7c4-11ea-8eb2-63bd83647e5f.png)
+     ![image](https://user-images.githubusercontent.com/59101963/85906800-478b3580-b7c4-11ea-8eb2-63bd83647e5f.png)
 2. Verify that the Grafana service is running in your cluster
    - In kubernetes, execute the following command: `kubectl get svc osm-grafana -n osm-system`
-   ![image](https://user-images.githubusercontent.com/59101963/85906847-70abc600-b7c4-11ea-853d-f4c9b188ab9f.png)
+     ![image](https://user-images.githubusercontent.com/59101963/85906847-70abc600-b7c4-11ea-853d-f4c9b188ab9f.png)
 3. Open up the Grafana UI
    - Ensure you are in root of the repository and execute the following script: `./scripts/port-forward-grafana.sh`
    - Visit the following url [http://localhost:3000][4] in your web browser
