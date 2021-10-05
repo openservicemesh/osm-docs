@@ -6,6 +6,8 @@ type: docs
 weight: 2
 ---
 
+# Namespace Additon
+
 ## Overview
 
 When setting up an OSM control plane (also referred to as a "mesh"), one can also enroll a set of Kubernetes namespaces to the mesh. Enrolling a namespace to OSM allows OSM to monitor the resources within that Namespace whether they be applications deployed in Pods, Services, or even traffic policies represented as SMI resources.
@@ -49,7 +51,7 @@ osm metrics enable --namespace <namespace>
 
 There may be namespaces in a cluster that should never be part of a mesh. To explicity exclude a namespace from OSM:
 
-``` bash
+```bash
 osm namespace ignore <namespace>
 ```
 
