@@ -5,7 +5,7 @@ aliases: "/docs/HA/"
 type: docs
 ---
 
-# High Availability Design Considerations
+# High Availability
 
 OSM's control plane components are built with High Availability and Fault Tolerance in mind. The following sections will thoroughly document how are these tackled.
 
