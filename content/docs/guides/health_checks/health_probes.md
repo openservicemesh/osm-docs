@@ -5,6 +5,8 @@ aliases: "/docs/application_health_probes"
 type: "docs"
 ---
 
+# Configure Health Probes
+
 ## Overview
 
 Implementing [health probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) in your application is a great way for Kubernetes to automate some tasks to improve availability in the event of an error.
@@ -15,11 +17,11 @@ For health probes to continue to work as expected from within the mesh, OSM adds
 
 For HTTP probes, the following table shows the modified path and port for each probe type.
 
-Probe | Path | Port
--|-|-
-Liveness | /osm-liveness-probe | 15901
-Readiness | /osm-readiness-probe | 15902
-Startup | /osm-startup-probe | 15903
+| Probe     | Path                 | Port  |
+| --------- | -------------------- | ----- |
+| Liveness  | /osm-liveness-probe  | 15901 |
+| Readiness | /osm-readiness-probe | 15902 |
+| Startup   | /osm-startup-probe   | 15903 |
 
 HTTPS and `tcpSocket` probes will have their ports modified the same way as HTTP probes. For HTTPS probes, the path is left unchanged.
 
@@ -422,6 +424,7 @@ server: envoy
   ...
 </html>
 ```
+
 ## Known issues
 
 - [#2207](https://github.com/openservicemesh/osm/issues/2207)
@@ -432,16 +435,16 @@ If any health probes are consistently failing, perform the following steps to id
 
 1. Verify `httpGet` and `tcpSocket` probes on Pods in the mesh have been modified.
 
-    Startup, liveness, and readiness `httpGet` and `tcpSocket` probes must be modified by OSM in order to continue to function while in a mesh. Ports must be modified to 15901, 15902, and 15903 for liveness, readiness, and startup probes, respectively. Only HTTP (not HTTPS) probes will have paths modified in addition to be `/osm-liveness-probe`, `/osm-readiness-probe`, or `/osm-startup-probe`.
+   Startup, liveness, and readiness `httpGet` and `tcpSocket` probes must be modified by OSM in order to continue to function while in a mesh. Ports must be modified to 15901, 15902, and 15903 for liveness, readiness, and startup probes, respectively. Only HTTP (not HTTPS) probes will have paths modified in addition to be `/osm-liveness-probe`, `/osm-readiness-probe`, or `/osm-startup-probe`.
 
-    Also, verify the Pod's Envoy configuration contains a listener for the modified endpoint.
+   Also, verify the Pod's Envoy configuration contains a listener for the modified endpoint.
 
-    See the [examples above](#examples) for more details.
+   See the [examples above](#examples) for more details.
 
 1. Determine if Kubernetes encountered any other errors while scheduling or starting the Pod.
 
-    Look for any errors that may have recently occurred with `kubectl describe` of the unhealthy Pod. Resolve any errors and verify the Pod's health again.
+   Look for any errors that may have recently occurred with `kubectl describe` of the unhealthy Pod. Resolve any errors and verify the Pod's health again.
 
 1. Determine if the Pod encountered a runtime error.
 
-    Look for any errors that may have occurred after the container started by inspecting its logs with `kubectl logs`. Resolve any errors and verify the Pod's health again.
+   Look for any errors that may have occurred after the container started by inspecting its logs with `kubectl logs`. Resolve any errors and verify the Pod's health again.
