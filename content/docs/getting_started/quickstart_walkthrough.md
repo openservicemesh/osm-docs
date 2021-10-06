@@ -1,26 +1,25 @@
 ---
-title: "OSM manual demo"
+title: "Quickstart Walkthrough"
 description: "The manual demo is a step-by-step walkthrough set of instruction of the automated demo."
 type: docs
-weight: 1
+weight: 2
 aliases: = ["/docs/install/manual_demo/"]
 ---
 
-# How to run the OSM manual demo
+# Quickstart Walkthrough
 
 The OSM manual demo install guide is a step by step set of instructions to quickly demo OSM's key features.
 
-
 ## Prerequisites
+
 This demo of OSM v0.9.2 requires:
-  - a cluster running Kubernetes v1.19 or greater (using a cloud provider of choice, [minikube](https://minikube.sigs.k8s.io/docs/start/), or similar)
-  - a workstation capable of executing [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) scripts
-  - [The Kubernetes command-line tool](https://kubernetes.io/docs/tasks/tools/#kubectl) - `kubectl`
-  - the [OSM code repo](https://github.com/openservicemesh/osm/) available locally
+
+- a cluster running Kubernetes v1.19 or greater (using a cloud provider of choice, [minikube](https://minikube.sigs.k8s.io/docs/start/), or similar)
+- a workstation capable of executing [Bash](<https://en.wikipedia.org/wiki/Bash_(Unix_shell)>) scripts
+- [The Kubernetes command-line tool](https://kubernetes.io/docs/tasks/tools/#kubectl) - `kubectl`
+- the [OSM code repo](https://github.com/openservicemesh/osm/) available locally
 
 > Note: This document assumes you have already installed credentials for a Kubernetes cluster in ~/.kube/config and `kubectl cluster-info` executes successfully.
-
-
 
 ## Download and install the OSM command-line tool
 
@@ -30,6 +29,7 @@ The binary is available on the [OSM GitHub releases page](https://github.com/ope
 ### For GNU/Linux and macOS
 
 Download the 64-bit GNU/Linux or macOS binary of OSM v0.9.2:
+
 ```bash
 system=$(uname -s)
 release=v0.9.2
@@ -40,6 +40,7 @@ curl -L https://github.com/openservicemesh/osm/releases/download/${release}/osm-
 ### For Windows
 
 Download the 64-bit Windows OSM v0.9.2 binary via Powershell:
+
 ```powershell
 wget  https://github.com/openservicemesh/osm/releases/download/v0.9.2/osm-v0.9.2-windows-amd64.zip -o osm.zip
 unzip osm.zip
@@ -47,8 +48,6 @@ unzip osm.zip
 ```
 
 The `osm` CLI can be compiled from source using [this guide](/docs/install/).
-
-
 
 ## Installing OSM on Kubernetes
 
@@ -75,9 +74,7 @@ osm install \
 
 This installed OSM Controller in the `osm-system` namespace.
 
-
 Read more on OSM's integrations with Prometheus, Grafana, and Jaeger in the [observability documentation](/docs/guides/observability/).
-
 
 ## Deploy Applications
 
@@ -88,17 +85,15 @@ In this section we will deploy 4 different Pods, and we will apply policies to c
 - `bookstore` is a server, which responds to HTTP requests. It is also a client making requests to the `bookwarehouse` service.
 - `bookwarehouse` is a server and should respond only to `bookstore`. Both `bookbuyer` and `bookthief` should be blocked.
 
-
 We are going to craft SMI policies, which will bring us to this final desired
 state of allowed and blocked traffic between pods:
 
-| from  /   to: | bookbuyer | bookthief | bookstore | bookwarehouse |
-|---------------|-----------|-----------|-----------|---------------|
-| bookbuyer     |     \     |     ❌     |     ✔    |       ❌       |
-| bookthief     |     ❌     |     \     |     ❌     |       ❌       |
-| bookstore     |     ❌     |     ❌     |     \     |       ✔      |
-| bookwarehouse |     ❌     |     ❌     |     ❌     |      \        |
-
+| from / to:    | bookbuyer | bookthief | bookstore | bookwarehouse |
+| ------------- | --------- | --------- | --------- | ------------- |
+| bookbuyer     | \         | ❌        | ✔         | ❌            |
+| bookthief     | ❌        | \         | ❌        | ❌            |
+| bookstore     | ❌        | ❌        | \         | ✔             |
+| bookwarehouse | ❌        | ❌        | ❌        | \             |
 
 To show SMI Traffic Split, we will deploy an additional application:
 
@@ -235,14 +230,16 @@ The following sections demonstrate using OSM with [permissive traffic policy mod
 In permissive traffic policy mode, application connectivity within the mesh is automatically configured by `osm-controller`. It can be enabled in the following ways.
 
 1. During install using `osm` CLI:
-  ```bash
-  osm install --set=OpenServiceMesh.enablePermissiveTrafficPolicy=true
-  ```
+
+```bash
+osm install --set=OpenServiceMesh.enablePermissiveTrafficPolicy=true
+```
 
 1. Post install by patching the `osm-mesh-config` custom resource in the control plane's namespace (`osm-system` by default)
-  ```bash
-  kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":true}}}'  --type=merge
-  ```
+
+```bash
+kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":true}}}'  --type=merge
+```
 
 ### Verify OSM is in permissive traffic policy mode
 
@@ -291,7 +288,7 @@ At this point, applications do not have access to each other because no access c
 
 Apply the [SMI Traffic Target][1] and [SMI Traffic Specs][2] resources to define access control and routing policies for the applications to communicate:
 
- Deploy SMI TrafficTarget and HTTPRouteGroup policy:
+Deploy SMI TrafficTarget and HTTPRouteGroup policy:
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/release-v0.9/docs/example/manifests/access/traffic-access-v1.yaml
@@ -326,18 +323,18 @@ spec:
     name: bookstore
     namespace: bookstore
   rules:
-  - kind: HTTPRouteGroup
-    name: bookstore-service-routes
-    matches:
-    - buy-a-book
-    - books-bought
+    - kind: HTTPRouteGroup
+      name: bookstore-service-routes
+      matches:
+        - buy-a-book
+        - books-bought
   sources:
-  - kind: ServiceAccount
-    name: bookbuyer
-    namespace: bookbuyer
+    - kind: ServiceAccount
+      name: bookbuyer
+      namespace: bookbuyer
   #- kind: ServiceAccount
-    #name: bookthief
-    #namespace: bookthief
+  #name: bookthief
+  #namespace: bookthief
 ```
 
 Updated TrafficTarget spec with uncommented `bookthief` kind:
@@ -346,26 +343,26 @@ Updated TrafficTarget spec with uncommented `bookthief` kind:
 kind: TrafficTarget
 apiVersion: access.smi-spec.io/v1alpha3
 metadata:
- name: bookstore-v1
- namespace: bookstore
+  name: bookstore-v1
+  namespace: bookstore
 spec:
- destination:
-   kind: ServiceAccount
-   name: bookstore
-   namespace: bookstore
- rules:
- - kind: HTTPRouteGroup
-   name: bookstore-service-routes
-   matches:
-   - buy-a-book
-   - books-bought
- sources:
- - kind: ServiceAccount
-   name: bookbuyer
-   namespace: bookbuyer
- - kind: ServiceAccount
-   name: bookthief
-   namespace: bookthief
+  destination:
+    kind: ServiceAccount
+    name: bookstore
+    namespace: bookstore
+  rules:
+    - kind: HTTPRouteGroup
+      name: bookstore-service-routes
+      matches:
+        - buy-a-book
+        - books-bought
+  sources:
+    - kind: ServiceAccount
+      name: bookbuyer
+      namespace: bookbuyer
+    - kind: ServiceAccount
+      name: bookthief
+      namespace: bookthief
 ```
 
 Re-apply the access manifest with the updates.
@@ -465,17 +462,18 @@ osm dashboard
 
 Simply navigate to http://localhost:3000 to access the Grafana dashboards. The default user name is `admin` and the default password is `admin`. On the Grafana homepage click on the **Home** icon, you will see a folders containing dashboards for both OSM Control Plan and OSM Data Plane.
 
-
 ## Cleanup
 
 To cleanup all resources created for the demo, the OSM control plane, SMI resources, and the sample applications need to be deleted.
 
 To uninstall the sample applications and SMI resources, delete their namespaces with the following command:
+
 ```bash
 kubectl delete ns bookbuyer bookthief bookstore bookwarehouse
 ```
 
 To uninstall OSM, run
+
 ```bash
 osm uninstall
 ```
