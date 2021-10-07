@@ -22,7 +22,7 @@ In a bash-based shell on Linux/macOS or [Windows Subsystem for Linux](https://do
 
 ```console
 # Specify the OSM version that will be leveraged throughout these instructions
-OSM_VERSION=v0.9.1
+OSM_VERSION=v0.11.0
 
 # Linux curl command only
 curl -sL "https://github.com/openservicemesh/osm/releases/download/$OSM_VERSION/osm-$OSM_VERSION-linux-amd64.tar.gz" | tar -vxzf -
@@ -55,7 +55,7 @@ In a PowerShell-based shell on Windows, use `Invoke-WebRequest` to download the 
 
 ```console
 # Specify the OSM version that will be leveraged throughout these instructions
-$OSM_VERSION="v0.9.1"
+$OSM_VERSION="v0.11.0"
 
 [Net.ServicePointManager]::SecurityProtocol = "tls12"
 $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -URI "https://github.com/openservicemesh/osm/releases/download/$OSM_VERSION/osm-$OSM_VERSION-windows-amd64.zip" -OutFile "osm-$OSM_VERSION.zip"

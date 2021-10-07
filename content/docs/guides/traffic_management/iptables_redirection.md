@@ -141,7 +141,7 @@ The following snippet from the demo `curl` client's init container spec shows th
 Init Containers:
   osm-init:
     Container ID:  containerd://80f86af7bc64b7a70f7f2bf64242d735d857559a79cd97e206513368130902f1
-    Image:         openservicemesh/init:v0.9.2
+    Image:         openservicemesh/init:v0.11.0
     Image ID:      docker.io/openservicemesh/init@sha256:eb1f6ab02aeaaba8f58aaa29406b1653d7a3983958ea040c2af8845136ed786c
     Port:          <none>
     Host Port:     <none>
