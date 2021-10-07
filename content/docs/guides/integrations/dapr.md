@@ -3,6 +3,7 @@ title: "Integrate Dapr with OSM"
 description: "A simple demo showing to integrate Dapr with OSM"
 aliases: "/docs/integrations/demo_dapr"
 type: docs
+weight: 2
 ---
 
 # Integrate Dapr with OSM
