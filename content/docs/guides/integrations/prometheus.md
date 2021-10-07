@@ -3,6 +3,7 @@ title: "Integrate Prometheus with OSM"
 description: "A simple demo showing how OSM integrates with Prometheus for metrics"
 aliases: "/docs/integrations/demo_prometheus"
 type: docs
+weight: 3
 ---
 
 # Integrate Prometheus with OSM

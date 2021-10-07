@@ -2,6 +2,7 @@
 title: "External Authorization"
 description: "Configure external authorization through MeshConfig."
 type: docs
+weight: 1
 ---
 # External Authorization
 
