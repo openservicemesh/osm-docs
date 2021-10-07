@@ -7,7 +7,7 @@ weight: 4
 
 ## Overview
 
-Open Service Mesh (OSM) implements Service Mesh Interface (SMI) resources. This allows OSM users to have flexible implementations of common service mesh scenarios.
+Open Service Mesh (OSM) implements [Service Mesh Interface (SMI)](https://smi-spec.io/) resources. This allows OSM users to have flexible implementations of common service mesh scenarios.
 
 ## Supported versions
 
