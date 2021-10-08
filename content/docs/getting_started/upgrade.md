@@ -62,7 +62,7 @@ Please check the `CRD Updates` section of the [release notes](https://github.com
 - Kubernetes cluster with the OSM control plane installed
     - Ensure that the Kubernetes cluster has the minimum Kubernetes version required by the new OSM chart. This can be found in the [Installation Pre-requisites](/docs/getting_started/install#Pre-requisites)
 - `osm` CLI installed
-  - By default, the `osm` CLI will upgrade to the same chart version that it installs. e.g. v0.9.2 of the `osm` CLI will upgrade to v0.9.2 of the OSM Helm chart. Upgrading to any other version of the Helm chart than the version matching the CLI may work, but those scenarios are not tested and issues that arise may not get fixed even if reported.
+  - By default, the `osm` CLI will upgrade to the same chart version that it installs. e.g. v0.11.0 of the `osm` CLI will upgrade to v0.11.0 of the OSM Helm chart. Upgrading to any other version of the Helm chart than the version matching the CLI may work, but those scenarios are not tested and issues that arise may not get fixed even if reported.
 
 The `osm mesh upgrade` command performs a `helm upgrade` of the existing Helm release for a mesh.
 
@@ -72,7 +72,7 @@ $ osm mesh upgrade
 OSM successfully upgraded mesh osm
 ```
 
-This command will upgrade the mesh with the default mesh name in the default OSM namespace. Values from the previous release will carry over to the new release except for `OpenServiceMesh.image.registry` and `OpenServiceMesh.image.tag` which are overridden by default. For example, if OSM v0.7.0 is installed, `osm mesh upgrade` for v0.9.2 of the CLI will update the control plane images to v0.9.2 by default.
+This command will upgrade the mesh with the default mesh name in the default OSM namespace. Values from the previous release will carry over to the new release except for `OpenServiceMesh.image.registry` and `OpenServiceMesh.image.tag` which are overridden by default. For example, if OSM v0.7.0 is installed, `osm mesh upgrade` for v0.11.0 of the CLI will update the control plane images to v0.11.0 by default.
 
 See `osm mesh upgrade --help` for more details
 
