@@ -88,7 +88,10 @@ breadcrumb_disable = false
 sidebar_search_disable = false
 
 [[params.versions]]
-  version = "v0.10 (latest)"
+  version = "v0.11 (latest)"
+  url = "https://release-v0-11.docs.openservicemesh.io/"
+[[params.versions]]
+  version = "v0.10"
   url = "https://release-v0-10.docs.openservicemesh.io/"
 [[params.versions]]
   version = "v0.9"
@@ -99,7 +102,7 @@ sidebar_search_disable = false
 [params.versionbanner]
 	show = true
 	archive = "v0.8"
-	latest = "https://release-v0-10.docs.openservicemesh.io/"
+	latest = "https://release-v0-11.docs.openservicemesh.io/"
 
 
 [params.ui.feedback]
