@@ -10,5 +10,5 @@
 
 [[redirects]]
   from = "https://docs.openservicemesh.io/"
-  to = "https://release-v0-10.docs.openservicemesh.io/"
+  to = "https://release-v0-11.docs.openservicemesh.io/"
   force = true
