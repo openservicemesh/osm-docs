@@ -42,6 +42,16 @@ data:
 
 For details and code where this is used see [osm-controller.go](https://github.com/openservicemesh/osm/blob/release-v0.9/cmd/osm-controller/osm-controller.go#L182-L183).
 
+To read the root certificate, you can decode the secret and pipe it through openssl:
+
+```console
+kubectl get secret -n $osm_namespace osm-ca-bundle -o jsonpath='{.data.ca\.crt}' |
+    base64 -d |
+    openssl x509 -text -noout
+```
+
+This will provide valuable certificate information, such as the expiration date and the issuer.
+
 ### Rotate the Root Certificate (Tresor)
 
 The self-signed root certificate, which is created via the Tresor package within OSM, will expire in a decade. To rotate the root cert, the following steps should be followed: 
@@ -81,11 +91,10 @@ For certificate providers other than Tresor, the process of rotating the root ce
 
 ## Issuing Certificates
 
-Open Service Mesh supports 4 methods of issuing certificates:
+Open Service Mesh supports 3 methods of issuing certificates:
 
 - using an internal OSM package, called [Tresor](https://github.com/openservicemesh/osm/tree/release-v0.9/pkg/certificate/providers/tresor). This is the default for a first time installation.
 - using [Hashicorp Vault](https://www.vaultproject.io/)
-- using [Azure Key Vault](https://azure.microsoft.com/en-us/services/key-vault/)
 - using [cert-manager](https://cert-manager.io)
 
 ### Using OSM's Tresor certificate issuer
