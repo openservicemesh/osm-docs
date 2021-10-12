@@ -7,10 +7,10 @@ weight: 5
 
 ## Inspect OSM Components
 
-Some OSM components will be installed by default into the `osm-system` Namespace. Inspect them by using the following `kubectl` command:
+Some OSM components will be installed by default into `<osm-namespace>`. This refers to the namespace where the mesh control plane is installed. Inspect them by using the following `kubectl` command:
 
 ```console
-$ kubectl get pods,svc,secrets,meshconfigs,serviceaccount --namespace osm-system
+$ kubectl get pods,svc,secrets,meshconfigs,serviceaccount --namespace "<osm-namespace>"
 ```
 
 Some cluster-wide (non-namespaced) OSM components will also be installed. Inspect them using the following `kubectl` command:
@@ -22,7 +22,7 @@ kubectl get clusterrolebinding,clusterrole,mutatingwebhookconfiguration
 Under the hood, `osm` is using [Helm](https://helm.sh) libraries to create a Helm `release` object in the control plane Namespace. The Helm `release` name is the mesh-name. The `helm` CLI can also be used to inspect Kubernetes manifests installed in more detail. See the Helm docs for how to [install Helm](https://helm.sh/docs/intro/install/).
 
 ```console
-$ helm get manifest osm --namespace osm-system
+$ helm get manifest osm --namespace <osm-namespace>"
 ```
 
 ## Components

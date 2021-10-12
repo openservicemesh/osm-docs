@@ -62,14 +62,16 @@ will be injected with Envoy, but traffic will flow through the proxy and will no
 > Note: Permissive Traffic Policy mode is an important feature for brownfield deployments, where it may take some time to craft SMI policies. While operators design the SMI policies, existing services will continue to operate as they have been before OSM was installed.
 
 ```bash
+export osm_namespace=osm-system # Replace osm-system with the namespace where OSM will be installed
+export osm_mesh_name=osm # Replace osm with the desired OSM mesh name
+
 osm install \
+    --mesh-name "$osm_mesh_name" \
+    --osm-namespace "$osm_namespace" \
     --set=osm.enablePermissiveTrafficPolicy=true \
     --set=osm.deployPrometheus=true \
     --set=osm.deployGrafana=true \
     --set=osm.deployJaeger=true
 ```
-
-This installed OSM Controller in the `osm-system` namespace.
-
 
 Read more on OSM's integrations with Prometheus, Grafana, and Jaeger in the [observability documentation](/docs/guides/observability/).

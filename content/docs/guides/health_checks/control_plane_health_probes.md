@@ -128,7 +128,7 @@ If any health probes are consistently failing, perform the following steps to id
     osm2        osm-system-2   osm-controller-48fd3c810d-sornc  v0.8.0      HTTPRouteGroup:specs.smi-spec.io/v1alpha4,TCPRoute:specs.smi-spec.io/v1alpha4,TrafficSplit:split.smi-spec.io/v1alpha2,TrafficTarget:access.smi-spec.io/v1alpha3
     ```
 
-    Note how `osm-system` is present in the following list:
+    Note how `osm-system` (the mesh control plane namespace) is present in the following list of namespaces:
 
     ```console
     $ osm namespace list --mesh-name osm --osm-namespace osm-system

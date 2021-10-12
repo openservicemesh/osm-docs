@@ -47,9 +47,11 @@ When enabled, Fluent Bit can collect these logs, process them and send them to a
 OSM provides log forwarding by optionally deploying a Fluent Bit sidecar to the OSM controller using the `--set=osm.enableFluentbit=true` flag during installation. The user can then define where OSM logs should be forwarded using any of the available [Fluent Bit output plugins](https://docs.fluentbit.io/manual/pipeline/outputs).
 
 ### Configuring Log Forwarding with Fluent Bit
-By default, the Fluent Bit sidecar is configured to simply send logs to the Fluent Bit container's stdout. If you have installed OSM with Fluent Bit enabled, you may access these logs using `kubectl logs -n osm-system <osm-controller-name> -c fluentbit-logger`. This command will also help you find how your logs are formatted in case you need to change your parsers and filters.
+By default, the Fluent Bit sidecar is configured to simply send logs to the Fluent Bit container's stdout. If you have installed OSM with Fluent Bit enabled, you may access these logs using `kubectl logs -n "<osm-namespace>" <osm-controller-name> -c fluentbit-logger`. This command will also help you find how your logs are formatted in case you need to change your parsers and filters.
 
-To quickly bring up Fluent Bit with default values, use:
+> Note: `<osm-namespace>` refers to the namespace where the osm control plane is installed.
+
+To quickly bring up Fluent Bit with default values, use the `--set=OpenServiceMesh.enableFluentbit` option:
 ```console
 osm install --set=osm.enableFluentbit=true
 ```

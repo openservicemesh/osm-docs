@@ -11,8 +11,8 @@ If for any reason, `osm uninstall mesh` as documented in the [uninstall guide](/
 
 Set environment variables for your mesh:
 ```console
-export osm_namespace=<osm namespace>
-export mesh_name=<mesh name>
+export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
+export mesh_name=osm # Replace osm with the OSM mesh name
 export osm_version=<osm version>
 export osm_ca_bundle=<osm ca bundle>
 ```

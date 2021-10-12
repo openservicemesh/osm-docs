@@ -249,8 +249,9 @@ Ensure that you have followed the steps to run [OSM Demo][2]
 ### Querying proxy metrics for request count
 
 1. Verify that the Prometheus service is running in your cluster
-   - In kubernetes, execute the following command: `kubectl get svc osm-prometheus -n osm-system`
+   - In kubernetes, execute the following command: `kubectl get svc osm-prometheus -n "<osm-namespace>"`.
      ![image](https://user-images.githubusercontent.com/59101963/85906800-478b3580-b7c4-11ea-8eb2-63bd83647e5f.png)
+   - Note: `<osm-namespace>` refers to the namespace where the osm control plane is installed.
 2. Open up the Prometheus UI
    - Ensure you are in root of the repository and execute the following script: `./scripts/port-forward-prometheus.sh`
    - Visit the following url [http://localhost:7070][5] in your web browser
@@ -270,10 +271,10 @@ Ensure that you have followed the steps to run [OSM Demo][2]
 ### Viewing a Grafana dashboard for service to service metrics
 
 1. Verify that the Prometheus service is running in your cluster
-   - In kubernetes, execute the following command: `kubectl get svc osm-prometheus -n osm-system`
+   - In kubernetes, execute the following command: `kubectl get svc osm-prometheus -n "<osm-namespace>"`
      ![image](https://user-images.githubusercontent.com/59101963/85906800-478b3580-b7c4-11ea-8eb2-63bd83647e5f.png)
 2. Verify that the Grafana service is running in your cluster
-   - In kubernetes, execute the following command: `kubectl get svc osm-grafana -n osm-system`
+   - In kubernetes, execute the following command: `kubectl get svc osm-grafana -n "<osm-namespace>"`
      ![image](https://user-images.githubusercontent.com/59101963/85906847-70abc600-b7c4-11ea-853d-f4c9b188ab9f.png)
 3. Open up the Grafana UI
    - Ensure you are in root of the repository and execute the following script: `./scripts/port-forward-grafana.sh`

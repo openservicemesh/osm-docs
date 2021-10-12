@@ -22,7 +22,7 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
 
 1. Enable permissive mode if not enabled.
     ```bash
-    export osm_namespace=<osm-namespace> # Replace <osm-namespace> with the namespace where OSM is installed
+    export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
     kubectl patch meshconfig osm-mesh-config -n "$osm_namespace" -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":true}}}'  --type=merge
     ```
 

@@ -110,7 +110,7 @@ Run `helm upgrade --help` for more options.
 The envoy version can be updated by changing the value of the `envoyImage` variable in the osm-mesh-config. When doing so, it is recommended to specify the image digest associated with that envoy version to avoid being vulnerable to supply chain attacks. For instance, to update the [envoy-alpine image](https://hub.docker.com/r/envoyproxy/envoy-alpine/tags) to v1.19.1, the following command should be run:
 
 ```bash
-export osm_namespace=<osm-namespace> # Replace <osm-namespace> with the namespace where OSM is installed
+export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
 kubectl patch meshconfig osm-mesh-config -n $osm_namespace -p '{"spec":{"sidecar":{"envoyImage":"envoyproxy/envoy-alpine@sha256:6502a637c6c5fba4d03d0672d878d12da4bcc7a0d0fb3f1d506982dde0039abd"}}}' --type=merge
 ```
 
@@ -121,7 +121,7 @@ After the MeshConfig resource has been updated, all the pods and deployments tha
 If enabled, OSM's Prometheus, Grafana, and Jaeger services are deployed alongside other OSM control plane components. Though these third party dependencies cannot be updated through the meshconfig like Envoy, the versions can still be updated in the deployment directly. For instance, to update prometheus to v2.19.1, the user can run:
 
 ```bash
-export osm_namespace=<osm-namespace> # Replace <osm-namespace> with the namespace where OSM is installed
+export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
 kubectl set image deployment/osm-prometheus -n $osm_namespace prometheus="prom/prometheus:v2.19.1"
 ```
 

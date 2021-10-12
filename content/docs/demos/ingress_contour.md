@@ -20,13 +20,15 @@ OSM provides the option to use [Contour](https://projectcontour.io) ingress cont
 
 First, we will install OSM and Contour as in the `osm-system` namespace and name the mesh name as `osm`.
 ```bash
-export osm_namespace=osm-system
-export osm_mesh_name=osm
+export osm_namespace=osm-system # Replace osm-system with the namespace where OSM will be installed
+export osm_mesh_name=osm # Replace osm with the desired OSM mesh name
 ```
 
 If using `osm` CLI:
 ```bash
 osm install --set contour.enabled=true \
+    --mesh-name "$osm_mesh_name" \
+    --osm-namespace "$osm_namespace" \
     --set contour.configInline.tls.envoy-client-certificate.name=osm-contour-envoy-client-cert \
     --set contour.configInline.tls.envoy-client-certificate.namespace="$osm_namespace"
 ```
@@ -132,7 +134,9 @@ To proxy connections to TLS backends using HTTPS, the backend service must be an
 kubectl annotate service httpbin -n httpbin projectcontour.io/upstream-protocol.tls='14001' --overwrite
 ```
 
-Next, we need to create an HTTPProxy configuration to use TLS proxying to the backend service, and providing a CA certificate to validate the server certificate presented by the backend service. For this to work, we need to first delegate to Contour the permission to read OSM's CA certificate secret from the OSM's namespace when referenced in the HTTPProxy configuration in the `httpbin` namespace. Refer to the [Upstream TLS section](https://projectcontour.io/docs/v1.18.0/config/upstream-tls/) to learn more about upstream certificate validation and when certificate delegation is necessary. In addition, we must create an IngressBackend resource that specifies HTTPS ingress traffic directed to the `httpbin` service must only accept traffic from a trusted client, osm-contour-envoy in the ingress edge proxy we deployed. OSM automatically provisioned a client certificate for the `osm-contour-envoy` ingress gateway with the Subject ALternative Name (SAN) `osm-contour-envoy.osm-system.cluster.local` during install, so the IngressBackend configuration needs to reference the same SAN for mTLS authentication between the `osm-contour-envoy` edge and the `httpbin` backend.
+Next, we need to create an HTTPProxy configuration to use TLS proxying to the backend service, and providing a CA certificate to validate the server certificate presented by the backend service. For this to work, we need to first delegate to Contour the permission to read OSM's CA certificate secret from the OSM's namespace when referenced in the HTTPProxy configuration in the `httpbin` namespace. Refer to the [Upstream TLS section](https://projectcontour.io/docs/v1.18.0/config/upstream-tls/) to learn more about upstream certificate validation and when certificate delegation is necessary. In addition, we must create an IngressBackend resource that specifies HTTPS ingress traffic directed to the `httpbin` service must only accept traffic from a trusted client, osm-contour-envoy in the ingress edge proxy we deployed. OSM automatically provisioned a client certificate for the `osm-contour-envoy` ingress gateway with the Subject Alternative Name (SAN) `osm-contour-envoy.$osm_namespace.cluster.local` during install, so the IngressBackend configuration needs to reference the same SAN for mTLS authentication between the `osm-contour-envoy` edge and the `httpbin` backend.
+
+> Note: `<osm-namespace>` refers to the namespace where the osm control plane is installed.
 
 Apply the configurations:
 ```bash

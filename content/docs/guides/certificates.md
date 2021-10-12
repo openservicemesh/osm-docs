@@ -24,7 +24,7 @@ There are a few kinds of certificates used in OSM:
 
 ### Root Certificate
 
-The root certificate for the service mesh is stored in an Opaque Kubernetes Secret named `osm-ca-bundle` in the OSM Namespace (in most cases `osm-system`).
+The root certificate for the service mesh is stored in an Opaque Kubernetes Secret named `osm-ca-bundle` in the namespace where osm is installed (by default `osm-system`).
 The secret YAML has the following shape:
 
 ```yaml
@@ -60,17 +60,18 @@ The self-signed root certificate, which is created via the Tresor package within
 
 1. Delete the `osm-ca-bundle` certificate in the osm namesapce
    ```console
-   export osm_namespace=<osm-namespace> # Replace <osm-namespace> with the namespace where OSM is installed
+   export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
    kubectl delete secret osm-ca-bundle -n $osm_namespace
    ```
-2. Restart the control plane components in the osm-namespace
+
+2. Restart the control plane components in `$osm_namespace`
    ```console
    kubectl rollout restart deploy osm-controller -n $osm_namespace
    kubectl rollout restart deploy osm-injector -n $osm_namespace
    kubectl rollout restart deploy osm-bootstrap -n $osm_namespace
    ```
 
-When the components gets re-deployed, you should be able to eventually see the new `osm-ca-bundle` secret in the osm-namespace:
+When the components gets re-deployed, you should be able to eventually see the new `osm-ca-bundle` secret in `$osm_namespace`:
 
 ```console
 kubectl get secrets -n $osm_namespace
@@ -187,7 +188,9 @@ Development mode should NOT be used in production installations!
 ...
 ```
 
-The outcome of deploying Vault in your system is a URL and a token. For instance the URL of Vauld could be `http://vault.osm-system-ns.svc.cluster.local` and the token `xxx`.
+The outcome of deploying Vault in your system is a URL and a token. For instance the URL of Vault could be `http://vault.$osm_namespace-ns.svc.cluster.local` and the token `xxx`.
+
+> Note: `$osm_namespace` refers to the namespace where the osm control plane is installed.
 
 #### Configure OSM with Vault
 
