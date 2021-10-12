@@ -19,6 +19,20 @@ The following guide describes how to onboard a Kubernetes microservice to an OSM
     - [demo/deploy-traffic-split.sh](https://github.com/openservicemesh/osm/blob/release-v0.9/demo/deploy-traffic-split.sh)
     - [demo/deploy-traffic-target.sh](https://github.com/openservicemesh/osm/blob/release-v0.9/demo/deploy-traffic-target.sh)
 
+    If an application in the mesh needs to communicate with the Kubernetes API server, the user needs to explicitly add the Kubernetes API server's address to the list of Global outbound IP ranges for exclusion. The IP address could be a cluster IP address or a public IP address and should be appropriately excluded for connectivity to the Kubernetes API server. For example:
+
+    1. Get the Kubernetes API server cluster IP:
+        ```console
+        $ kubectl get svc -n default
+        NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+        kubernetes   ClusterIP   10.0.0.1     <none>        443/TCP   1d
+        ```
+    2. Add this IP to the MeshConfig so that outbound traffic to it is excluded from interception by OSM's sidecar
+        ```console
+        $ kubectl patch meshconfig osm-mesh-config -n kube-system -p '{"spec":{"traffic":{"outboundIPRangeExclusionList":["10.0.0.1/32"]}}}'  --type=merge
+        meshconfig.config.openservicemesh.io/osm-mesh-config patched
+        ```
+
 1. Onboard Kubernetes Namespaces to OSM
 
     To onboard a namespace containing applications to be managed by OSM, run the `osm namespace add` command, which does the equivalent of the following:
