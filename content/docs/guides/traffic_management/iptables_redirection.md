@@ -66,6 +66,8 @@ OSM provides a means to specify a global list of IP ranges to exclude from outbo
     ## Assumes OSM is installed in the osm-system namespace
     kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"outboundIPRangeExclusionList":["1.1.1.1/32", "2.2.2.2/24"]}}}'  --type=merge
     ```
+   
+   When IP ranges are set for exclusion post-install, make sure to restart the relevant pods in monitored namespaces for this change to take effect.
 
 Excluded IP ranges are stored in the `osm-mesh-config` `MeshConfig` custom resource and are read at the time of sidecar injection by `osm-injector`. These dynamically configurable IP ranges are programmed by the init container along with the static rules used to intercept and redirect traffic via the Envoy proxy sidecar. Excluded IP ranges will not be intercepted for traffic redirection to the Envoy proxy sidecar. Refer to the [outbound IP range exclusion demo](/docs/demos/outbound_ip_exclusion) to learn more.
 
@@ -90,6 +92,8 @@ OSM provides the means to specify a global list of ports to exclude from outboun
     ## Assumes OSM is installed in the osm-system namespace
     kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"outboundPortExclusionList":[6379, 7070]}}}'  --type=merge
     ```
+
+   When ports are set for exclusion post-install, make sure to restart the relevant pods in monitored namespaces for this change to take effect.
 
 #### 2. Pod scoped outbound port exclusions
 
@@ -122,6 +126,8 @@ OSM provides the means to specify a global list of ports to exclude from inbound
     ## Assumes OSM is installed in the osm-system namespace
     kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"inboundPortExclusionList":[6379, 7070]}}}'  --type=merge
     ```
+
+   When ports are set for exclusion post-install, make sure to restart the relevant pods in monitored namespaces for this change to take effect.
 
 #### 2. Pod scoped inbound port exclusions
 

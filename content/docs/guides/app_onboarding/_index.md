@@ -19,19 +19,55 @@ The following guide describes how to onboard a Kubernetes microservice to an OSM
     - [demo/deploy-traffic-split.sh](https://github.com/openservicemesh/osm/blob/release-v0.9/demo/deploy-traffic-split.sh)
     - [demo/deploy-traffic-target.sh](https://github.com/openservicemesh/osm/blob/release-v0.9/demo/deploy-traffic-target.sh)
 
-    If an application in the mesh needs to communicate with the Kubernetes API server, the user needs to explicitly add the Kubernetes API server's address to the list of Global outbound IP ranges for exclusion. The IP address could be a cluster IP address or a public IP address and should be appropriately excluded for connectivity to the Kubernetes API server. For example:
+1. If an application in the mesh needs to communicate with the Kubernetes API server, the user needs to explicitly allow this either by using IP range exclusion or by creating an egress policy as outlined below.
+   
+   First get the Kubernetes API server cluster IP:
+   ```console
+   $ kubectl get svc -n default
+   NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+   kubernetes   ClusterIP   10.0.0.1     <none>        443/TCP   1d
+   ```
+   
+    **Option 1:** add the Kubernetes API server's address to the list of Global outbound IP ranges for exclusion. The IP address could be a cluster IP address or a public IP address and should be appropriately excluded for connectivity to the Kubernetes API server.
 
-    1. Get the Kubernetes API server cluster IP:
-        ```console
-        $ kubectl get svc -n default
-        NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-        kubernetes   ClusterIP   10.0.0.1     <none>        443/TCP   1d
-        ```
-    2. Add this IP to the MeshConfig so that outbound traffic to it is excluded from interception by OSM's sidecar
-        ```console
-        $ kubectl patch meshconfig osm-mesh-config -n kube-system -p '{"spec":{"traffic":{"outboundIPRangeExclusionList":["10.0.0.1/32"]}}}'  --type=merge
-        meshconfig.config.openservicemesh.io/osm-mesh-config patched
-        ```
+    Add this IP to the MeshConfig so that outbound traffic to it is excluded from interception by OSM's sidecar:
+    ```console
+    $ kubectl patch meshconfig osm-mesh-config -n <osm-namespace> -p '{"spec":{"traffic":{"outboundIPRangeExclusionList":["10.0.0.1/32"]}}}'  --type=merge
+    meshconfig.config.openservicemesh.io/osm-mesh-config patched
+    ```
+    
+    Restart the relevant pods in monitored namespaces for this change to take effect.
+
+    **Option 2:** apply an Egress policy to allow access to the Kubernetes API server over HTTPS
+   
+   > _Note: when using an Egress policy, the Kubernetes API service must not be in a namespace that OSM manages_
+
+    1. Enable egress policy if not enabled:
+    ```console
+    kubectl patch meshconfig osm-mesh-config -n <osm-namespace> -p '{"spec":{"featureFlags":{"enableEgressPolicy":true}}}'  --type=merge
+    ```
+   
+    2. Apply an Egress policy to allow the application's ServiceAccount to access the Kubernetes API server cluster IP found above.
+    For example:
+    ```console
+    kubectl apply -f - <<EOF
+    kind: Egress
+    apiVersion: policy.openservicemesh.io/v1alpha1
+    metadata:
+        name: k8s-server-egress
+        namespace: test
+    spec:
+        sources:
+        - kind: ServiceAccount
+          name: <app pod's service account name>
+          namespace: <app pod's service account namespace>
+        ipAddresses:
+        - 10.0.0.1/32
+        ports:
+        - number: 443
+          protocol: https
+    EOF
+    ```  
 
 1. Onboard Kubernetes Namespaces to OSM
 
