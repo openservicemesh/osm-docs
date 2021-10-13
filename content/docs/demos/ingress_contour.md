@@ -12,7 +12,7 @@ OSM provides the option to use [Contour](https://projectcontour.io) ingress cont
 
 - Kubernetes cluster running Kubernetes v1.19.0 or greater.
 - Have `kubectl` available to interact with the API server.
-- No existing installation of OSM. Any existing installation must first be uinstalled prior to proceeding with this demo.
+- No existing installation of OSM. Any existing installation must first be uninstalled prior to proceeding with this demo.
 - Have `osm` or `Helm 3` CLI available for installing OSM and Contour.
 - OSM version >= v0.10.0.
 
@@ -33,12 +33,15 @@ osm install --set contour.enabled=true \
 
 If using `Helm`:
 ```bash
-helm install "$osm_mesh_name" osm --repo https://openservicemesh.github.io/osm
+helm install "$osm_mesh_name" osm --repo https://openservicemesh.github.io/osm \
+    --set contour.enabled=true \
+    --set contour.configInline.tls.envoy-client-certificate.name=osm-contour-envoy-client-cert \
+    --set contour.configInline.tls.envoy-client-certificate.namespace="$osm_namespace"
 ```
 
-To restrict ingress traffic on backends to authorized clients, we will set up the IngressBackend configuration such that only ingress traffic from the endpoints of the `osm-contour-envoy` service can route traffic to the service backend. To be able to discover the endpoints of `osm-contour-envoy` service, we need OSM controller to monitor the corresponding namespace.
+To restrict ingress traffic on backends to authorized clients, we will set up the IngressBackend configuration such that only ingress traffic from the endpoints of the `osm-contour-envoy` service can route traffic to the service backend. To be able to discover the endpoints of `osm-contour-envoy` service, we need OSM controller to monitor the corresponding namespace. However, Contour must NOT be injected with an Envoy sidecar to function properly.
 ```bash
-kubectl label ns "$osm_namespace" openservicemesh.io/monitored-by="$osm_mesh_name"
+osm namespace add "$osm_namespace" --mesh-name "$osm_mesh_name" --disable-sidecar-injection
 ```
 
 Save the ingress gateway's external IP address and port which we will later use to test access to the backend application:

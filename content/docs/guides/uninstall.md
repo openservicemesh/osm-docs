@@ -66,10 +66,6 @@ Now, there should be no OSM Envoy sidecar containers running as part of the appl
 longer managed by the OSM control plane with the `mesh-name` used above. During this process, your applications may experience some downtime
 as all the Pods are restarting.
 
-### Delete Envoy Bootsrap Secrets
-
-Once the sidecar is removed, there is no need for the Envoy bootstrap config secrets OSM created. These are stored in the application namespace and can be deleted manually with `kubectl`. These secrets have the prefix `envoy-bootstrap-config` followed by some unique ID: `envoy-bootstrap-config-<some-id-here>`.
-
 ## Resource Management
 
 ## Uninstall OSM Control Plane and Remove User Provided Resources

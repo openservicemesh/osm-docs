@@ -2,7 +2,7 @@
 title: "Application onboarding"
 description: "Onboard Services"
 type: docs
-weight: 3
+weight: 6
 ---
 
 # Onboard Services
@@ -35,22 +35,16 @@ The following guide describes how to onboard a Kubernetes microservice to an OSM
 
 1. Onboard Kubernetes Namespaces to OSM
 
-    To onboard a namespace containing applications to be managed by OSM, run the `osm namespace add` command, which does the equivalent of the following:
+    To onboard a namespace containing applications to be managed by OSM, run the `osm namespace add` command:
 
     ```console
-    $ kubectl label namespace <namespace> openservicemesh.io/monitored-by=<mesh-name>
+    $ osm namespace add <namespace> --mesh-name <mesh-name>
     ```
 
     By default, the `osm namespace add` command enables automatic sidecar injection for pods in the namespace.
-    This does the equivalent of the following:
-
-    ```console
-    $ kubectl label namespace <namespace> openservicemesh.io/monitored-by=<mesh-name>
-    $ kubectl annotate namespace <namespace> openservicemesh.io/sidecar-injection=enabled
-    ```
 
     To disable automatic sidecar injection as a part of enrolling a namespace into the mesh, use `osm namespace add <namespace> --disable-sidecar-injection`.
-    Once a namespace has been on-boarded, pods can be enrolled in the mesh by configuring automatic sidecar injection. See the [Sidecar Injection](/docs/guides/app_onboarding/sidecar_injection) document for more details.
+    Once a namespace has been onboarded, pods can be enrolled in the mesh by configuring automatic sidecar injection. See the [Sidecar Injection](/docs/guides/app_onboarding/sidecar_injection) document for more details.
 
 1.  Deploy new applications or redeploy existing applications
 
@@ -60,10 +54,10 @@ The following guide describes how to onboard a Kubernetes microservice to an OSM
     In order to route protocol specific traffic correctly to service ports, configure the application protocol to use. Refer to the [application protocol selection guide](/docs/guides/app_onboarding/app_protocol_selection) to learn more.
 
 #### Note: Removing Namespaces
-Namespaces can be removed from the OSM mesh with the `osm namespace remove` command, which does the equivalent of the following:
+Namespaces can be removed from the OSM mesh with the `osm namespace remove` command:
 
 ```console
-$ kubectl label namespace <namespace> openservicemesh.io/monitored-by-
+$ osm namespace remove <namespace>
 ```
 
 > **Please Note:**

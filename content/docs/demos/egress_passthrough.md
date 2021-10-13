@@ -64,6 +64,6 @@ This guide demonstrates a client within the service mesh accessing destinations 
     ```
     ```console
     $ kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I https://httpbin.org:443
-	  curl: (35) OpenSSL SSL_connect: SSL_ERROR_SYSCALL in connection to httpbin.org:443
-	  command terminated with exit code 35
+	  curl: (7) Failed to connect to httpbin.org port 443 after 3 ms: Connection refused
+	  command terminated with exit code 7
     ```
