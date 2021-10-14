@@ -62,7 +62,7 @@ Please check the `CRD Updates` section of the [release notes](https://github.com
 - Kubernetes cluster with the OSM control plane installed
     - Ensure that the Kubernetes cluster has the minimum Kubernetes version required by the new OSM chart. This can be found in the [Installation Pre-requisites](/docs/getting_started/install#Pre-requisites)
 - `osm` CLI installed
-  - By default, the `osm` CLI will upgrade to the same chart version that it installs. e.g. v0.9.2 of the `osm` CLI will upgrade to v0.9.2 of the OSM Helm chart. Upgrading to any other version of the Helm chart than the version matching the CLI may work, but those scenarios are not tested and issues that arise may not get fixed even if reported.
+  - By default, the `osm` CLI will upgrade to the same chart version that it installs. e.g. v1.0.0 of the `osm` CLI will upgrade to v1.0.0 of the OSM Helm chart. Upgrading to any other version of the Helm chart than the version matching the CLI may work, but those scenarios are not tested and issues that arise may not get fixed even if reported.
 
 The `osm mesh upgrade` command performs a `helm upgrade` of the existing Helm release for a mesh.
 
@@ -72,7 +72,7 @@ $ osm mesh upgrade
 OSM successfully upgraded mesh osm
 ```
 
-This command will upgrade the mesh with the default mesh name in the default OSM namespace. Values from the previous release will carry over to the new release except for `OpenServiceMesh.image.registry` and `OpenServiceMesh.image.tag` which are overridden by default. For example, if OSM v0.7.0 is installed, `osm mesh upgrade` for v0.9.2 of the CLI will update the control plane images to v0.9.2 by default.
+This command will upgrade the mesh with the default mesh name in the default OSM namespace. Values from the previous release will carry over to the new release except for `OpenServiceMesh.image.registry` and `OpenServiceMesh.image.tag` which are overridden by default. For example, if OSM v0.7.0 is installed, `osm mesh upgrade` for v1.0.0 of the CLI will update the control plane images to v1.0.0 by default.
 
 See `osm mesh upgrade --help` for more details
 
@@ -81,12 +81,12 @@ See `osm mesh upgrade --help` for more details
 #### Pre-requisites
 
 - Kubernetes cluster with the OSM control plane installed
-- The [helm 3 CLI](https://helm.sh/docs/intro/install/) 
+- The [helm 3 CLI](https://helm.sh/docs/intro/install/)
 
 #### OSM Configuration
 When upgrading, any custom settings used to install or run OSM may be reverted to the default, this only includes any metrics deployments. Please ensure that you carefully follow the guide to prevent these values from being overwritten.
 
-To preserve any changes you've made to the OSM configuration, use the `helm --values` flag. Create a copy of the [values file](https://github.com/openservicemesh/osm/blob/release-v0.9/charts/osm/values.yaml) (make sure to use the version for the upgraded chart) and change any values you wish to customize. You can omit all other values.
+To preserve any changes you've made to the OSM configuration, use the `helm --values` flag. Create a copy of the [values file](https://github.com/openservicemesh/osm/blob/release-v1.0/charts/osm/values.yaml) (make sure to use the version for the upgraded chart) and change any values you wish to customize. You can omit all other values.
 
 **Note: Any configuration changes that go into the MeshConfig will not be applied during upgrade and the values will remain as is prior to the upgrade. If you wish to update any value in the MeshConfig you can do so by patching the resource after an upgrade.
 
@@ -107,14 +107,14 @@ Run `helm upgrade --help` for more options.
 
 ### Envoy
 
-The envoy version can be updated by changing the value of the `envoyImage` variable in the osm-mesh-config. When doing so, it is recommended to specify the image digest associated with that envoy version to avoid being vulnerable to supply chain attacks. For instance, to update the [envoy-alpine image](https://hub.docker.com/r/envoyproxy/envoy-alpine/tags) to v1.19.1, the following command should be run: 
+The envoy version can be updated by changing the value of the `envoyImage` variable in the osm-mesh-config. When doing so, it is recommended to specify the image digest associated with that envoy version to avoid being vulnerable to supply chain attacks. For instance, to update the [envoy-alpine image](https://hub.docker.com/r/envoyproxy/envoy-alpine/tags) to v1.19.1, the following command should be run:
 
 ```bash
 export osm_namespace=<osm-namespace> # Replace <osm-namespace> with the namespace where OSM is installed
 kubectl patch meshconfig osm-mesh-config -n $osm_namespace -p '{"spec":{"sidecar":{"envoyImage":"envoyproxy/envoy-alpine@sha256:6502a637c6c5fba4d03d0672d878d12da4bcc7a0d0fb3f1d506982dde0039abd"}}}' --type=merge
 ```
 
-After the MeshConfig resource has been updated, all the pods and deployments that are part of the mesh must be restarted so that the newer version of Envoy sidecar can be injected onto the pods as a part of the automatic sidecar injection that OSM performs. This can be done with the `kubectl rollout restart deploy` command. 
+After the MeshConfig resource has been updated, all the pods and deployments that are part of the mesh must be restarted so that the newer version of Envoy sidecar can be injected onto the pods as a part of the automatic sidecar injection that OSM performs. This can be done with the `kubectl rollout restart deploy` command.
 
 ### Prometheus, Grafana, and Jaeger
 
@@ -125,7 +125,7 @@ export osm_namespace=<osm-namespace> # Replace <osm-namespace> with the namespac
 kubectl set image deployment/osm-prometheus -n $osm_namespace prometheus="prom/prometheus:v2.19.1"
 ```
 
-To update to Grafana 8.1.0, the command would look like: 
+To update to Grafana 8.1.0, the command would look like:
 
 ```bash
 kubectl set image deployment/osm-grafana -n $osm_namespace grafana="grafana/grafana:8.1.0"
