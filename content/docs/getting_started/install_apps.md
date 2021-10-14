@@ -94,11 +94,11 @@ A Kubernetes Deployment and Pods for each of `bookbuyer`, `bookthief`, `bookstor
 To view these resources on your cluster, run the following commands:
 
 ```bash
-kubectl get pods,deployments,serviceaccounts --n bookbuyer
-kubectl get pods,deployments,serviceaccounts --n bookthief
+kubectl get pods,deployments,serviceaccounts -n bookbuyer
+kubectl get pods,deployments,serviceaccounts -n bookthief
 
-kubectl get pods,deployments,serviceaccounts,services,endpoints --n bookstore
-kubectl get pods,deployments,serviceaccounts,services,endpoints --n bookwarehouse
+kubectl get pods,deployments,serviceaccounts,services,endpoints -n bookstore
+kubectl get pods,deployments,serviceaccounts,services,endpoints -n bookwarehouse
 ```
 
 In addition, a [Kubernetes Service Account](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) was also created for each application. The Service Account serves as the application's identity which will be used later in the demo to create service-to-service access control policies.
