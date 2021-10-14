@@ -240,13 +240,15 @@ body {
 
                       &:before {
                         border: solid $green;
-                        border-width: 0 0 0 6px;
+                        border-width: 0 3px 3px 0;
                         display: inline-block;
                         content:  " ";
                         padding: 3px;
+                        transform: rotate(-45deg);
+                        -webkit-transform: rotate(-45deg);
                         position: absolute;
-                        left: -0.075rem;
-                        top: 0.7rem;
+                        left: -0.2rem;
+                        top: 0.5rem;
                       }
                       
                       &.active {
