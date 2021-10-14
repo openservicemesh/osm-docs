@@ -23,7 +23,6 @@ OSM Envoy sidecars and related secrets will be removed in the following steps:
 
 1. [Disable automatic sidecar injection](#disable-automatic-sidecar-injection)
 1. [Restart pods](#restart-pods)
-1. [Delete Envoy bootsrap secrets](#delete-envoy-bootsrap-secrets)
 
 ### Disable Automatic Sidecar Injection
 
@@ -83,7 +82,7 @@ Use the `osm` CLI to uninstall the OSM control plane from a Kubernetes cluster. 
 1. OSM controller resources (deployment, service, config map, and RBAC)
 1. Prometheus, Grafana, Jaeger, and Fluentbit resources installed by OSM
 1. Mutating webhook and validating webhook
-1. The conversion webhook fields patched by OSM to the CRDs installed/required by OSM: [CRDs for OSM](https://github.com/openservicemesh/osm/tree/main/cmd/osm-bootstrap/crds) will be unpatched. Refer to [Removal of OSM Cluster Wide resources](#remove-osm-cluster-wide-resources) for more details
+1. The conversion webhook fields patched by OSM to the CRDs installed/required by OSM: [CRDs for OSM](https://github.com/openservicemesh/osm/tree/main/cmd/osm-bootstrap/crds) will be unpatched. Refer to [Removal of OSM Cluster Wide Resources](#removal-of-osm-cluster-wide-resources) for more details
 
 Run `osm uninstall`:
 
@@ -124,7 +123,7 @@ namespace "<namespace>" deleted
 
 Repeat the steps above for each mesh installed in the cluster. After there are no OSM control planes remaining, move to following step.
 
-## Removal of OSM Cluster Wide resources
+## Removal of OSM Cluster Wide Resources
 
 OSM ensures that all the CRDs mentioned [here](https://github.com/openservicemesh/osm/tree/main/cmd/osm-bootstrap/crds) exist in the cluster at install time. If they are not already installed, the `osm-bootstrap` pod will install them before the rest of the control plane components are running. This is the same behavior when using the Helm charts to install OSM as well. Uninstalling OSM will only remove/un-patch the conversion webhook fields from all the CRDs (which OSM adds to support multiple CR versions) and will not deleted them for primarily two reasons: 1. CRDs are cluster-wide resources and may be used by other service meshes running in the same cluster, 2. deletion of a CRD will cause all custom resources corresponding to that CRD to also be deleted. 
 
