@@ -14070,8 +14070,6 @@ body {
     margin-bottom: 4.25rem; }
   .td-content p + h3 {
     margin-top: 3.5rem; }
-  .td-content h2 {
-    font-size: 1.33rem; }
   .td-content p {
     line-height: 1.636;
     color: #575963; }
