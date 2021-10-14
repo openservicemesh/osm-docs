@@ -87,7 +87,10 @@ osm_version = "v1.0.0-rc.2"
 envoy_version = "v1.19.1"
 
 [[params.versions]]
-  version = "v0.11 (latest)"
+  version = "v1.0 (latest)"
+  url = "https://release-v1-0.docs.openservicemesh.io/"
+[[params.versions]]
+  version = "v0.11"
   url = "https://release-v0-11.docs.openservicemesh.io/"
 [[params.versions]]
   version = "v0.10"
