@@ -1,9 +1,11 @@
+{{ $hasbanner := .Site.Params.versionbanner }}
+
 <!doctype html>
 <html lang="{{ .Site.Language.Lang }}" class="no-js">
   <head>
     {{ partial "head.html" . }}
   </head>
-  <body class="td-{{ .Kind }}">
+  <body class="td-{{ .Kind }} {{ if $hasbanner.show }} has-banner{{ end }}">
     <header>
       {{ partial "navbar.html" . }}
     </header>
