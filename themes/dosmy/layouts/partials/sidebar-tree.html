@@ -23,7 +23,7 @@
       {{ partial "navbar-lang-selector.html" . }}
     </div>
     {{ end }}
-    {{ template "section-tree-nav-section" (dict "page" . "section" .FirstSection "delayActive" $shouldDelayActive)  }}
+    {{ template "section-tree-nav-section" (dict "page" . "section" (index .Site.Sections 0) "delayActive" $shouldDelayActive)  }}
   </nav>
 </div>
 {{ define "section-tree-nav-section" }}
