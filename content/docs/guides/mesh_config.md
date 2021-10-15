@@ -9,7 +9,7 @@ weight: 7
 # OSM MeshConfig
 OSM deploys a MeshConfig resource `osm-mesh-config` as a part of its control plane (in the same namespace as that of the osm-controller pod) which can be updated by the mesh owner/operator at any time. The purpose of this MeshConfig is to provide the mesh owner/operator the ability to update some of the mesh configurations based on their needs.
 
-At the time of install, the OSM MeshConfig is deployed from a preset MeshConfig (`preset-mesh-config`) which can be found under [charts/osm/templates](https://github.com/openservicemesh/osm/blob/release-v0.9/charts/osm/templates/preset-mesh-config.yaml).
+At the time of install, the OSM MeshConfig is deployed from a preset MeshConfig (`preset-mesh-config`) which can be found under [charts/osm/templates](https://github.com/openservicemesh/osm/blob/release-v1.0/charts/osm/templates/preset-mesh-config.yaml).
 To view your `osm-mesh-config` in CLI use the `kubectl get` command.
 ```bash
 # Replace osm-system with osm-controller's namespace if using a non-default namespace
@@ -27,7 +27,7 @@ kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"
 ```
 Refer to the [Config API reference](/docs/apidocs/config/v1alpha1) for more information.
 
-If an incorrect value is used, validations on the [MeshConfig CRD](https://github.com/openservicemesh/osm/blob/release-v0.9/charts/osm/crds/meshconfig.yaml) will prevent the change with an error message explaining why the value is invalid.
+If an incorrect value is used, validations on the [MeshConfig CRD](https://github.com/openservicemesh/osm/blob/release-v1.0/charts/osm/crds/meshconfig.yaml) will prevent the change with an error message explaining why the value is invalid.
 For example, the below command shows what happens if we patch `enableEgress` to a non-boolean value.
 ```bash
 kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enableEgress":"no"}}}'  --type=merge
