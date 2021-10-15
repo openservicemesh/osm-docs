@@ -11,11 +11,17 @@
         //
 
         $searchInput.data('html', true);
-        $searchInput.data('placement', 'bottom');
         $searchInput.data(
             'template',
-            '<div class="popover offline-search-result" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+            '<div class="popover offline-search-result" role="tooltip"><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
         );
+        $searchInput.data('popperConfig', {
+            modifiers: {
+                preventOverflow: {
+                    boundariesElement: 'viewport'
+                }
+            }
+        });
 
         //
         // Register handler

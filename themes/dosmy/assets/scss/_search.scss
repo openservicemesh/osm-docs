@@ -17,9 +17,6 @@
 }
 
 .popover.offline-search-result {
-    // Override bootstrap default style (max-width: $popover-max-width;)
-    max-width: 90%;
-
     .card {
         margin-bottom: $spacer * .5;
 
