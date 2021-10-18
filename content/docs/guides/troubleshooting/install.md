@@ -33,7 +33,7 @@ Then, try installing OSM again on the cluster.
 
 # OSM Mesh Uninstall Troubleshooting Guide
 
-If for any reason, `osm uninstall` is unsuccessful, run the [cleanup script](https://github.com/openservicemesh/osm/blob/release-v0.8/scripts/cleanup/osm-cleanup.sh) which will delete any OSM related resources.
+If for any reason, `osm uninstall` is unsuccessful, run the [cleanup script](https://github.com/openservicemesh/osm/blob/release-v0.11/scripts/cleanup/osm-cleanup.sh) which will delete any OSM related resources.
 
 To run the script, create a `.env` environment variable file to set the values specified at the top of the script. These values should match the values used to deploy the mesh.
 

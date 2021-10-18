@@ -235,7 +235,7 @@ Sample result will be:
 
 ## Grafana Integration
 
-![Grafana Demo](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.8/img/grafana.gif "Grafana Demo")
+![Grafana Demo](https://raw.githubusercontent.com/openservicemesh/osm/release-v0.11/img/grafana.gif "Grafana Demo")
 
 OSM provides some pre-cooked Grafana dashboards to display and track services related information captured by Prometheus:
 
