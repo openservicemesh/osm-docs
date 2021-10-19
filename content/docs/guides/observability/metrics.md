@@ -1,21 +1,22 @@
 ---
 title: "Metrics"
-description: "Metrics"
+description: "Proxy and control plane Prometheus metrics"
 type: docs
 weight: 1
 ---
 
 # Metrics
+Open Service Mesh (OSM) generates detailed metrics related to all traffic within the mesh and the OSM control plane. These metrics provide insights into the behavior of applications in the mesh and the mesh itself helping users to troubleshoot, maintain and analyze their applications.
 
 ## Metrics Overview
 
-Open Service Mesh (OSM) generates detailed metrics related to all traffic within the mesh. These metrics provide insights into the behavior of applications in the mesh helping users to troubleshoot, maintain and analyze their applications.
+OSM provides rich metrics for incoming and outgoing traffic for all services in the mesh. With these metrics the user can get information about the overall volume of traffic, errors within traffic and the response time for requests. OSM collects the metrics directly from the sidecar proxies (Envoy).
 
-As of today OSM collects metrics directly from the sidecar proxies (Envoy). OSM provides rich metrics for incoming and outgoing traffic for all services in the mesh. With these metrics the user can get information about the overall volume of traffic, errors within traffic and the response time for requests.
+Additionally, OSM generates metrics for the control plane components. These metrics can be used to monitor the behavior and health of the service mesh.
 
 OSM uses [Prometheus][1] to gather and store consistent traffic metrics and statistics for all applications running in the mesh. Prometheus is an open-source monitoring and alerting toolkit which is commonly used on (but not limited to) Kubernetes and Service Mesh environments.
 
-Each application that is part of the mesh runs in a Pod which contains an Envoy sidecar that exposes metrics (proxy metrics) in the Prometheus format. Furthermore, every Pod that is a part of the mesh has Prometheus annotations, which makes it possible for the Prometheus server to scrape the application dynamically. This mechanism automatically enables scraping of metrics whenever a new namespace/pod/service is added to the mesh.
+Each application that is part of the mesh runs in a Pod which contains an Envoy sidecar that exposes metrics (proxy metrics) in the Prometheus format. Furthermore, every Pod that is a part of the mesh has Prometheus annotations, which makes it possible for the Prometheus server to scrape the application dynamically. This mechanism automatically enables scraping of metrics whenever a pod is added to the mesh.
 
 OSM metrics can be viewed with [Grafana][8] which is an open source visualization and analytics software. It allows you to query, visualize, alert on, and explore your metrics.
 
@@ -31,22 +32,22 @@ to automatically provision the metrics components and with the BYO method.
 
 By default, both Prometheus and Grafana are disabled.
 
-However, when configured with the `--set=OpenServiceMesh.deployPrometheus=true` flag, OSM installation will deploy a Prometheus instance to scrape the sidecar's metrics endpoints. Based on the metrics scraping configuration set by the user, OSM will annotate pods part of the mesh with necessary metrics annotations to have Prometheus reach and scrape the pods to collect relevant metrics. To install Grafana for metrics visualization, set the `--set=OpenServiceMesh.deployGrafana=true` flag to true when installing OSM using the `osm install` command.
+However, when configured with the `--set=OpenServiceMesh.deployPrometheus=true` flag, OSM installation will deploy a Prometheus instance to scrape the sidecar's metrics endpoints. Based on the metrics scraping configuration set by the user, OSM will annotate pods part of the mesh with necessary metrics annotations to have Prometheus reach and scrape the pods to collect relevant metrics. The [scraping configuration file](https://github.com/openservicemesh/osm/blob/release-v0.9/charts/osm/templates/prometheus-configmap.yaml) defines the default Prometheus behavior and the set of metrics collected by OSM.
 
-The automatic bring up can be overridden with the `osm install --set` flag during install time:
+To install Grafana for metrics visualization, set the `--set=OpenServiceMesh.deployGrafana=true` flag to true when installing OSM using the `osm install` command.
 
 ```bash
  osm install --set=OpenServiceMesh.deployPrometheus=true \
              --set=OpenServiceMesh.deployGrafana=true
 ```
 
-Note that the Prometheus and Grafana instances deployed automatically by OSM have simple configurations that do not include high availability, persistent storage, or locked down security. If production-grade instances are required, pre-provision them and follow the BYO instructions on this page to integrate them with OSM.
+> Note: The Prometheus and Grafana instances deployed automatically by OSM have simple configurations that do not include high availability, persistent storage, or locked down security. If production-grade instances are required, pre-provision them and follow the BYO instructions on this page to integrate them with OSM.
 
 ## Prometheus Integration
 
 ### BYO Prometheus
 
-The following section will document the additional steps needed to allow an already running Prometheus instance to poll the endpoints of an OSM mesh.
+The following section documents the additional steps needed to allow an already running Prometheus instance to poll the endpoints of an OSM mesh.
 
 #### List of Prerequisites for BYO Prometheus
 
@@ -133,28 +134,21 @@ Metrics scraping can be configured using the `osm metrics` command. By default, 
 For metrics to be scraped, the following prerequisites must be met:
 
 - The namespace must be a part of the mesh, ie. it must be labeled with the `openservicemesh.io/monitored-by` label with an appropriate mesh name. This can be done using the `osm namespace add` command.
-- A running service able to scrap Prometheus endpoints. OSM provides configuration for an [automatic bringup of Prometheus](#automatic-bring-up); alternatively users can [bring their own Prometheus](#byo-bring-your-own).
+- A running service able to scrape Prometheus endpoints. OSM provides configuration for an [automatic bringup of Prometheus](#automatic-bring-up); alternatively users can [bring their own Prometheus](#byo-bring-your-own).
 
 To enable one or more namespaces for metrics scraping:
 
 ```bash
-# With osm
 osm metrics enable --namespace test
 osm metrics enable --namespace "test1, test2"
 
-# With kubectl
-kubectl patch namespace test --type=merge -p '{"metadata": {"annotations": {"openservicemesh.io/metrics": "enabled"}}}'
 ```
 
 To disable one or more namespaces for metrics scraping:
 
 ```bash
-# With osm
 osm metrics disable --namespace test
 osm metrics disable --namespace "test1, test2"
-
-# With kubectl
-kubectl patch namespace test --type=merge -p '{"metadata": {"annotations": {"openservicemesh.io/metrics": null}}}'
 ```
 
 Enabling metrics scraping on a namespace also causes the osm-injector to add the following annotations to pods in that namespace:
@@ -165,11 +159,15 @@ prometheus.io/port: 15010
 prometheus.io/path: /stats/prometheus
 ```
 
+When metrics are disabled for a previously enabled mesh namespace, the existing pods in the namespace will still be scraped. The pods must be recreated for the annotation to be removed. All future future pods added to a namespace with metrics disabled will not be updated with the Prometheus annotations.
+
 ### Available Metrics
 
-For details about what metrics are scraped from each Envoy proxy, see [Envoy's documentation](https://www.envoyproxy.io/docs/envoy/v1.17.2/operations/stats_overview). Note that OSM's default configuration only scrapes a subset of all metrics generated by each proxy.
+OSM exports metrics about the traffic within the mesh as well as metrics about the control plane.
 
-#### Custom Metrics
+#### Envoy Metrics
+
+Each Envoy proxy exposes metrics in the Prometheus format. For details about what metrics are exposed, see [Envoy's documentation](https://www.envoyproxy.io/docs/envoy/v1.17.2/operations/stats_overview). OSM's default Prometheus configuration only scrapes a subset of all metrics generated by each proxy.
 
 To implement the [SMI metrics spec][7], OSM adds a custom WebAssembly extension to each Envoy proxy which generates the following statistics for HTTP traffic:
 
@@ -204,7 +202,172 @@ In addition, the `osm_request_total` metric has a `response_code` label represen
 - Metrics are only recorded for traffic where both endpoints are part of the mesh. Ingress and egress traffic do not have statistics recorded.
 - Metrics are recorded in Prometheus with all instances of '-' and '.' in tags converted to '\_'. This is because proxy-wasm adds tags to metrics through the name of the metric and Prometheus does not allow '-' or '.' in metric names, so Envoy converts them all to '\_' for the Prometheus format. This means a pod named 'abc-123' is labeled in Prometheus as 'abc_123' and metrics for pods 'abc-123' and 'abc.123' would be tracked as a single pod 'abc_123' and only distinguishable by the 'instance' label containing the pod's IP address.
 
-#### Error Code Metrics
+#### Control Plane
+
+The following metrics are exposed by the OSM control plane components. The `osm-controller` and `osm-injector` pods are have the following Prometheus annotation.
+
+```yaml
+annotations:
+   prometheus.io/scrape: 'true'
+   prometheus.io/port: '9091'
+```
+
+The metrics endpoint for both components is exposed on port 9091.
+
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Type</th>
+<th>Labels</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>osm_k8s_api_event_count</code><br/>
+</td>
+<td>
+<p>Count</p>
+</td>
+<td>
+<p>type, namespace</p>
+</td>
+<td>
+<p>Represents the number of events received from the Kubernetes API Server</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>osm_proxy_connect_count</code><br/>
+</td>
+<td>
+<p>Guage</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p>Represents the number of proxies connected to OSM controller</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>osm_proxy_reconnect_count</code><br/>
+</td>
+<td>
+<p>Count</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p>IngressGateway defines the certificate specification for an ingress gateway</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>osm_proxy_response_send_success_count</code><br/>
+</td>
+<td>
+<p>Count</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p>Represents the number of responses successfully sent to proxies</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>osm_proxy_response_send_error_count</code><br/>
+</td>
+<td>
+<p>Count</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p>Represents the number of responses that errored when being set to proxies</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>osm_proxy_config_update_time</code><br/>
+</td>
+<td>
+<p>Histogram</p>
+</td>
+<td>
+<p>resource_type, success</p>
+</td>
+<td>
+<p>Histogram to track time spent for proxy configuration</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>osm_proxy_broadcast_event_count</code><br/>
+</td>
+<td>
+<p>Count</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p>Represents the number of ProxyBroadcast events published by the OSM controller</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>osm_cert_issued_count</code><br/>
+</td>
+<td>
+<p>Count</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p>Represents the total number of XDS certificates issued to proxies</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>osm_cert_issued_time</code><br/>
+</td>
+<td>
+<p>Histogram</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p>Histogram to track time spent to issue xds certificate</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>osm_error_err_code_count</code><br/>
+</td>
+<td>
+<p>Count</p>
+</td>
+<td>
+<p>resource_type, success</p>
+</td>
+<td>
+<p>Represents the number of errcodes generated by OSM</p>
+</td>
+</tr>
+</tbody>
+</table>
+
+##### Error Code Metrics
 
 When an error occurs in the OSM control plane the ErrCodeCounter Prometheus metric is incremented for the related OSM error code. For the complete list of error codes and their descriptions, see [OSM Control Plane Error Code Troubleshooting Guide](/docs/guides/troubleshooting/control_plane_error_codes).
 
