@@ -41,7 +41,7 @@ helm install "$osm_mesh_name" osm --repo https://openservicemesh.github.io/osm \
 
 To restrict ingress traffic on backends to authorized clients, we will set up the IngressBackend configuration such that only ingress traffic from the endpoints of the `osm-contour-envoy` service can route traffic to the service backend. To be able to discover the endpoints of `osm-contour-envoy` service, we need OSM controller to monitor the corresponding namespace. However, Contour must NOT be injected with an Envoy sidecar to function properly.
 ```bash
-osm namespace add "$osm_namespace" --mesh-name "$osm_mesh_name" --disable-sidecar-injection
+kubectl label namespace "$osm_namespace" openservicemesh.io/monitored-by="$osm_mesh_name"
 ```
 
 Save the ingress gateway's external IP address and port which we will later use to test access to the backend application:
