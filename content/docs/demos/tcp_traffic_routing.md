@@ -2,7 +2,7 @@
 title: "TCP Traffic Routing"
 description: "Set up TCP traffic routing"
 type: docs
-weight: 6
+weight: 20
 ---
 
 This guide demonstrates a TCP client and server application within the service mesh communicating using OSM's TCP routing capability.

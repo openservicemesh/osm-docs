@@ -2,7 +2,7 @@
 title: "Egress Policy"
 description: "Accessing external services using Egress policies"
 type: docs
-weight: 4
+weight: 15
 ---
 
 This guide demonstrates a client within the service mesh accessing destinations external to the mesh using OSM's Egress policy API.

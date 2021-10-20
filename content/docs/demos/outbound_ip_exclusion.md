@@ -2,7 +2,7 @@
 title: "Outbound Traffic IP Range Exclusions"
 description: "Excluding IP address ranges of outbound traffic from sidecar interception"
 type: docs
-weight: 2
+weight: 5
 ---
 
 This guide demonstrates how outbound IP address ranges can be excluded from being intercepted by OSM's proxy sidecar, so as to not subject them to service mesh filtering and routing policies.

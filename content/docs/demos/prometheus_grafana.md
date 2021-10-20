@@ -2,7 +2,7 @@
 title: "Prometheus & Grafana"
 description: "Describes basic steps to get up and running a Prometheus and Grafana stack with OSM specific configuration and Dashboards"
 type: docs
-weight: 7
+weight: 25
 ---
 
 # OSM's Prometheus and Grafana stack
