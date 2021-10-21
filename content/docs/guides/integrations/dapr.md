@@ -301,5 +301,5 @@ This document walks you through the steps of getting Dapr working with OSM on a 
     3. To uninstall OSM, run
 
        ```console
-       $ osm uninstall
+       $ osm uninstall mesh
        ```
