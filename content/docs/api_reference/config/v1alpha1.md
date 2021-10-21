@@ -11,9 +11,9 @@ type: docs
 </li>
 </ul>
 <h2 id="config.openservicemesh.io/v1alpha1">config.openservicemesh.io/v1alpha1</h2>
-<p>
+<div>
 <p>Package v1alpha1 is the v1alpha1 version of the API.</p>
-</p>
+</div>
 Resource Types:
 <ul></ul>
 <h3 id="config.openservicemesh.io/v1alpha1.CertificateSpec">CertificateSpec
@@ -21,9 +21,9 @@ Resource Types:
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
-<p>
+<div>
 <p>CertificateSpec is the type to reperesent OSM&rsquo;s certificate management configuration.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -75,9 +75,9 @@ IngressGatewayCertSpec
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MultiClusterServiceSpec">MultiClusterServiceSpec</a>)
 </p>
-<p>
+<div>
 <p>ClusterSpec is the type used to represent a remote cluster in multicluster scenarios.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -137,9 +137,9 @@ int
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.TrafficSpec">TrafficSpec</a>)
 </p>
-<p>
+<div>
 <p>ExternalAuthzSpec is a type to represent external authorization configuration.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -223,9 +223,9 @@ response against the external authorization endpoint.</p>
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
-<p>
+<div>
 <p>FeatureFlags is a type to represent OSM&rsquo;s feature flags.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -331,9 +331,9 @@ bool
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.CertificateSpec">CertificateSpec</a>)
 </p>
-<p>
+<div>
 <p>IngressGatewayCertSpec is the type to represent the certificate specification for an ingress gateway.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -381,9 +381,9 @@ Kubernetes core/v1.SecretReference
 </table>
 <h3 id="config.openservicemesh.io/v1alpha1.MeshConfig">MeshConfig
 </h3>
-<p>
+<div>
 <p>MeshConfig is the type used to represent the mesh configuration.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -498,9 +498,9 @@ FeatureFlags
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfig">MeshConfig</a>)
 </p>
-<p>
+<div>
 <p>MeshConfigSpec is the spec for OSM&rsquo;s configuration.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -578,10 +578,10 @@ FeatureFlags
 </table>
 <h3 id="config.openservicemesh.io/v1alpha1.MultiClusterService">MultiClusterService
 </h3>
-<p>
+<div>
 <p>MultiClusterService is the type used to represent the multicluster configuration.
 MultiClusterService name needs to match the name of the service backing the pods in each cluster.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -667,9 +667,9 @@ string
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MultiClusterService">MultiClusterService</a>)
 </p>
-<p>
+<div>
 <p>MultiClusterServiceSpec is the type used to represent the multicluster service specification.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -722,9 +722,9 @@ string
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
-<p>
+<div>
 <p>ObservabilitySpec is the type to represent OSM&rsquo;s observability configurations.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -775,9 +775,9 @@ TracingSpec
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MultiClusterServiceSpec">MultiClusterServiceSpec</a>)
 </p>
-<p>
+<div>
 <p>PortSpec contains information on service&rsquo;s port.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -815,9 +815,9 @@ string
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
-<p>
+<div>
 <p>SidecarSpec is the type used to represent the specifications for the proxy sidecar.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -923,9 +923,9 @@ Kubernetes core/v1.ResourceRequirements
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.ObservabilitySpec">ObservabilitySpec</a>)
 </p>
-<p>
+<div>
 <p>TracingSpec is the type to represent OSM&rsquo;s tracing configuration.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -985,9 +985,9 @@ string
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
-<p>
+<div>
 <p>TrafficSpec is the type used to represent OSM&rsquo;s traffic management configuration.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -1081,5 +1081,5 @@ for all inbound and ingress traffic in the mesh.</p>
 <hr/>
 <p><em>
 Generated with <code>gen-crd-api-reference-docs</code>
-on git commit <code>a94ed01f</code>.
+on git commit <code>c01aefae</code>.
 </em></p>
