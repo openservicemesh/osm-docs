@@ -42,13 +42,15 @@ data:
 
 For details and code where this is used see [osm-controller.go](https://github.com/openservicemesh/osm/blob/release-v0.9/cmd/osm-controller/osm-controller.go#L182-L183).
 
-To read the root certificate, you can decode the secret and pipe it through openssl:
+To read the root certificate (with the exception of Hashicorp Vault), you can retrieve the corresponding secret and decode it:
 
 ```console
-kubectl get secret -n $osm_namespace osm-ca-bundle -o jsonpath='{.data.ca\.crt}' |
+kubectl get secret -n $osm_namespace $osm_ca_bundle -o jsonpath='{.data.ca\.crt}' |
     base64 -d |
     openssl x509 -text -noout
 ```
+
+*Note: By default, the CA bundle is named `osm-ca-bundle`.*
 
 This will provide valuable certificate information, such as the expiration date and the issuer.
 
