@@ -8,7 +8,7 @@ weight: 1
 # Setup OSM
 
 ## Prerequisites
-This demo of OSM v0.9.2 requires:
+This demo of OSM {{< param osm_version >}} requires:
   - a cluster running Kubernetes v1.19 or greater (using a cloud provider of choice, [minikube](https://minikube.sigs.k8s.io/docs/start/), or similar)
   - a workstation capable of executing [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) scripts
   - [The Kubernetes command-line tool](https://kubernetes.io/docs/tasks/tools/#kubectl) - `kubectl`
@@ -25,19 +25,19 @@ The binary is available on the [OSM GitHub releases page](https://github.com/ope
 
 ### For GNU/Linux and macOS
 
-Download the 64-bit GNU/Linux or macOS binary of OSM v0.9.2:
+Download the 64-bit GNU/Linux or macOS binary of OSM {{< param osm_version >}}:
 ```bash
 system=$(uname -s)
-release=v0.9.2
+release={{< param osm_version >}}
 curl -L https://github.com/openservicemesh/osm/releases/download/${release}/osm-${release}-${system}-amd64.tar.gz | tar -vxzf -
 ./${system}-amd64/osm version
 ```
 
 ### For Windows
 
-Download the 64-bit Windows OSM v0.9.2 binary via Powershell:
+Download the 64-bit Windows OSM {{< param osm_version >}} binary via Powershell:
 ```powershell
-wget  https://github.com/openservicemesh/osm/releases/download/v0.9.2/osm-v0.9.2-windows-amd64.zip -o osm.zip
+wget  https://github.com/openservicemesh/osm/releases/download/{{< param osm_version >}}/osm-{{< param osm_version >}}-windows-amd64.zip -o osm.zip
 unzip osm.zip
 .\windows-amd64\osm.exe version
 ```
