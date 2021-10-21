@@ -1,6 +1,6 @@
 ---
 title: "Logs"
-description: "Logs"
+description: "Diagnostic logs from the OSM control plane"
 type: docs
 ---
 
