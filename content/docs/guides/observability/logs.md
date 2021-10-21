@@ -47,7 +47,7 @@ When enabled, Fluent Bit can collect these logs, process them and send them to a
 OSM provides log forwarding by optionally deploying a Fluent Bit sidecar to the OSM controller using the `--set=OpenServiceMesh.enableFluentbit=true` flag during installation. The user can then define where OSM logs should be forwarded using any of the available [Fluent Bit output plugins](https://docs.fluentbit.io/manual/pipeline/outputs).
 
 ### Configuring Log Forwarding with Fluent Bit
-By default, the Fluent Bit sidecar is configured to simply send logs to the Fluent Bit container's stdout. If you have installed OSM with Fluent Bit enabled, you may access these logs using `kubectl logs -n osm-system <osm-controller-name> -c fluentbit-logger`. This command will also help you find how your logs are formatted in case you need to change your parsers and filters. 
+By default, the Fluent Bit sidecar is configured to simply send logs to the Fluent Bit container's stdout. If you have installed OSM with Fluent Bit enabled, you may access these logs using `kubectl logs -n osm-system <osm-controller-name> -c fluentbit-logger`. This command will also help you find how your logs are formatted in case you need to change your parsers and filters.
 
 To quickly bring up Fluent Bit with default values, use:
 ```console
@@ -59,7 +59,7 @@ Once you have tried out this basic setup, we recommend configuring log forwardin
 
 To customize log forwarding to your output, follow these steps and then reinstall OSM with Fluent Bit enabled.
 
-1. Find the output plugin you would like to forward your logs to in [Fluent Bit documentation](https://docs.fluentbit.io/manual/pipeline/outputs). Replace the `[OUTPUT]` section in [`fluentbit-configmap.yaml`](https://github.com/openservicemesh/osm/blob/release-v0.9/charts/osm/templates/fluentbit-configmap.yaml) with appropriate values.
+1. Find the output plugin you would like to forward your logs to in [Fluent Bit documentation](https://docs.fluentbit.io/manual/pipeline/outputs). Replace the `[OUTPUT]` section in [`fluentbit-configmap.yaml`](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/charts/osm/templates/fluentbit-configmap.yaml) with appropriate values.
 
 1. The default configuration uses CRI log format parsing. If you are using a kubernetes distribution that causes your logs to be formatted differently, you may need to add a new parser to the `[PARSER]` section and change the `parser` name in the `[INPUT]` section to one of the parsers defined [here](https://github.com/fluent/fluent-bit/blob/master/conf/parsers.conf).
 
@@ -131,4 +131,4 @@ Alternatively, you may change the values in the Helm chart by updating the follo
     ```console
     osm install --set=OpenServiceMesh.enableFluentbit=true
     ```
-> NOTE: Ensure that the [Fluent Bit image tag](https://github.com/openservicemesh/osm/blob/release-v0.9/charts/osm/values.yaml) is `1.6.4` or greater as it is required for this feature.
+> NOTE: Ensure that the [Fluent Bit image tag](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/charts/osm/values.yaml) is `1.6.4` or greater as it is required for this feature.

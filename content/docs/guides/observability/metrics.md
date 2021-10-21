@@ -308,7 +308,7 @@ OSM provides some pre-cooked Grafana dashboards to display and track services re
      ![image](https://user-images.githubusercontent.com/64559656/138173158-5baad409-b194-49ed-b4cc-3a939e84f800.png)
 
 [1]: https://prometheus.io/docs/introduction/overview/
-[2]: https://github.com/openservicemesh/osm/blob/release-v0.9/demo/README.md
+[2]: https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/demo/README.md
 [3]: https://grafana.com/docs/grafana/latest/getting-started/#what-is-grafana
 [4]: http://localhost:3000
 [5]: http://localhost:7070
