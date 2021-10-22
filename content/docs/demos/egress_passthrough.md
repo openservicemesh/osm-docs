@@ -2,7 +2,7 @@
 title: "Egress Passthrough to Unknown Destinations"
 description: "Accessing external services without Egress policies"
 type: docs
-weight: 5
+weight: 16
 ---
 
 This guide demonstrates a client within the service mesh accessing destinations external to the mesh using OSM's Egress capability to passthrough traffic to unknown destinations without an Egress policy.

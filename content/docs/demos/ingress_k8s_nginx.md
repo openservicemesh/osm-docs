@@ -2,7 +2,7 @@
 title: "Ingress with Kubernetes Nginx Ingress Controller"
 description: "HTTP and HTTPS ingress with Kubernetes Nginx Ingress Controller"
 type: docs
-weight: 3
+weight: 11
 ---
 
 This guide will demonstrate how to configure HTTP and HTTPS ingress to a service part of an OSM managed service mesh when using [Kubernetes Nginx Ingress Controller](https://kubernetes.github.io/ingress-nginx/).
