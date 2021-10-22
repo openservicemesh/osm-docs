@@ -114,7 +114,7 @@ The following steps demonstrate the canary rollout deployment strategy.
     pod: httpbin-v1-77c99dccc9-q2gvt
     ```
 
-  The above output indicates all 10 requests returned HTTP 200 OK, and were responded by the `httpbin-v1` pod.
+    The above output indicates all 10 requests returned HTTP 200 OK, and were responded by the `httpbin-v1` pod.
 
 1. Prepare the canary rollout by deploying version `v2` of the `httpbin` service. The service `httpbin-v2` has the selector `app: httpbin, version: v2`, and the deployment `httpbin-v2` has the labels `app: httpbin, version: v2` matching the selector of both the `httpbin` root service and `httpbin-v2` service.
 
