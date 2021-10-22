@@ -22,9 +22,9 @@ An update or delete event on the reconcilable resources will trigger the reconci
 
 The resources that OSM reconciles are:
 
-- CRDs : The CRDs installed/required by OSM [CRDs for OSM](https://github.com/openservicemesh/osm/tree/main/cmd/osm-bootstrap/crds) will be reconciled. Since OSM manages the installation and upgrade of the CRDs it needs, OSM will also reconcile them to ensure that their spec, stored and served verions are always in the state that is required by OSM.
+- CRDs : The CRDs installed/required by OSM [CRDs for OSM](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/cmd/osm-bootstrap/crds) will be reconciled. Since OSM manages the installation and upgrade of the CRDs it needs, OSM will also reconcile them to ensure that their spec, stored and served verions are always in the state that is required by OSM.
 
-- MutatingWebhookConfiguration : A MutatingWebhookConfiguration is deployed as a part of OSM's control plane to enable automatic sidecar injection. As this is a very critical component for pods joining the mesh, OSM reconciles this resource. 
+- MutatingWebhookConfiguration : A MutatingWebhookConfiguration is deployed as a part of OSM's control plane to enable automatic sidecar injection. As this is a very critical component for pods joining the mesh, OSM reconciles this resource.
 
 - ValidatingWebhookConfiguration : A ValidatingWebhookConfiguration is deployed as a part of OSM's control plane to validate various mesh configurations. This resources validates configurations being applied to the mesh, hence OSM will reconcile this resource.
 

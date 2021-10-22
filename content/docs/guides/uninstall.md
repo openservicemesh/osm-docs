@@ -82,7 +82,7 @@ Use the `osm` CLI to uninstall the OSM control plane from a Kubernetes cluster. 
 1. OSM controller resources (deployment, service, mesh config, and RBAC)
 1. Prometheus, Grafana, Jaeger, and Fluent Bit resources installed by OSM
 1. Mutating webhook and validating webhook
-1. The conversion webhook fields patched by OSM to the CRDs installed/required by OSM: [CRDs for OSM](https://github.com/openservicemesh/osm/tree/main/cmd/osm-bootstrap/crds) will be unpatched. Refer to [Removal of OSM Cluster Wide Resources](#removal-of-osm-cluster-wide-resources) for more details
+1. The conversion webhook fields patched by OSM to the CRDs installed/required by OSM: [CRDs for OSM](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/cmd/osm-bootstrap/crds) will be unpatched. Refer to [Removal of OSM Cluster Wide Resources](#removal-of-osm-cluster-wide-resources) for more details
 1. `osm-ca-bundle`, `mutating-webhook-cert-secret`, `validating-webhook-cert-secret` and `crd-converter-cert-secret` secrets
 
 Run `osm uninstall mesh`:
@@ -126,7 +126,7 @@ Repeat the steps above for each mesh installed in the cluster. After there are n
 
 ## Removal of OSM Cluster Wide Resources
 
-OSM ensures that all the CRDs mentioned [here](https://github.com/openservicemesh/osm/tree/main/cmd/osm-bootstrap/crds) exist in the cluster at install time. If they are not already installed, the `osm-bootstrap` pod will install them before the rest of the control plane components are running. This is the same behavior when using the Helm charts to install OSM as well. Uninstalling OSM will only remove/un-patch the conversion webhook fields from all the CRDs (which OSM adds to support multiple CR versions) and will not deleted them for primarily two reasons: 1. CRDs are cluster-wide resources and may be used by other service meshes running in the same cluster, 2. deletion of a CRD will cause all custom resources corresponding to that CRD to also be deleted. 
+OSM ensures that all the CRDs mentioned [here](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/cmd/osm-bootstrap/crds) exist in the cluster at install time. If they are not already installed, the `osm-bootstrap` pod will install them before the rest of the control plane components are running. This is the same behavior when using the Helm charts to install OSM as well. Uninstalling OSM will only remove/un-patch the conversion webhook fields from all the CRDs (which OSM adds to support multiple CR versions) and will not deleted them for primarily two reasons: 1. CRDs are cluster-wide resources and may be used by other service meshes running in the same cluster, 2. deletion of a CRD will cause all custom resources corresponding to that CRD to also be deleted. 
 
 If there are no other service meshes running in the same cluster and the required custom resources have been backed up, the CRDs can be removed from the cluster using `kubectl`.
 

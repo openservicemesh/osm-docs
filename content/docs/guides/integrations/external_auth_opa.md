@@ -25,7 +25,7 @@ We strongly suggest to go through [OPA envoy plugin's](https://github.com/open-p
 
 The following example uses a single, remote (over the network) endpoint to validate all traffic. This configuration is not recommended for a production deployment.
 
-- First, start by deploying OSM's Demo. We will use this sample deployment to test external authorization capabilities. Please refer to [OSM's Automated Demo](https://github.com/openservicemesh/osm/tree/main/demo#how-to-run-the-osm-automated-demo) and follow the instructions.
+- First, start by deploying OSM's Demo. We will use this sample deployment to test external authorization capabilities. Please refer to [OSM's Automated Demo](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/demo#how-to-run-the-osm-automated-demo) and follow the instructions.
 
 ```
 # Assuming OSM repo is available
@@ -33,11 +33,11 @@ cd <PATH_TO_OSM_REPO>
 demo/run-osm-demo.sh  # wait for all services to come up
 ```
 
-- When OSM's demo is up and running, proceed to deploy `opa-envoy-plugin`. OSM provides a [curated standalone opa-envoy-plugin deployment chart](https://github.com/openservicemesh/osm/blob/main/docs/example/manifests/opa/deploy-opa-envoy.yaml) which exposes `opa-envoy-plugin`'s gRPC port (default `9191`) through a service, over the network. This is the endpoint that OSM will configure the proxies with when enabling external authorization. The following snippet creates an `opa` namespace and deploys `opa-envoy-plugin` in it with minimal deny-all configuration:
+- When OSM's demo is up and running, proceed to deploy `opa-envoy-plugin`. OSM provides a [curated standalone opa-envoy-plugin deployment chart](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/docs/example/manifests/opa/deploy-opa-envoy.yaml) which exposes `opa-envoy-plugin`'s gRPC port (default `9191`) through a service, over the network. This is the endpoint that OSM will configure the proxies with when enabling external authorization. The following snippet creates an `opa` namespace and deploys `opa-envoy-plugin` in it with minimal deny-all configuration:
 
 ```
 kubectl create namespace opa
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/opa/deploy-opa-envoy.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/opa/deploy-opa-envoy.yaml
 ```
 
 - Once OSM's demo is up and running, proceed to edit OSM's MeshConfig to add external authorization to the mesh. For that, configure the `inboundExternalAuthorization` to point to the remote external authorization endpoint as follows:
