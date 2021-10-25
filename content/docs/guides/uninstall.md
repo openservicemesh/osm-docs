@@ -45,6 +45,8 @@ $ osm namespace remove <namespace> --mesh-name=<mesh-name>
 Namespace [<namespace>] successfully removed from mesh [<mesh-name>]
 ```
 
+This will remove the `openservicemesh.io/sidecar-injection: enabled` annotation and `openservicemesh.io/monitored-by: <mesh name>` label from the namespace. 
+
 Alternatively, if sidecar injection is enabled via annotations on pods instead of per namespace, please modify the pod or deployment spec to remove the sidecar injection annotation.
 
 ### Restart Pods
@@ -65,8 +67,6 @@ Now, there should be no OSM Envoy sidecar containers running as part of the appl
 longer managed by the OSM control plane with the `mesh-name` used above. During this process, your applications may experience some downtime
 as all the Pods are restarting.
 
-## Resource Management
-
 ## Uninstall OSM Control Plane and Remove User Provided Resources
 
 The OSM control plane and related components will be uninstalled in the following steps:
@@ -79,21 +79,22 @@ The OSM control plane and related components will be uninstalled in the followin
 
 Use the `osm` CLI to uninstall the OSM control plane from a Kubernetes cluster. The following step will remove:
 
-1. OSM controller resources (deployment, service, config map, and RBAC)
-1. Prometheus, Grafana, Jaeger, and Fluentbit resources installed by OSM
+1. OSM controller resources (deployment, service, mesh config, and RBAC)
+1. Prometheus, Grafana, Jaeger, and Fluent Bit resources installed by OSM
 1. Mutating webhook and validating webhook
 1. The conversion webhook fields patched by OSM to the CRDs installed/required by OSM: [CRDs for OSM](https://github.com/openservicemesh/osm/tree/main/cmd/osm-bootstrap/crds) will be unpatched. Refer to [Removal of OSM Cluster Wide Resources](#removal-of-osm-cluster-wide-resources) for more details
+1. `osm-ca-bundle`, `mutating-webhook-cert-secret`, `validating-webhook-cert-secret` and `crd-converter-cert-secret` secrets
 
-Run `osm uninstall`:
+Run `osm uninstall mesh`:
 
 ```console
 # Uninstall osm control plane components
-$ osm uninstall --mesh-name=<mesh-name>
+$ osm uninstall mesh --mesh-name=<mesh-name>
 Uninstall OSM [mesh name: <mesh-name>] ? [y/n]: y
 OSM [mesh name: <mesh-name>] uninstalled
 ```
 
-Run `osm uninstall --help` for more options.
+Run `osm uninstall mesh --help` for more options.
 
 Alternatively, if you used Helm to install the control plane, run the following `helm uninstall` command:
 
@@ -141,3 +142,6 @@ kubectl delete crd tcproutes.specs.smi-spec.io
 kubectl delete crd traffictargets.access.smi-spec.io
 kubectl delete crd trafficsplits.split.smi-spec.io
 ```
+
+
+To troubleshoot OSM uninstallation, refer to the [uninstall troubleshooting section](/docs/guides/troubleshooting/uninstall/)

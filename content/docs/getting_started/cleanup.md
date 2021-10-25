@@ -16,7 +16,7 @@ kubectl delete ns bookbuyer bookthief bookstore bookwarehouse
 
 To uninstall OSM, run
 ```bash
-osm uninstall
+osm uninstall mesh
 ```
 
-For more details about uninstalling OSM, see the [uninstallation guide](../uninstallation_guide/).
+For more details about uninstalling OSM, see the [uninstallation guide](/docs/guides/uninstall/).

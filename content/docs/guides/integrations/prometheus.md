@@ -118,7 +118,7 @@ To familiarize yourself on how OSM works with Prometheus, try installing a new m
    Then, uninstall OSM:
 
    ```
-   $ osm uninstall
+   $ osm uninstall mesh
    Uninstall OSM [mesh name: osm] ? [y/n]: y
    OSM [mesh name: osm] uninstalled
    ```
