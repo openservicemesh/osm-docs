@@ -30,7 +30,7 @@ to automatically provision the metrics components and with the BYO method.
 
 By default, both Prometheus and Grafana are disabled.
 
-However, when configured with the `--set=OpenServiceMesh.deployPrometheus=true` flag, OSM installation will deploy a Prometheus instance to scrape the sidecar's metrics endpoints. Based on the metrics scraping configuration set by the user, OSM will annotate pods part of the mesh with necessary metrics annotations to have Prometheus reach and scrape the pods to collect relevant metrics. The [scraping configuration file](https://github.com/openservicemesh/osm/blob/main/charts/osm/templates/prometheus-configmap.yaml) defines the default Prometheus behavior and the set of metrics collected by OSM.
+However, when configured with the `--set=OpenServiceMesh.deployPrometheus=true` flag, OSM installation will deploy a Prometheus instance to scrape the sidecar's metrics endpoints. Based on the metrics scraping configuration set by the user, OSM will annotate pods part of the mesh with necessary metrics annotations to have Prometheus reach and scrape the pods to collect relevant metrics. The [scraping configuration file](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/charts/osm/templates/prometheus-configmap.yaml) defines the default Prometheus behavior and the set of metrics collected by OSM.
 
 To install Grafana for metrics visualization, pass the `--set=OpenServiceMesh.deployGrafana=true` flag to the `osm install` command. OSM provides a pre-configured dashboard that is documented in [OSM Grafana dashboards](#osm-grafana-dashboards).
 

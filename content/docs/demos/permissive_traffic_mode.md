@@ -36,7 +36,7 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
     osm namespace add httpbin
 
     # Deploy httpbin service in the httpbin namespace
-    kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/samples/httpbin/httpbin.yaml -n httpbin
+    kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/samples/httpbin/httpbin.yaml -n httpbin
     ```
 
     Confirm the `httpbin` service and pods are up and running.
@@ -63,7 +63,7 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
     osm namespace add curl
 
     # Deploy curl client in the curl namespace
-    kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/samples/curl/curl.yaml -n curl
+    kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/samples/curl/curl.yaml -n curl
     ```
 
     Confirm the `curl` client pod is up and running.

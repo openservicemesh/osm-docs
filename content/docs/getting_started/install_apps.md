@@ -60,31 +60,31 @@ on these namespaces, will start injecting all **new** pods with Envoy sidecars.
 Create the `bookbuyer` service account and deployment:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/bookbuyer.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/apps/bookbuyer.yaml
 ```
 
 Create the `bookthief` service account and deployment:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/bookthief.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/apps/bookthief.yaml
 ```
 
 Create the `bookstore` service account, service, and deployment:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/bookstore.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/apps/bookstore.yaml
 ```
 
 Create the `bookwarehouse` service account, service, and deployment:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/bookwarehouse.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/apps/bookwarehouse.yaml
 ```
 
 Create the `mysql` service account, service, and stateful set:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/mysql.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/apps/mysql.yaml
 ```
 
 ### Checkpoint: What Got Installed?
