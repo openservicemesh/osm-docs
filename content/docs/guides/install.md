@@ -10,6 +10,10 @@ weight: 2
 - Kubernetes cluster running Kubernetes v1.19.0 or greater
 - The [osm CLI](/docs/guides/cli) or the [helm 3 CLI](https://helm.sh/docs/intro/install/) or the OpenShift `oc` CLI.
 
+### Kubernetes support
+
+OSM can be run on Kubernetes versions that are supported at the time of the OSM release. For this release, OSM supports running on Kubernetes version 1.19 to 1.22.
+
 ### Using the OSM CLI
 
 Use the `osm` CLI to install the OSM control plane on to a Kubernetes cluster.
