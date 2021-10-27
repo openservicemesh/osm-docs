@@ -12,7 +12,12 @@ weight: 2
 
 ### Kubernetes support
 
-OSM can be run on Kubernetes versions that are supported at the time of the OSM release. For this release, OSM supports running on Kubernetes version 1.19 to 1.22.
+OSM can be run on Kubernetes versions that are supported at the time of the OSM release. The current support matrix is:
+
+| Open Service Mesh | Kubernetes |
+| ------------------|------------|
+| 0.11              | 1.19 - 1.22 |
+| 0.10              | 1.19 - 1.21 |
 
 ### Using the OSM CLI
 
