@@ -105,6 +105,10 @@ Proceed with the following steps once the release branch has been created in the
 	    latest = "https://release-v0-8.docs.openservicemesh.io/"
     ```
 
+### Update the release support matrix
+
+Once a new OSM version has been released, update the [OSM and Kubernetes support matrix](./content/docs/guides/install.md#kubernetes-support). The Kubernetes version support will be the [current releases of Kubernetes](https://kubernetes.io/releases/) at the time of the OSM release.
+
 # Site Development
 
 ## Notes
