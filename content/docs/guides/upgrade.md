@@ -72,7 +72,7 @@ $ osm mesh upgrade
 OSM successfully upgraded mesh osm
 ```
 
-This command will upgrade the mesh with the default mesh name in the default OSM namespace. Values from the previous release will carry over to the new release except for `OpenServiceMesh.image.registry` and `OpenServiceMesh.image.tag` which are overridden by default. For example, if OSM v0.7.0 is installed, `osm mesh upgrade` for {{< param osm_version >}} of the CLI will update the control plane images to {{< param osm_version >}} by default.
+This command will upgrade the mesh with the default mesh name in the default OSM namespace. Values from the previous release will carry over to the new release except for `osm.image.registry` and `osm.image.tag` which are overridden by default. For example, if OSM v0.7.0 is installed, `osm mesh upgrade` for {{< param osm_version >}} of the CLI will update the control plane images to {{< param osm_version >}} by default.
 
 See `osm mesh upgrade --help` for more details
 
@@ -92,7 +92,7 @@ To preserve any changes you've made to the OSM configuration, use the `helm --va
 
 For example, if the `logLevel` field in the MeshConfig was set to `info` prior to upgrade, updating this in `override.yaml` will during an upgrade will not cause any change.
 
-<b>Warning:</b> Do NOT change `OpenServiceMesh.meshName` or `OpenServiceMesh.osmNamespace`
+<b>Warning:</b> Do NOT change `osm.meshName` or `osm.osmNamespace`
 
 #### Helm Upgrade
 Then run the following `helm upgrade` command.

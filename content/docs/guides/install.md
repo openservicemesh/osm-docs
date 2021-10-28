@@ -56,7 +56,7 @@ You can configure the OSM installation by overriding the values file.
 
    - For example, to set the `logLevel` field in the MeshConfig to `info`, save the following as `override.yaml`:
      ```
-     OpenServiceMesh:
+     osm:
        envoyLogLevel: info
      ```
 
@@ -78,7 +78,7 @@ To install OSM on OpenShift:
 
 1. Enable privileged init containers so that they can properly program iptables. The NET_ADMIN capability is not sufficient on OpenShift.
    ```shell
-   osm install --set="OpenServiceMesh.enablePrivilegedInitContainer=true"
+   osm install --set="osm.enablePrivilegedInitContainer=true"
    ```
    - If you have already installed OSM without enabling privileged init containers, set `enablePrivilegedInitContainer` to `true` in the [OSM MeshConfig](/docs/guides/mesh_config) and restart any pods in the mesh.
 1. Add the `privileged` [security context constraint](https://docs.openshift.com/container-platform/4.7/authentication/managing-security-context-constraints.html) to each service account in the mesh.
@@ -94,11 +94,11 @@ To install OSM on OpenShift:
 
 **PSP support will be removed in OSM 1.0.0**
 
-If you are running OSM in a cluster with PSPs enabled, pass in `--set OpenServiceMesh.pspEnabled=true` to your `osm install` or `helm install` CLI command.
+If you are running OSM in a cluster with PSPs enabled, pass in `--set osm.pspEnabled=true` to your `osm install` or `helm install` CLI command.
 
 ### Enable Reconciler in OSM
 
-If you wish to enable a reconcielr in OSM, pass in `--set OpenServiceMesh.enableReconciler=true` to your `osm install` or `helm install` CLI command. More information on the reconciler can be found in the [Reconciler Guide](/docs/guides/reconciler).
+If you wish to enable a reconcielr in OSM, pass in `--set osm.enableReconciler=true` to your `osm install` or `helm install` CLI command. More information on the reconciler can be found in the [Reconciler Guide](/docs/guides/reconciler).
 
 ## Inspect OSM Components
 

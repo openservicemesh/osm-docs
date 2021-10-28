@@ -12,15 +12,15 @@ If a Prometheus instance installed with OSM can't be reached, perform the follow
 
 1. Verify a Prometheus Pod exists.
 
-    When installed with `osm install --set=OpenServiceMesh.deployPrometheus=true`, a Prometheus Pod named something like `osm-prometheus-5794755b9f-rnvlr` should exist in the namespace of the other OSM control plane components which named `osm-system` by default.
+    When installed with `osm install --set=osm.deployPrometheus=true`, a Prometheus Pod named something like `osm-prometheus-5794755b9f-rnvlr` should exist in the namespace of the other OSM control plane components which named `osm-system` by default.
 
-    If no such Pod is found, verify the OSM Helm chart was installed with the `OpenServiceMesh.deployPrometheus` parameter set to `true` with `helm`:
+    If no such Pod is found, verify the OSM Helm chart was installed with the `osm.deployPrometheus` parameter set to `true` with `helm`:
 
     ```console
     $ helm get values -a <mesh name> -n <OSM namespace>
     ```
 
-    If the parameter is set to anything but `true`, reinstall OSM with the `--set=OpenServiceMesh.deployPrometheus=true` flag on `osm install`.
+    If the parameter is set to anything but `true`, reinstall OSM with the `--set=osm.deployPrometheus=true` flag on `osm install`.
 
 1. Verify the Prometheus Pod is healthy.
 
@@ -93,10 +93,10 @@ If Prometheus is found not to be scraping metrics for any Pods, perform the foll
 
 2. If [custom metrics](/docs/guides/observability/metrics/#custom-metrics) are not being scraped, verify they have been enabled.
 
-    Custom metrics are currently disable by default and enabled when the `OpenServiceMesh.featureFlags.enableWASMStats` parameter is set to `true`. Verify the current OSM instance has this parameter set for a mesh named `osm` in the `osm-system` namespace:
+    Custom metrics are currently disable by default and enabled when the `osm.featureFlags.enableWASMStats` parameter is set to `true`. Verify the current OSM instance has this parameter set for a mesh named `osm` in the `osm-system` namespace:
 
     ```console
     $ helm get values -a osm -n osm-system
     ```
 
-    If `OpenServiceMesh.featureFlags.enableWASMStats` is set to a different value, reinstall OSM and pass `--set OpenServiceMesh.featureFlags.enableWASMStats` to `osm install`.
+    If `osm.featureFlags.enableWASMStats` is set to a different value, reinstall OSM and pass `--set osm.featureFlags.enableWASMStats` to `osm install`.

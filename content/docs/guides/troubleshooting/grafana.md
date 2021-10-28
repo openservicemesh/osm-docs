@@ -11,15 +11,15 @@ If a Grafana instance installed with OSM can't be reached, perform the following
 
 1. Verify a Grafana Pod exists.
 
-    When installed with `osm install --set=OpenServiceMesh.deployGrafana=true`, a Grafana Pod named something like `osm-grafana-7c88b9687d-tlzld` should exist in the namespace of the other OSM control plane components which named `osm-system` by default.
+    When installed with `osm install --set=osm.deployGrafana=true`, a Grafana Pod named something like `osm-grafana-7c88b9687d-tlzld` should exist in the namespace of the other OSM control plane components which named `osm-system` by default.
 
-    If no such Pod is found, verify the OSM Helm chart was installed with the `OpenServiceMesh.deployGrafana` parameter set to `true` with `helm`:
+    If no such Pod is found, verify the OSM Helm chart was installed with the `osm.deployGrafana` parameter set to `true` with `helm`:
 
     ```console
     $ helm get values -a <mesh name> -n <OSM namespace>
     ```
 
-    If the parameter is set to anything but `true`, reinstall OSM with the `--set=OpenServiceMesh.deployGrafana=true` flag on `osm install`.
+    If the parameter is set to anything but `true`, reinstall OSM with the `--set=osm.deployGrafana=true` flag on `osm install`.
 
 1. Verify the Grafana Pod is healthy.
 

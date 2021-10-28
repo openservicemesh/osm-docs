@@ -42,10 +42,10 @@ Refer to the [Egress policy demo](/docs/demos/egress_policy) and [API documentat
 
 Egress can be enabled mesh-wide during OSM install or post install. When egress is enabled mesh-wide, outbound traffic from pods are allowed to egress the pod as long as the traffic does not match in-mesh traffic policies that otherwise deny the traffic.
 
-1. During OSM install (default `OpenServiceMesh.enableEgress=false`):
+1. During OSM install (default `osm.enableEgress=false`):
 
    ```bash
-   osm install --set OpenServiceMesh.enableEgress=true
+   osm install --set osm.enableEgress=true
    ```
 
 2. After OSM has been installed:
@@ -63,7 +63,7 @@ Similar to enabling egress, mesh-wide egress can be disabled during OSM install 
 1. During OSM install:
 
    ```bash
-   osm install --set OpenServiceMesh.enableEgress=false
+   osm install --set osm.enableEgress=false
    ```
 
 2. After OSM has been installed:
