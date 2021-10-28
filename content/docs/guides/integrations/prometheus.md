@@ -15,7 +15,7 @@ To familiarize yourself on how OSM works with Prometheus, try installing a new m
 1. Install OSM with its own Prometheus instance:
 
    ```console
-   $ osm install --set OpenServiceMesh.deployPrometheus=true,OpenServiceMesh.enablePermissiveTrafficPolicy=true
+   $ osm install --set osm.deployPrometheus=true,osm.enablePermissiveTrafficPolicy=true
    OSM installed successfully in namespace [osm-system] with mesh name [osm]
    ```
 

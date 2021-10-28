@@ -25,7 +25,7 @@ Enabling permissive traffic policy mode implicitly disables SMI traffic policy m
 
 During OSM install using the `--set` flag:
 ```bash
-osm install --set OpenServiceMesh.enablePermissiveTrafficPolicy=true
+osm install --set osm.enablePermissiveTrafficPolicy=true
 ```
 
 After OSM has been installed:
@@ -40,7 +40,7 @@ Disabling permissive traffic policy mode implicitly enables SMI traffic policy m
 
 During OSM install using the `--set` flag:
 ```bash
-osm install --set OpenServiceMesh.enablePermissiveTrafficPolicy=false
+osm install --set osm.enablePermissiveTrafficPolicy=false
 ```
 
 After OSM has been installed:

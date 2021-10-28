@@ -35,7 +35,7 @@ In permissive traffic policy mode, application connectivity within the mesh is a
 
 1. During install using `osm` CLI:
   ```bash
-  osm install --set=OpenServiceMesh.enablePermissiveTrafficPolicy=true
+  osm install --set=osm.enablePermissiveTrafficPolicy=true
   ```
 
 1. Post install by patching the `osm-mesh-config` custom resource in the control plane's namespace (`osm-system` by default)

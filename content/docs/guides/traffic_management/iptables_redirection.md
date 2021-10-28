@@ -59,7 +59,7 @@ OSM provides a means to specify a global list of IP ranges to exclude from outbo
 1. During OSM install using the `--set` option:
     ```bash
     # To exclude the IP ranges 1.1.1.1/32 and 2.2.2.2/24 from outbound interception
-    osm install --set="OpenServiceMesh.outboundIPRangeExclusionList={1.1.1.1/32,2.2.2.2/24}
+    osm install --set="osm.outboundIPRangeExclusionList={1.1.1.1/32,2.2.2.2/24}
     ```
 
 1. By setting the `outboundIPRangeExclusionList` key in the `osm-mesh-config` resource:
@@ -85,7 +85,7 @@ OSM provides the means to specify a global list of ports to exclude from outboun
 1. During OSM install using the `--set` option:
     ```bash
     # To exclude the ports 6379 and 7070 from outbound sidecar interception
-    osm install --set="OpenServiceMesh.outboundPortExclusionList={6379,7070}
+    osm install --set="osm.outboundPortExclusionList={6379,7070}
     ```
 
 1. By setting the `outboundPortExclusionList` key in the `osm-mesh-config` resource:
@@ -119,7 +119,7 @@ OSM provides the means to specify a global list of ports to exclude from inbound
 1. During OSM install using the `--set` option:
     ```bash
     # To exclude the ports 6379 and 7070 from inbound sidecar interception
-    osm install --set="OpenServiceMesh.inboundPortExclusionList={6379,7070}
+    osm install --set="osm.inboundPortExclusionList={6379,7070}
     ```
 
 1. By setting the `inboundPortExclusionList` key in the `osm-mesh-config` resource:

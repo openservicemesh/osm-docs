@@ -55,7 +55,7 @@ This command enables
 [Prometheus](https://github.com/prometheus/prometheus),
 [Grafana](https://github.com/grafana/grafana), and
 [Jaeger](https://github.com/jaegertracing/jaeger) integrations.
-The `OpenServiceMesh.enablePermissiveTrafficPolicy` chart parameter in the `values.yaml` file instructs OSM to ignore any policies and
+The `osm.enablePermissiveTrafficPolicy` chart parameter in the `values.yaml` file instructs OSM to ignore any policies and
 let traffic flow freely between the pods. With Permissive Traffic Policy mode enabled, new pods
 will be injected with Envoy, but traffic will flow through the proxy and will not be blocked.
 
@@ -63,10 +63,10 @@ will be injected with Envoy, but traffic will flow through the proxy and will no
 
 ```bash
 osm install \
-    --set=OpenServiceMesh.enablePermissiveTrafficPolicy=true \
-    --set=OpenServiceMesh.deployPrometheus=true \
-    --set=OpenServiceMesh.deployGrafana=true \
-    --set=OpenServiceMesh.deployJaeger=true
+    --set=osm.enablePermissiveTrafficPolicy=true \
+    --set=osm.deployPrometheus=true \
+    --set=osm.deployGrafana=true \
+    --set=osm.deployJaeger=true
 ```
 
 This installed OSM Controller in the `osm-system` namespace.

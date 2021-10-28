@@ -34,7 +34,7 @@ The resources that OSM reconciles are:
 To install OSM with the reconciler, use the below command:
 
 ```console
-$ osm install --set OpenServiceMesh.enableReconciler=true
+$ osm install --set osm.enableReconciler=true
 OSM installed successfully in namespace [osm-system] with mesh name [osm]
 ```
 
