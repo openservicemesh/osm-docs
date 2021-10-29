@@ -289,7 +289,7 @@ Similar to Prometheus, we will deploy a Grafan instance through helm.
 
 ```
 helm repo add grafana https://grafana.github.io/helm-charts
-helm install stable/grafana --generate-name
+helm install grafana/grafana --generate-name
 ```
 
 Next grab Grafana's admin password
