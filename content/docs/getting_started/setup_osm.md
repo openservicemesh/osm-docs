@@ -42,7 +42,7 @@ unzip osm.zip
 .\windows-amd64\osm.exe version
 ```
 
-The `osm` CLI can be compiled from source using [this guide](/docs/install/).
+The `osm` CLI can be compiled from source using [this guide](/docs/guides/cli).
 
 
 
