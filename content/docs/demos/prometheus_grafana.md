@@ -285,7 +285,7 @@ Here you should see most of the endpoints connected, up and running for scrape.
 
 ## Deploying a Grafana Instance
 
-Similar to Prometheus, we will deploy a Grafan instance through helm.
+Similar to Prometheus, we will deploy a Grafana instance through helm.
 
 ```
 helm repo add grafana https://grafana.github.io/helm-charts
