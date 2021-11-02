@@ -30,8 +30,8 @@ There are two mechanisms to configure Egress:
 OSM supports configuring fine grained policies for traffic destined to external endpoints using its [Egress policy API][1]. To use this feature, enable it if not enabled:
 
 ```bash
-# Replace <osm-namespace> with the namespace where OSM is installed
-kubectl patch meshconfig osm-mesh-config -n <osm-namespace> -p '{"spec":{"featureFlags":{"enableEgressPolicy":true}}}'  --type=merge
+# Replace osm-system with the namespace where OSM is installed
+kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"featureFlags":{"enableEgressPolicy":true}}}'  --type=merge
 ```
 
 Refer to the [Egress policy demo](/docs/demos/egress_policy) and [API documentation][1] on how to configure policies for routing egress traffic for various protocols.
@@ -53,10 +53,9 @@ Egress can be enabled mesh-wide during OSM install or post install. When egress 
    `osm-controller` retrieves the egress configuration from the `osm-mesh-config` `MeshConfig` custom resource in the osm mesh control plane namespace (`osm-system` by default). Use `kubectl patch` to set `enableEgress` to `true` in the `osm-mesh-config` resource.
 
    ```bash
-   kubectl patch meshconfig osm-mesh-config -n <osm-namespace> -p '{"spec":{"traffic":{"enableEgress":true}}}' --type=merge
+   # Replace osm-system with the namespace where OSM is installed
+   kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enableEgress":true}}}' --type=merge
    ```
-   
-> Note: Replace `<osm-namespace>` with the namespace where osm is installed (by default, osm is installed in `osm-system`).
 
 ### Disabling mesh-wide Egress passthrough to external destinations
 
@@ -71,7 +70,8 @@ Similar to enabling egress, mesh-wide egress can be disabled during OSM install 
 2. After OSM has been installed:
    Use `kubectl patch` to set `enableEgress` to `false` in the `osm-mesh-config` resource.
    ```bash
-   kubectl patch meshconfig osm-mesh-config -n <osm-namespace> -p '{"spec":{"traffic":{"enableEgress":false}}}'  --type=merge
+   # Replace osm-system with the namespace where OSM is installed
+   kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enableEgress":false}}}'  --type=merge
    ```
 
 With egress disabled, traffic from pods within the mesh will not be able to access external services outside the cluster.

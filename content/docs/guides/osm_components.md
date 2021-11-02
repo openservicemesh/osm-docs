@@ -7,10 +7,11 @@ weight: 5
 
 ## Inspect OSM Components
 
-Some OSM components will be installed by default into `<osm-namespace>`. This refers to the namespace where the mesh control plane is installed. Inspect them by using the following `kubectl` command:
+Some OSM components will be installed by default in the chosen namespace, which defaults to `osm-system`. Inspect them by using the following `kubectl` command:
 
 ```console
-$ kubectl get pods,svc,secrets,meshconfigs,serviceaccount --namespace "<osm-namespace>"
+# Replace osm-system with the namespace where OSM is installed
+$ kubectl get pods,svc,secrets,meshconfigs,serviceaccount --namespace osm-system
 ```
 
 Some cluster-wide (non-namespaced) OSM components will also be installed. Inspect them using the following `kubectl` command:
