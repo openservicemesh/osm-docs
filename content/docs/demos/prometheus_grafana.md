@@ -295,13 +295,16 @@ helm install grafana/grafana --generate-name
 Next grab Grafana's admin password:
 
 ```
-kubectl get secret --namespace <grafana namespace> <grafana secret> -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+export GRAFANA_NAMESPACE=<grafana namespace> # kubernetes namespace grafana was installed to (can be default)
+export SECRET_NAME=$(kubectl get secret --namespace $GRAFANA_NAMESPACE -l "app.kubernetes.io/name=grafana" -o jsonpath="{.items[0].metadata.name}")
+kubectl get secret --namespace $GRAFANA_NAMESPACE $SECRET_NAME -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
 
 Next forward Grafana's webadmin port:
+
 ```
-export POD_NAME=$(kubectl get pods --namespace <grafana namespace> -l "app.kubernetes.io/name=grafana" -o jsonpath="{.items[0].metadata.name}")
-kubectl --namespace <namespace> port-forward $POD_NAME 3000
+export POD_NAME=$(kubectl get pods --namespace $GRAFANA_NAMESPACE -l "app.kubernetes.io/name=grafana" -o jsonpath="{.items[0].metadata.name}")
+kubectl --namespace $GRAFANA_NAMESPACE port-forward $POD_NAME 3000
 ```
 
 Here use `admin` as user and the password you got from two steps above.
