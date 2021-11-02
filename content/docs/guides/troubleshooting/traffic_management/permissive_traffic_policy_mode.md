@@ -6,7 +6,7 @@ type: docs
 
 ## When permissive traffic policy mode is not working as expected
 
-### 1. Confirm Permissive traffic policy mode is enabled
+### 1. Confirm permissive traffic policy mode is enabled
 
 Confirm permissive traffic policy mode is enabled by verifying the value for the `enablePermissiveTrafficPolicyMode` key in the `osm-mesh-config` custom resource. `osm-mesh-config` MeshConfig resides in the namespace OSM control plane namespace (`osm-system` by default).
 

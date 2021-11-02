@@ -6,11 +6,11 @@ weight: 2
 ---
 
 # Permissive Traffic Policy Mode
-Permissive traffic policy mode in OSM is a mode where [SMI][1] traffic policy enforcement is bypassed. In this mode, OSM automatically discovers services that are a part of the service mesh and programs traffic policy rules on each Envoy proxy sidecar to be able to communicate with these services.
+Permissive traffic policy mode in OSM is a mode where [SMI][1] traffic access policy enforcement is bypassed. In this mode, OSM automatically discovers services that are a part of the service mesh and programs traffic policy rules on each Envoy proxy sidecar to be able to communicate with these services.
 
 ## When to use permissive traffic policy mode
-Since permissive traffic policy mode bypasses [SMI][1] traffic policy enforcement, it is suitable for use when connectivity between applications within the service mesh should flow as before the applications were enrolled into the mesh. This mode is suitable in environments
-where explicitly defining traffic policies for connectivity between applications is not feasible.
+Since permissive traffic policy mode bypasses [SMI][1] traffic access policy enforcement, it is suitable for use when connectivity between applications within the service mesh should flow as before the applications were enrolled into the mesh. This mode is suitable in environments
+where explicitly defining traffic access policies for connectivity between applications is not feasible.
 
 A common use case to enable permissive traffic policy mode is to support gradual onboarding of applications into the mesh without breaking application connectivity. Traffic routing between application services is automatically set up by OSM controller through service discovery. Wildcard traffic policies are set up on each Envoy proxy sidecar to allow traffic flow to services within the mesh.
 
