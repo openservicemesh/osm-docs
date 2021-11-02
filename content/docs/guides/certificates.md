@@ -15,16 +15,16 @@ Open Service Mesh uses mTLS for encryption of data between pods as well as Envoy
 
 There are a few kinds of certificates used in OSM:
 
-| Cert Type                  | Where it is issued                                                                                                                                                                                     | How it is used                                                                                                                                                              | Validity duration                                                                                                              | Sample CommonName                                             |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
-| xDS bootstrap              | [pkg/injector/patch.go → createPatch()](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/pkg/injector/patch.go#L25-L28)                                                                        | used for [Envoy-to-xDS connections](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/pkg/envoy/ads/stream.go#L27); identifies Envoy (Pod) to the xDS control plane. | [XDSCertificateValidityPeriod](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/pkg/constants/constants.go) → a decade | `7b2359d7-f201-4d3f-a217-73fd6e44e39b.bookstore-v2.bookstore` |
-| service                    | [pkg/envoy/sds/response.go → createDiscoveryResponse()](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/pkg/envoy/secrets/types.go#L39)                                                       | used for east-west communication between Envoys; identifies Service Accounts                                                                                                | [defined in MeshConfig; default 24h](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/charts/osm/values.yaml#L82)      | `bookstore-v2.bookstore.cluster.local`                        |
-| mutating webhook handler   | [pkg/injector/webhook.go → NewWebhook()](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/pkg/injector/webhook.go#L67-L69)                                                                     | used by the webhook handler; **note**: this cert does not have to be related to the Envoy certs, but it does have to match the CA in the MutatingWebhookConfiguration       | [XDSCertificateValidityPeriod](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/pkg/constants/constants.go) → a decade | `osm-controller.osm-system.svc`                               |
-| validating webhook handler | [pkg/configurator/validating_webhook.go → NewValidatingWebhook()](https://github.com/openservicemesh/osm/blob/a48de43463c99c03e3662670bf7f2b99166e1388/pkg/configurator/validating_webhook.go#L85-L86) | used by the validating webhook handler; (same note as MWH cert)                                                                                                             | [XDSCertificateValidityPeriod](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/pkg/constants/constants.go) → a decade | `osm-config-validator.osm-system.svc`                         |
+| Cert Type                  | Where it is issued                                                                                                                                                                                     | How it is used                                                                                                                                                                          | Validity duration                                                                                                                          | Sample CommonName                                             |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
+| xDS bootstrap              | [pkg/injector/patch.go → createPatch()](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/pkg/injector/patch.go#L25-L28)                                                            | used for [Envoy-to-xDS connections](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/pkg/envoy/ads/stream.go#L27); identifies Envoy (Pod) to the xDS control plane. | [XDSCertificateValidityPeriod](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/pkg/constants/constants.go) → a decade | `7b2359d7-f201-4d3f-a217-73fd6e44e39b.bookstore-v2.bookstore` |
+| service                    | [pkg/envoy/sds/response.go → createDiscoveryResponse()](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/pkg/envoy/secrets/types.go#L39)                                           | used for east-west communication between Envoys; identifies Service Accounts                                                                                                            | [defined in MeshConfig; default 24h](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/charts/osm/values.yaml#L82)      | `bookstore-v2.bookstore.cluster.local`                        |
+| mutating webhook handler   | [pkg/injector/webhook.go → NewWebhook()](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/pkg/injector/webhook.go#L67-L69)                                                         | used by the webhook handler; **note**: this cert does not have to be related to the Envoy certs, but it does have to match the CA in the MutatingWebhookConfiguration                   | [XDSCertificateValidityPeriod](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/pkg/constants/constants.go) → a decade | `osm-controller.osm-system.svc`                               |
+| validating webhook handler | [pkg/configurator/validating_webhook.go → NewValidatingWebhook()](https://github.com/openservicemesh/osm/blob/a48de43463c99c03e3662670bf7f2b99166e1388/pkg/configurator/validating_webhook.go#L85-L86) | used by the validating webhook handler; (same note as MWH cert)                                                                                                                         | [XDSCertificateValidityPeriod](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/pkg/constants/constants.go) → a decade | `osm-config-validator.osm-system.svc`                         |
 
 ### Root Certificate
 
-The root certificate for the service mesh is stored in an Opaque Kubernetes Secret named `osm-ca-bundle` in the OSM Namespace (in most cases `osm-system`).
+The root certificate for the service mesh is stored in an Opaque Kubernetes Secret named `osm-ca-bundle` in the namespace where osm is installed (by default `osm-system`).
 The secret YAML has the following shape:
 
 ```yaml
@@ -60,17 +60,18 @@ The self-signed root certificate, which is created via the Tresor package within
 
 1. Delete the `osm-ca-bundle` certificate in the osm namesapce
    ```console
-   export osm_namespace=<osm-namespace> # Replace <osm-namespace> with the namespace where OSM is installed
+   export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
    kubectl delete secret osm-ca-bundle -n $osm_namespace
    ```
-2. Restart the control plane components in the osm-namespace
+
+2. Restart the control plane components
    ```console
    kubectl rollout restart deploy osm-controller -n $osm_namespace
    kubectl rollout restart deploy osm-injector -n $osm_namespace
    kubectl rollout restart deploy osm-bootstrap -n $osm_namespace
    ```
 
-When the components gets re-deployed, you should be able to eventually see the new `osm-ca-bundle` secret in the osm-namespace:
+When the components gets re-deployed, you should be able to eventually see the new `osm-ca-bundle` secret in `$osm_namespace`:
 
 ```console
 kubectl get secrets -n $osm_namespace
@@ -187,7 +188,8 @@ Development mode should NOT be used in production installations!
 ...
 ```
 
-The outcome of deploying Vault in your system is a URL and a token. For instance the URL of Vauld could be `http://vault.osm-system-ns.svc.cluster.local` and the token `xxx`.
+The outcome of deploying Vault in your system is a URL and a token. For instance the URL of Vault could be `http://vault.<osm-namespace>.svc.cluster.local` and the token `xxx`.
+> Note: `<osm-namespace>` refers to the namespace where the osm control plane is installed.
 
 #### Configure OSM with Vault
 

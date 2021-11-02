@@ -93,10 +93,12 @@ If Prometheus is found not to be scraping metrics for any Pods, perform the foll
 
 2. If [custom metrics](/docs/guides/observability/metrics/#custom-metrics) are not being scraped, verify they have been enabled.
 
-    Custom metrics are currently disable by default and enabled when the `osm.featureFlags.enableWASMStats` parameter is set to `true`. Verify the current OSM instance has this parameter set for a mesh named `osm` in the `osm-system` namespace:
+    Custom metrics are currently disable by default and enabled when the `osm.featureFlags.enableWASMStats` parameter is set to `true`. Verify the current OSM instance has this parameter set for a mesh named `<osm-mesh-name>` in the `<osm-namespace>` namespace:
 
     ```console
-    $ helm get values -a osm -n osm-system
+    $ helm get values -a <osm-mesh-name> -n <osm-namespace>
     ```
+
+   > Note: replace `<osm-mesh-name>` with the name of the osm mesh and `<osm-namespace>` with the namespace where osm was installed.
 
     If `osm.featureFlags.enableWASMStats` is set to a different value, reinstall OSM and pass `--set osm.featureFlags.enableWASMStats` to `osm install`.

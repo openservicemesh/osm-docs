@@ -19,8 +19,8 @@ This guide will demonstrate how to configure HTTP and HTTPS ingress to a service
 
 First, note the details regarding OSM and Nginx installations:
 ```bash
-osm_namespace=<osm-namespace> # replace <osm-namespace> with the namespace where OSM is installed
-osm_mesh_name=<osm-mesh-name> # replace <osm-mesh-name> with the mesh name (use `osm mesh list` command)
+osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
+osm_mesh_name=osm # replace osm with the mesh name (use `osm mesh list` command)
 
 nginx_ingress_namespace=<nginx-namespace> # replace <nginx-namespace> with the namespace where Nginx is installed
 nginx_ingress_service=<nginx-ingress-controller-service> # replace <nginx-ingress-controller-service> with the name of the nginx ingress controller service

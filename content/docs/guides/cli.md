@@ -101,7 +101,8 @@ $ make build-osm
 
 ### OSM Configuration
 
-By default, the control plane components are installed into a Kubernetes Namespace called `osm-system` and the control plane is given a unique identifier attribute `mesh-name` defaulted to `osm`. Both the Namespace and mesh-name can be configured through flags when using the `osm CLI` flags or by editing the values file when using the `helm CLI`.
+By default, the control plane components are installed into a Kubernetes Namespace called `osm-system` and the control plane is given a unique identifier attribute `mesh-name` defaulted to `osm`.
+During installation, the Namespace and mesh-name can be configured through flags when using the `osm` CLI or by editing the values file when using the `helm` CLI.
 
 The `mesh-name` is a unique identifier assigned to an osm-controller instance during install to identify and manage a mesh instance.
 

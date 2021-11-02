@@ -14,8 +14,8 @@ weight: 2
 
 OSM can be run on Kubernetes versions that are supported at the time of the OSM release. The current support matrix is:
 
-| Open Service Mesh | Kubernetes |
-| ------------------|------------|
+| Open Service Mesh | Kubernetes  |
+| ----------------- | ----------- |
 | 0.11              | 1.19 - 1.22 |
 | 0.10              | 1.19 - 1.21 |
 
@@ -29,10 +29,9 @@ Each version of the OSM CLI is designed to work only with the matching version o
 
 #### Running the CLI
 
-Run `osm install`.
+Run `osm install` to install the OSM control plane.
 
 ```console
-# Install osm control plane components
 $ osm install
 OSM installed successfully in namespace [osm-system] with mesh name [osm]
 ```
@@ -102,9 +101,10 @@ If you wish to enable a reconcielr in OSM, pass in `--set osm.enableReconciler=t
 
 ## Inspect OSM Components
 
-A few components will be installed by default into the `osm-system` Namespace. Inspect them by using the following `kubectl` command:
+A few components will be installed by default. Inspect them by using the following `kubectl` command:
 
 ```console
+# Replace osm-system with the namespace where OSM is installed
 $ kubectl get pods,svc,secrets,meshconfigs,serviceaccount --namespace osm-system
 ```
 
@@ -117,6 +117,7 @@ kubectl get clusterrolebinding,clusterrole,mutatingwebhookconfiguration,validati
 Under the hood, `osm` is using [Helm](https://helm.sh) libraries to create a Helm `release` object in the control plane Namespace. The Helm `release` name is the mesh-name. The `helm` CLI can also be used to inspect Kubernetes manifests installed in more detail. Goto https://helm.sh for instructions to install Helm.
 
 ```console
+# Replace osm-system with the namespace where OSM is installed
 $ helm get manifest osm --namespace osm-system
 ```
 

@@ -20,7 +20,7 @@ This guide demonstrates a client within the service mesh accessing destinations 
 
 1. Enable egress policy if not enabled:
     ```bash
-    export osm_namespace=<osm-namespace> # Replace <osm-namespace> with the namespace where OSM is installed
+    export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
     kubectl patch meshconfig osm-mesh-config -n "$osm_namespace" -p '{"spec":{"featureFlags":{"enableEgressPolicy":true}}}'  --type=merge
     ```
 
