@@ -23,7 +23,7 @@ kubectl get clusterrolebinding,clusterrole,mutatingwebhookconfiguration
 Under the hood, `osm` is using [Helm](https://helm.sh) libraries to create a Helm `release` object in the control plane Namespace. The Helm `release` name is the mesh-name. The `helm` CLI can also be used to inspect Kubernetes manifests installed in more detail. See the Helm docs for how to [install Helm](https://helm.sh/docs/intro/install/).
 
 ```console
-$ helm get manifest osm --namespace <osm-namespace>"
+$ helm get manifest osm --namespace <osm-namespace>
 ```
 
 ## Components
