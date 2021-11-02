@@ -24,16 +24,16 @@ to critical errors.
 
 OSM defines the following log levels in order of increasing verbosity:
 
-Log level | Purpose
--|-
-disabled | Disables logging entirely
-panic    | *Currently unused*
-fatal    | For unrecoverable errors resulting in termination, usually on startup
-error    | For errors that may require user action to resolve
-warn     | For recovered errors or unexpected conditions that may lead to errors
-info     | For messages indicating normal behavior, such as acknowledging some user action
-debug    | For extra information useful in figuring out why a mesh may not be working as expected
-trace    | For extra verbose messages, used primarily for development
+| Log level | Purpose                                                                                |
+| --------- | -------------------------------------------------------------------------------------- |
+| disabled  | Disables logging entirely                                                              |
+| panic     | *Currently unused*                                                                     |
+| fatal     | For unrecoverable errors resulting in termination, usually on startup                  |
+| error     | For errors that may require user action to resolve                                     |
+| warn      | For recovered errors or unexpected conditions that may lead to errors                  |
+| info      | For messages indicating normal behavior, such as acknowledging some user action        |
+| debug     | For extra information useful in figuring out why a mesh may not be working as expected |
+| trace     | For extra verbose messages, used primarily for development                             |
 
 Each of the above log levels can be configured in the MeshConfig at
 `spec.observability.osmLogLevel` or on install with the
@@ -47,7 +47,7 @@ When enabled, Fluent Bit can collect these logs, process them and send them to a
 OSM provides log forwarding by optionally deploying a Fluent Bit sidecar to the OSM controller using the `--set=osm.enableFluentbit=true` flag during installation. The user can then define where OSM logs should be forwarded using any of the available [Fluent Bit output plugins](https://docs.fluentbit.io/manual/pipeline/outputs).
 
 ### Configuring Log Forwarding with Fluent Bit
-By default, the Fluent Bit sidecar is configured to simply send logs to the Fluent Bit container's stdout. If you have installed OSM with Fluent Bit enabled, you may access these logs using `kubectl logs -n "<osm-namespace>" <osm-controller-name> -c fluentbit-logger`. This command will also help you find how your logs are formatted in case you need to change your parsers and filters.
+By default, the Fluent Bit sidecar is configured to simply send logs to the Fluent Bit container's stdout. If you have installed OSM with Fluent Bit enabled, you may access these logs using `kubectl logs -n <osm-namespace> <osm-controller-name> -c fluentbit-logger`. This command will also help you find how your logs are formatted in case you need to change your parsers and filters.
 
 > Note: `<osm-namespace>` refers to the namespace where the osm control plane is installed.
 
@@ -87,7 +87,7 @@ Fluent Bit has an Azure output plugin that can be used to send logs to an Azure 
 
 2. Navigate to your new workspace in Azure Portal. Find your Workspace ID and Primary key in your workspace under Agents management. In `values.yaml`, under `fluentBit`, update the `outputPlugin` to `azure` and keys `workspaceId` and `primaryKey` with the corresponding values from Azure Portal (without quotes). Alternatively, you may replace entire output section in `fluentbit-configmap.yaml` as you would for any other output plugin.
 
-3. Run through steps 2-5 above. 
+3. Run through steps 2-5 above.
 
 4. Once you run OSM with Fluent Bit enabled, logs will populate under the Logs > Custom Logs section in your Log Analytics workspace. There, you may run the following query to view most recent logs first:
     ```
