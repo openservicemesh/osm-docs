@@ -16,7 +16,7 @@ Only one mesh can monitor a namespace, so this is something to watch out for whe
 Enrolling a namespace also optionally allows for metrics to be collected for resources in the given namespace and for Pods in the namespace to be automatically injected with sidecar proxy containers. These are all features that help OSM provide functionality for traffic management and observability. Scoping this functionality at the namespace level allows teams to organize which segments of
 their cluster should be part of which mesh.
 
-Namespace monitoring, automatic sidecar injection, and metrics collection is controlled by adding certain labels and annotations to a Kubernetes namespace. This can be done manually or using the `osm` CLI although using the `osm` CLI is the recommended approach. The presence of the label `openservicemesh.io/monitored-by=<mesh-name>` allows an OSM control place with the given `mesh-name` to monitor
+Namespace monitoring, automatic sidecar injection, and metrics collection is controlled by adding certain labels and annotations to a Kubernetes namespace. This can be done manually or using the `osm` CLI although using the `osm` CLI is the recommended approach. The presence of the label `openservicemesh.io/monitored-by=<mesh-name>` allows an OSM control plane with the given `mesh-name` to monitor
 all resources within that namespace. The annotation `openservicemesh.io/sidecar-injection=enabled` enables OSM to automatically inject sidecar proxy containers in all Pods created within that namespace. The metrics annotation `openservicemesh.io/metrics=enabled` allows OSM to collect metrics on resources within a Namespace.
 
 See how to use the OSM CLI to manage namespace monitoring below.
