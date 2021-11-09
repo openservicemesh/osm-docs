@@ -143,7 +143,7 @@ For _unmanaged_ environments, running `osm uninstall mesh` will uninstall the fo
 4. OSM validating webhook configurations
 
 OSM ensures that all the CRDs mentioned [here](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/cmd/osm-bootstrap/crds)
-exist in the cluster at install time.During installation, if they are not already installed, the `osm-bootstrap` pod will install them before the rest of the control plane components are running.This is the same behavior when using the Helm charts to install OSM as well.
+exist in the cluster at install time. During installation, if they are not already installed, the `osm-bootstrap` pod will install them before the rest of the control plane components are running. This is the same behavior when using the Helm charts to install OSM as well.
 
 When uninstalling OSM, both the `osm uninstall mesh` command and Helm uninstallation will not delete any OSM or SMI CRD in any cluster environment (managed and unmanaged) for primarily two reasons:
 1. CRDs are cluster-wide resources and may be used by other service meshes or resources running in the same cluster
