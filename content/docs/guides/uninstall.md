@@ -74,6 +74,7 @@ The OSM control plane and related components will be uninstalled in the followin
 1. [Uninstall the OSM control plane](#uninstall-the-osm-control-plane)
 1. [Remove User Provided Resources](#remove-user-provided-resources)
 1. [Delete OSM Namespace](#delete-osm-namespace)
+1. [Removal of OSM Cluster Wide Resources](#removal-of-osm-cluster-wide-resources)
 
 ### Uninstall the OSM control plane
 
@@ -125,7 +126,7 @@ namespace "<namespace>" deleted
 
 Repeat the steps above for each mesh installed in the cluster. After there are no OSM control planes remaining, move to following step.
 
-## Removal of OSM Cluster Wide Resources
+### Removal of OSM Cluster Wide Resources
 
 Uninstalling OSM (through the `osm uninstall mesh` command or through Helm) will uninstall OSM control plane components.
 However, it will leave behind certain OSM resources to prevent unintended consequences for the cluster after uninstalling OSM.
@@ -142,14 +143,11 @@ For _unmanaged_ environments, running `osm uninstall mesh` will uninstall the fo
 4. OSM validating webhook configurations
 
 OSM ensures that all the CRDs mentioned [here](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/cmd/osm-bootstrap/crds)
-exist in the cluster at install time.
-During installation, if they are not already installed, the `osm-bootstrap` pod will install them before the rest of the control plane components are running.
-This is the same behavior when using the Helm charts to install OSM as well.
+exist in the cluster at install time.During installation, if they are not already installed, the `osm-bootstrap` pod will install them before the rest of the control plane components are running.This is the same behavior when using the Helm charts to install OSM as well.
+
 When uninstalling OSM, both the `osm uninstall mesh` command and Helm uninstallation will not delete any OSM or SMI CRD in any cluster environment (managed and unmanaged) for primarily two reasons:
 1. CRDs are cluster-wide resources and may be used by other service meshes or resources running in the same cluster
 2. deletion of a CRD will cause all custom resources corresponding to that CRD to also be deleted
-
-# Remove OSM cluster wide resources
 
 After uninstalling OSM, to remove cluster wide resources that OSM installs (i.e. the meshconfig, secrets, OSM CRDs, SMI CRDs, and webhook configurations), run the following command.
 
