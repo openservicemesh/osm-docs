@@ -128,10 +128,7 @@ The following section assumes a Prometheus instance has already been configured 
 
 ##### Importing OSM Dashboards
 
-The OSM dashboards (if desired) can be imported through several mechanisms to the external Grafana instance.
-OSM Dashboards are available both through:
-- [OSM repository](https://github.com/openservicemesh/osm/tree/release-v0.9/charts/osm/grafana), and are importable as json blobs through the web admin portal
-- or [online at Grafana.com](https://grafana.com/grafana/dashboards/14145).
+OSM Dashboards are available through [our repository](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/charts/osm/grafana/dashboards), which can be imported as json blobs on the web admin portal.
 
 Detailed instructions for importing OSM dashboards can be found in the [Prometheus and Grafana](/docs/demos/prometheus_grafana) demo. Refer to [OSM Grafana dashboard](#osm-grafana-dashboards) for an overview of the pre-configured dashboards.
 
