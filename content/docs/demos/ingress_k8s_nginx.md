@@ -5,138 +5,177 @@ type: docs
 weight: 11
 ---
 
-This guide will demonstrate how to configure HTTP and HTTPS ingress to a service part of an OSM managed service mesh when using [Kubernetes Nginx Ingress Controller](https://kubernetes.github.io/ingress-nginx/).
+This is a guide to configuring [NGINX Ingress Controller](https://docs.nginx.com/nginx-ingress-controller/intro/overview/) with Open Service Mesh on Kubernetes.
 
 
-## Prerequisites
+## Requirements
 
-- Kubernetes cluster running Kubernetes v1.19.0 or greater.
-- Have `kubectl` available to interact with the API server.
-- Have OSM version >= v0.10.0 installed.
-- Have Kubernetes Nginx Ingress Controller installed. Refer to the [deployment guide](https://kubernetes.github.io/ingress-nginx/deploy/) to install it.
+- [Kubernetes](https://kubernetes.io/) cluster with v1.19.0 or higher
+- [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
+- [Open Service Mesh](https://github.com/openservicemesh/osm/releases)
 
-## Demo
 
-First, note the details regarding OSM and Nginx installations:
+## Assumptions
+For the purposes of this guide we will assume that:
+- OSM is installed in `osm-system` namespace
+- NGINX Ingress Controller is installed in `ingress-nginx` namespace
+- Hostname for the service we expose to the Internet is `www.contoso.com`
+- Port exposed to the Internet is `80`
+
+
+## Steps
+
+
+### 1. Install NGINX Ingress Controller
+The command below uses Helm to install NGINX Ingress Controller in the `ingress-nginx` namespace. For details and other options see the [NGINX](https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-helm/) or [Kubernetes Ingress](https://kubernetes.github.io/ingress-nginx/deploy/#quick-start) docs.
 ```bash
-osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
-osm_mesh_name=osm # replace osm with the mesh name (use `osm mesh list` command)
-
-nginx_ingress_namespace=<nginx-namespace> # replace <nginx-namespace> with the namespace where Nginx is installed
-nginx_ingress_service=<nginx-ingress-controller-service> # replace <nginx-ingress-controller-service> with the name of the nginx ingress controller service
-nginx_ingress_host="$(kubectl -n "$nginx_ingress_namespace" get service "$nginx_ingress_service" -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
-nginx_ingress_port="$(kubectl -n "$nginx_ingress_namespace" get service "$nginx_ingress_service" -o jsonpath='{.spec.ports[?(@.name=="http")].port}')"
+helm upgrade \
+  --install ingress-nginx ingress-nginx \
+  --repo https://kubernetes.github.io/ingress-nginx \
+  --namespace ingress-nginx \
+  --create-namespace
 ```
 
-To restrict ingress traffic on backends to authorized clients, we will set up the IngressBackend configuration such that only ingress traffic from the endpoints of the Nginx Ingress Controller service can route traffic to the service backend. To be able to discover the endpoints of this service, we need OSM controller to monitor the corresponding namespace. However, Nginx must NOT be injected with an Envoy sidecar to function properly.
+
+### 2. Label NGINX Ingress Controller Namespace
+Label the `ingress-nginx` namespace with `openservicemesh.io/monitored-by=osm`. This label ensures OSM can observe the pods in this namespace. Pods in the `ingress-nginx` namespace will **not** be augmented with an Envoy sidecar.
 ```bash
-osm namespace add "$nginx_ingress_namespace" --mesh-name "$osm_mesh_name" --disable-sidecar-injection
+kubectl label namespace ingress-nginx openservicemesh.io/monitored-by=osm
 ```
 
-Next, we will deploy the sample `httpbin` service.
 
-```bash
-# Create a namespace
-kubectl create ns httpbin
+### 3. Install Apps
+For this guide we use [httpbin](https://httpbin.org/) as our sample app. You could use your own apps in lieu of [httpbin](https://httpbin.org/).
 
-# Add the namespace to the mesh
-osm namespace add httpbin
+1. Create a namespace: `kubectl create namespace httpbin`
 
-# Deploy the application
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/samples/httpbin/httpbin.yaml -n httpbin
-```
+2. Add the newly created namespace to the mesh: `osm namespace add httpbin`
 
-Confirm the `httpbin` service and pod is up and running:
-```console
-$ kubectl get pods -n httpbin
-NAME                       READY   STATUS    RESTARTS   AGE
-httpbin-74677b7df7-zzlm2   2/2     Running   0          11h
-
-$ kubectl get svc -n httpbin
-NAME      TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)     AGE
-httpbin   ClusterIP   10.0.22.196   <none>        14001/TCP   11h
-```
-
-### HTTP Ingress
-
-Next, we will create the Ingress and IngressBackend configurations necessary to allow external clients to access the `httpbin` service on port `14001` in the `httpbin` namespace. The connection from the Nginx's ingress service to the `httpbin` backend pod will be unencrypted since we aren't using TLS.
-
+3. Create a new Kubernetes Service Account:
 ```bash
 kubectl apply -f - <<EOF
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: v1
+kind: ServiceAccount
 metadata:
   name: httpbin
   namespace: httpbin
-spec:
-  ingressClassName: nginx
-  rules:
-  - http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: httpbin
-            port:
-              number: 14001
----
-kind: IngressBackend
-apiVersion: policy.openservicemesh.io/v1alpha1
-metadata:
-  name: httpbin
-  namespace: httpbin
-spec:
-  backends:
-  - name: httpbin
-    port:
-      number: 14001
-      protocol: http
-  sources:
-  - kind: Service
-    namespace: "$nginx_ingress_namespace"
-    name: "$nginx_ingress_service"
 EOF
 ```
 
-Now, we expect external clients to be able to access the `httpbin` service for HTTP requests:
-```console
-$ curl -sI http://"$nginx_ingress_host":"$nginx_ingress_port"/get
-HTTP/1.1 200 OK
-Date: Wed, 18 Aug 2021 18:12:35 GMT
-Content-Type: application/json
-Content-Length: 366
-Connection: keep-alive
-access-control-allow-origin: *
-access-control-allow-credentials: true
-x-envoy-upstream-service-time: 2
-```
-
-### HTTPS Ingress (mTLS and TLS)
-
-To proxy connections to HTTPS backends, we will configure the Ingress and IngressBackend configurations to use `https` as the backend protocol, and have OSM issue a certificate that Nginx will use as the client certificate to proxy HTTPS connections to TLS backends. The client certificate and CA certificate will be stored in a Kubernetes secret that Nginx will use to authenticate service mesh backends.
-
-To issue a client certificate for the Nginx ingress service, update the `osm-mesh-config` `MeshConfig` resource.
+4. Create a new Kubernetes Service
 ```bash
-kubectl edit meshconfig osm-mesh-config -n "$osm_namespace"
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpbin
+  namespace: httpbin
+  labels:
+    app: httpbin
+    service: httpbin
+spec:
+  selector:
+    app: httpbin
+  ports:
+  - name: http
+    port: 14001
+EOF
 ```
 
-Add the `ingressGateway` field under `spec.certificate`:
+5. Deploy the [httpbin](https://httpbin.org/) app:
+```bash
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: httpbin
+  namespace: httpbin
+  labels:
+    app: httpbin
+spec:
+  serviceAccountName: httpbin
+  containers:
+  - image: kennethreitz/httpbin
+    name: httpbin
+    command: ["gunicorn", "-b", "0.0.0.0:14001", "httpbin:app", "-k", "gevent"]
+    ports:
+    - containerPort: 14001
+EOF
+```
+
+Confirm the `httpbin` pod is healthy and running:
+1. View the pod: `kubectl get pods --namespace httpbin`
+```console
+NAME      READY   STATUS    RESTARTS   AGE
+httpbin   2/2     Running   0          22s
+```
+
+2. View the service: `kubectl get services --namespace httpbin`
+```console
+NAME      TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)     AGE
+httpbin   ClusterIP   10.0.80.181   <none>        14001/TCP   22s
+```
+
+3. View the endpoint: `kubectl get endpoints --namespace httpbin`
+```console
+NAME      ENDPOINTS           AGE
+httpbin   10.244.2.13:14001   22s
+```
+
+
+### 4. Edit MeshConfig CRO
+OSM must be aware of the existence of an NGINX ingress pods. The NGINX pods will need a certificate to participate in the mesh. Edit the MeshConfig CRO named `osm-mesh-config` in the `osm-system` namespace:
+```bash
+kubectl edit MeshConfig osm-mesh-config --namespace osm-system
+```
+
+Add the `ingressGateway` configuration under `spec.certificate`:
 ```yaml
-certificate:
-  ingressGateway:
-    secret:
-      name: osm-nginx-client-cert
-      namespace: <osm-namespace> # replace <osm-namespace> with the namespace where OSM is installed
-    subjectAltNames:
-    - ingress-nginx.ingress.cluster.local
-    validityDuration: 24h
+spec:
+  certificate:
+    ingressGateway:
+      secret:
+        name: osm-ingress-mtls
+        namespace: ingress-nginx
+      subjectAltNames:
+          - ingress-nginx.ingress-nginx.cluster.local
+      validityDuration: 24h
 ```
-> Note: The Subject Alternative Name (SAN) is of the form `<service-account>.<namespace>.cluster.local`, where the service account and namespace correspond to the Ngnix service.
+> Note: the `subjectAltNames` list (SAN) is of the form `<service-account>.<namespace>.cluster.local`. Service account and namespace must match that of the NGNIX pods.
 
-Next, we need to create an Ingress and IngressBackend configuration to use TLS proxying to the backend service, while enabling proxying to the backend over mTLS. For this to work, we must create an IngressBackend resource that specifies HTTPS ingress traffic directed to the `httpbin` service must only accept traffic from a trusted client. OSM provisioned a client certificate for the Nginx ingress service with the Subject ALternative Name (SAN) `ingress-nginx.ingress.cluster.local`, so the IngressBackend configuration needs to reference the same SAN for mTLS authentication between the Nginx ingress service and the `httpbin` backend.
+Alternatively the MeshConfig change can be applied with a single command:
+```bash
+kubectl patch MeshConfig \
+  osm-mesh-config \
+  -n kube-system \
+  -p '{"spec":{"certificate":{"ingressGateway":{"subjectAltNames":["ingress-nginx.ingress-nginx.cluster.local"], "validityDuration":"1h", "secret":{"name":"osm-ingress-mtls","namespace":"ingress-nginx"}}}}}' \
+  --type=merge
+```
 
-Apply the configurations:
+As a result of these changes to `osm-mesh-config`, OSM Controller will create a new secret with an mTLS certificate in it.
+Look for the newly created mTLS certificate: `kubectl get secrets -n osm-system osm-ingress-mtls`
+
+```yaml
+apiVersion: v1
+type: kubernetes.io/tls
+kind: Secret
+metadata:
+  name: osm-ingress-mtls
+  namespace: ingress-nginx
+data:
+  ca.crt: ...
+  tls.crt: ...
+  tls.key: ...
+```
+
+All traffic from the NGINX pod (outside the mesh) to the httpbin pod (in the mesh) will be encrypted with the mTLS certificate above.
+
+
+### 5. Create Ingress Resource
+The following command will create the [Kubernetes Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) resource. This will instruct NGINX Ingress Controller to route traffic for `www.contoso.com` to the backend Kubernetes service `httpbin`.
+
+> Note: The connection from the Nginx's ingress service to the `httpbin` backend pod will be unencrypted since we aren't using TLS.
+
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: networking.k8s.io/v1
@@ -149,12 +188,13 @@ metadata:
     # proxy_ssl_name for a service is of the form <service-account>.<namespace>.cluster.local
     nginx.ingress.kubernetes.io/configuration-snippet: |
       proxy_ssl_name "httpbin.httpbin.cluster.local";
-    nginx.ingress.kubernetes.io/proxy-ssl-secret: "osm-system/osm-nginx-client-cert"
+    nginx.ingress.kubernetes.io/proxy-ssl-secret: "ingress-nginx/osm-ingress-mtls"
     nginx.ingress.kubernetes.io/proxy-ssl-verify: "on"
 spec:
   ingressClassName: nginx
   rules:
-  - http:
+  - host: www.contoso.com
+    http:
       paths:
       - path: /
         pathType: Prefix
@@ -163,44 +203,10 @@ spec:
             name: httpbin
             port:
               number: 14001
----
-apiVersion: policy.openservicemesh.io/v1alpha1
-kind: IngressBackend
-metadata:
-  name: httpbin
-  namespace: httpbin
-spec:
-  backends:
-  - name: httpbin
-    port:
-      number: 14001
-      protocol: https
-    tls:
-      skipClientCertValidation: false
-  sources:
-  - kind: Service
-    name: "$nginx_ingress_service"
-    namespace: "$nginx_ingress_namespace"
-  - kind: AuthenticatedPrincipal
-    name: ingress-nginx.ingress.cluster.local
 EOF
 ```
 
-Now, we expect external clients to be able to access the `httpbin` service for requests with HTTPS proxying over mTLS between the ingress gateway and service backend:
-```console
-$ curl -sI http://"$nginx_ingress_host":"$nginx_ingress_port"/get
-HTTP/1.1 200 OK
-Date: Wed, 18 Aug 2021 18:12:35 GMT
-Content-Type: application/json
-Content-Length: 366
-Connection: keep-alive
-access-control-allow-origin: *
-access-control-allow-credentials: true
-x-envoy-upstream-service-time: 2
-```
-
-To verify that unauthorized clients are not allowed to access the backend, update the `sources` specified in the IngressBackend configuration. Let's update the principal to something other than the SAN encoded in the Nginx client's certificate.
-
+To allow traffic from NGINX's pods to the `httpbin` pod in the mesh we create `IngressBackend`
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: policy.openservicemesh.io/v1alpha1
@@ -218,57 +224,33 @@ spec:
       skipClientCertValidation: false
   sources:
   - kind: Service
-    name: "$nginx_ingress_service"
-    namespace: "$nginx_ingress_namespace"
+    name: ingress-nginx-controller
+    namespace: ingress-nginx
   - kind: AuthenticatedPrincipal
-    name: untrusted-client.cluster.local # untrusted
+    name: ingress-nginx.ingress-nginx.cluster.local
 EOF
 ```
 
-Confirm the requests are rejected with an `HTTP 403 Forbidden` response:
+
+### 6. Test the setup
+Clients accessing http://www.contoso.com/ will now be able to reach the `httpbin` pod.
+Test this with `curl -sI http://www.contoso.com:80/get`
+
+Alternatively get the public IP address of the newly created ingress with: `kubectl get ingress -n httpbin`
 ```console
-$ curl -sI http://"$nginx_ingress_host":"$nginx_ingress_port"/get
-HTTP/1.1 403 Forbidden
-Date: Wed, 18 Aug 2021 18:36:09 GMT
-Content-Type: text/plain
-Content-Length: 19
-Connection: keep-alive
+NAME      CLASS   HOSTS             ADDRESS         PORTS   AGE
+httpbin   nginx   www.contoso.com   20.92.132.126   80      2m38s
 ```
 
-Next, we demonstrate support for disabling client certificate validation on the service backend if necessary, by updating our IngressBackend configuration to set `skipClientCertValidation: true`, while still using an untrusted client:
-```bash
-kubectl apply -f - <<EOF
-apiVersion: policy.openservicemesh.io/v1alpha1
-kind: IngressBackend
-metadata:
-  name: httpbin
-  namespace: httpbin
-spec:
-  backends:
-  - name: httpbin
-    port:
-      number: 14001
-      protocol: https
-    tls:
-      skipClientCertValidation: true
-  sources:
-  - kind: Service
-    name: "$nginx_ingress_service"
-    namespace: "$nginx_ingress_namespace"
-  - kind: AuthenticatedPrincipal
-    name: untrusted-client.cluster.local # untrusted
-EOF
-```
+Use the public IP address to access the `httpbin` pod (example): `curl -sI -H 'Host: www.contoso.com' http://20.92.132.126:80/get`
 
-Confirm the requests succeed again since untrusted authenticated principals are allowed to connect to the backend:
-```
-$ curl -sI http://"$nginx_ingress_host":"$nginx_ingress_port"/get
+```console
 HTTP/1.1 200 OK
-Date: Wed, 18 Aug 2021 18:36:49 GMT
+Date: Wed, 10 Nov 2021 02:01:37 GMT
 Content-Type: application/json
-Content-Length: 364
+Content-Length: 328
 Connection: keep-alive
 access-control-allow-origin: *
 access-control-allow-credentials: true
-x-envoy-upstream-service-time: 2
+x-envoy-upstream-service-time: 3
 ```
