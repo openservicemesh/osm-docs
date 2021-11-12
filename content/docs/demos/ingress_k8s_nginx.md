@@ -153,7 +153,7 @@ kubectl patch MeshConfig \
 ```
 
 As a result of these changes to `osm-mesh-config`, OSM Controller will create a new secret with an mTLS certificate in it.
-Look for the newly created mTLS certificate: `kubectl get secrets -n osm-system osm-ingress-mtls`
+Look for the newly created mTLS certificate: `kubectl get secrets -n ingress-nginx osm-ingress-mtls`
 
 ```yaml
 apiVersion: v1
