@@ -13,7 +13,7 @@ Ingress refers to managing external access to services within the cluster, typic
 
 ## IngressBackend API
 
-OSM leverages its [IngressBackend API][1] to configure a backend service to accept ingress traffic from trusted sources. The specification enables configuring how specific backends must authorize ingress traffic depending on the protocol used, HTTP or HTTPS. When the backend protocol is `http`, the source specified must be a `Service` kind whose endpoints will be authorized to connect to the backend. When the backend protocol is `https`, the source specified must be an `AuthenticatedPrincipal` kind which defines the Subject Alternative Name (SAN) encoded in the client's certificate that the backend will authenticate. A source with the kind `Service` is optional for `https` backends. For `https` backends, client certificate validation is performed by default and can be disabled by setting `skipClientCertValidation: true` in the `tls` field for the backend.
+OSM leverages its [IngressBackend API][1] to configure a backend service to accept ingress traffic from trusted sources. The specification enables configuring how specific backends must authorize ingress traffic depending on the protocol used, HTTP or HTTPS. When the backend protocol is `http`, the source specified must be a `Service` kind whose endpoints will be authorized to connect to the backend. When the backend protocol is `https`, the source specified must be an `AuthenticatedPrincipal` kind which defines the Subject Alternative Name (SAN) encoded in the client's certificate that the backend will authenticate. A source with the kind `Service` is optional for `https` backends. For `https` backends, client certificate validation is performed by default and can be disabled by setting `skipClientCertValidation: true` in the `tls` field for the backend. The `port.number` field for a `backend` service in the `IngressBackend` configuration must correspond to the `targetPort` of a Kubernetes service.
 
 Note that when the `Kind` for a source in an `IngressBackend` configuration is set to `Service`, OSM controller will attempt to discover the endpoints of that service. For OSM to be able to discover the endpoints of a service, the namespace in which the service resides needs to be a monitored namespace. Enable the namespace to be monitored using:
 
@@ -101,7 +101,7 @@ spec:
   backends:
     - name: foo
       port:
-        number: 80
+        number: 80 # targetPort of the service
         protocol: http # http implies no TLS
   sources:
     - kind: Service

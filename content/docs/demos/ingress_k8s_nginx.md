@@ -90,7 +90,7 @@ spec:
   backends:
   - name: httpbin
     port:
-      number: 14001
+      number: 14001 # targetPort of httpbin service
       protocol: http
   sources:
   - kind: Service
@@ -173,7 +173,7 @@ spec:
   backends:
   - name: httpbin
     port:
-      number: 14001
+      number: 14001 # targetPort of httpbin service
       protocol: https
     tls:
       skipClientCertValidation: false
@@ -212,7 +212,7 @@ spec:
   backends:
   - name: httpbin
     port:
-      number: 14001
+      number: 14001 # targetPort of httpbin service
       protocol: https
     tls:
       skipClientCertValidation: false
@@ -247,7 +247,7 @@ spec:
   backends:
   - name: httpbin
     port:
-      number: 14001
+      number: 14001 # targetPort of httpbin service
       protocol: https
     tls:
       skipClientCertValidation: true
