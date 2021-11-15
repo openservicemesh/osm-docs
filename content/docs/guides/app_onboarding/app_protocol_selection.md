@@ -12,15 +12,13 @@ OSM is capable of routing different application protocols such as `HTTP`, `TCP`,
 
 Kubernetes services expose one or more ports. A port exposed by an application running the service can serve a specific application protocol such as HTTP, TCP, gRPC etc. Since OSM filters and routes traffic for different application protocols differently, a configuration on the Kubernetes service object is necessary to convey to OSM how traffic directed to a service port must be routed.
 
-In order to determine the application protocol served by a service's port, OSM expects the `AppProtocol` field on the service object to be set, or have the port name prefixed with the application protocol name.
+In order to determine the application protocol served by a service's port, OSM expects the `appProtocol` field on the service's port to be set.
 
 OSM supports the following application protocols for service ports:
 1. `http`: For HTTP based filtering and routing of traffic
 1. `tcp`: For TCP based filtering and routing of traffic
+1. `tcp-server-first`: For TCP based filtering and routing of traffic where the server initiates communication with a client, such as mySQL, PostgreSQL, and others
 1. `gRPC`: For HTTP2 based filtering and routing of gRPC traffic
-
-The `AppProtocol` field can be specified in Kubernetes server versions >= v1.19. In older versions where this field cannot be set, the application protocol for a service port can be indicated by prefixing the protocol name as a part of the port name. If the application protocol cannot be derived,  OSM controller will use `http` as the default application protocol for a port.
-> Note: The `AppProtocol` field takes precedence over the `Name` field if both are specified.
 
 The application protocol configuration described is applicable to both SMI and Permissive traffic policy modes.
 
@@ -29,7 +27,7 @@ The application protocol configuration described is applicable to both SMI and P
 Consider the following SMI traffic access and traffic specs policies:
 - A `TCPRoute` resource named `tcp-route` that specifies the port TCP traffic should be allowed on.
 - An `HTTPRouteGroup` resource named `http-route` that specifies the HTTP routes for which HTTP traffic should be allowed.
-- A `TrafficTarget` resource named `test` that allows pods in the service account `sa-2` to access pods in the service account `sa-1` for the speficied TCP and HTTP rules.
+- A `TrafficTarget` resource named `test` that allows pods in the service account `sa-2` to access pods in the service account `sa-1` for the specified TCP and HTTP rules.
 
 ```yaml
 kind: TCPRoute
@@ -98,19 +96,4 @@ spec:
   - port: 8080
     name: some-port
     appProtocol: tcp
-```
-
-If the cluster is using an older Kubernetes version where `appProtocol` cannot be specified in the Service spec, the application protocol can be indicated by prefixing the port name with the protocol as follows:
-
-```yaml
-kind: Service
-metadata:
-  name: service-3
-  namespace: default
-spec:
-  ports:
-  - port: 80
-    name: http-someport # prefix 'http-' indicates http application protocol
-  - port: 90
-    name: tcp-someport # prefix 'tcp-' indicates tcp application protocol
 ```
