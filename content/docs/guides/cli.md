@@ -22,7 +22,7 @@ In a bash-based shell on Linux/macOS or [Windows Subsystem for Linux](https://do
 
 ```console
 # Specify the OSM version that will be leveraged throughout these instructions
-OSM_VERSION=v1.0.0
+OSM_VERSION={{< param osm_version >}}
 
 # Linux curl command only
 curl -sL "https://github.com/openservicemesh/osm/releases/download/$OSM_VERSION/osm-$OSM_VERSION-linux-amd64.tar.gz" | tar -vxzf -
@@ -55,7 +55,7 @@ In a PowerShell-based shell on Windows, use `Invoke-WebRequest` to download the 
 
 ```console
 # Specify the OSM version that will be leveraged throughout these instructions
-$OSM_VERSION="v1.0.0"
+$OSM_VERSION="{{< param osm_version >}}"
 
 [Net.ServicePointManager]::SecurityProtocol = "tls12"
 $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -URI "https://github.com/openservicemesh/osm/releases/download/$OSM_VERSION/osm-$OSM_VERSION-windows-amd64.zip" -OutFile "osm-$OSM_VERSION.zip"
@@ -101,7 +101,8 @@ $ make build-osm
 
 ### OSM Configuration
 
-By default, the control plane components are installed into a Kubernetes Namespace called `osm-system` and the control plane is given a unique identifier attribute `mesh-name` defaulted to `osm`. Both the Namespace and mesh-name can be configured through flags when using the `osm CLI` flags or by editing the values file when using the `helm CLI`.
+By default, the control plane components are installed into a Kubernetes Namespace called `osm-system` and the control plane is given a unique identifier attribute `mesh-name` defaulted to `osm`.
+During installation, the Namespace and mesh-name can be configured through flags when using the `osm` CLI or by editing the values file when using the `helm` CLI.
 
 The `mesh-name` is a unique identifier assigned to an osm-controller instance during install to identify and manage a mesh instance.
 

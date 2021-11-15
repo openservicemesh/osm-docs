@@ -41,8 +41,8 @@ Events:
   Type     Reason     Age               From               Message
   ----     ------     ----              ----               -------
   Normal   Scheduled  24s               default-scheduler  Successfully assigned osm-system/osm-controller-85fcb445b-fpv8l to osm-control-plane
-  Normal   Pulling    23s               kubelet            Pulling image "openservicemesh/osm-controller:v1.0.0"
-  Normal   Pulled     23s               kubelet            Successfully pulled image "openservicemesh/osm-controller:v1.0.0" in 562.2444ms
+  Normal   Pulling    23s               kubelet            Pulling image "openservicemesh/osm-controller:v0.8.0"
+  Normal   Pulled     23s               kubelet            Successfully pulled image "openservicemesh/osm-controller:v0.8.0" in 562.2444ms
   Normal   Created    1s (x2 over 23s)  kubelet            Created container osm-controller
   Normal   Started    1s (x2 over 23s)  kubelet            Started container osm-controller
   Warning  Unhealthy  1s (x3 over 21s)  kubelet            Liveness probe failed: HTTP probe failed with statuscode: 503
@@ -58,7 +58,7 @@ Events:
   ----     ------     ----              ----               -------
   Normal   Scheduled  36s               default-scheduler  Successfully assigned osm-system/osm-controller-5494bcffb6-tn5jv to osm-control-plane
   Normal   Pulling    36s               kubelet            Pulling image "openservicemesh/osm-controller:latest"
-  Normal   Pulled     35s               kubelet            Successfully pulled image "openservicemesh/osm-controller:v1.0.0" in 746.4323ms
+  Normal   Pulled     35s               kubelet            Successfully pulled image "openservicemesh/osm-controller:v0.8.0" in 746.4323ms
   Normal   Created    35s               kubelet            Created container osm-controller
   Normal   Started    35s               kubelet            Started container osm-controller
   Warning  Unhealthy  4s (x3 over 24s)  kubelet            Readiness probe failed: HTTP probe failed with statuscode: 503
@@ -102,8 +102,8 @@ If any health probes are consistently failing, perform the following steps to id
     ```console
     $ # Assuming OSM is installed in the osm-system namespace:
     $ kubectl get pod -n osm-system $(kubectl get pods -n osm-system -l app=osm-controller -o jsonpath='{.items[0].metadata.name}') -o jsonpath='{range .spec.containers[*]}{.image}{"\n"}{end}'
-    openservicemesh/osm-controller:v1.0.0
-    envoyproxy/envoy-alpine:v1.19.1
+    openservicemesh/osm-controller:v0.8.0
+    envoyproxy/envoy-alpine:v1.17.2
     ```
 
     To verify The osm-injector Pod is not running an Envoy sidecar container, verify none of the Pod's containers' images is an Envoy image. Envoy images have "envoyproxy/envoy" in their name.
@@ -112,8 +112,8 @@ If any health probes are consistently failing, perform the following steps to id
     ```console
     $ # Assuming OSM is installed in the osm-system namespace:
     $ kubectl get pod -n osm-system $(kubectl get pods -n osm-system -l app=osm-injector -o jsonpath='{.items[0].metadata.name}') -o jsonpath='{range .spec.containers[*]}{.image}{"\n"}{end}'
-    openservicemesh/osm-injector:v1.0.0
-    envoyproxy/envoy-alpine:v1.19.1
+    openservicemesh/osm-injector:v0.8.0
+    envoyproxy/envoy-alpine:v1.17.2
     ```
 
     If either Pod is running an Envoy container, it may have been injected erroneously by this or another another instance of OSM. For each mesh found with the `osm mesh list` command, verify the OSM namespace of the unhealthy Pod is not listed in the `osm namespace list` output with `SIDECAR-INJECTION` "enabled" for any OSM instance found with the `osm mesh list` command.
@@ -124,11 +124,11 @@ If any health probes are consistently failing, perform the following steps to id
     $ osm mesh list
 
     MESH NAME   NAMESPACE      CONTROLLER PODS                  VERSION     SMI SUPPORTED
-    osm         osm-system     osm-controller-5494bcffb6-qpjdv  v1.0.0      HTTPRouteGroup:specs.smi-spec.io/v1alpha4,TCPRoute:specs.smi-spec.io/v1alpha4,TrafficSplit:split.smi-spec.io/v1alpha2,TrafficTarget:access.smi-spec.io/v1alpha3
-    osm2        osm-system-2   osm-controller-48fd3c810d-sornc  v1.0.0      HTTPRouteGroup:specs.smi-spec.io/v1alpha4,TCPRoute:specs.smi-spec.io/v1alpha4,TrafficSplit:split.smi-spec.io/v1alpha2,TrafficTarget:access.smi-spec.io/v1alpha3
+    osm         osm-system     osm-controller-5494bcffb6-qpjdv  v0.8.0      HTTPRouteGroup:specs.smi-spec.io/v1alpha4,TCPRoute:specs.smi-spec.io/v1alpha4,TrafficSplit:split.smi-spec.io/v1alpha2,TrafficTarget:access.smi-spec.io/v1alpha3
+    osm2        osm-system-2   osm-controller-48fd3c810d-sornc  v0.8.0      HTTPRouteGroup:specs.smi-spec.io/v1alpha4,TCPRoute:specs.smi-spec.io/v1alpha4,TrafficSplit:split.smi-spec.io/v1alpha2,TrafficTarget:access.smi-spec.io/v1alpha3
     ```
 
-    Note how `osm-system` is present in the following list:
+    Note how `osm-system` (the mesh control plane namespace) is present in the following list of namespaces:
 
     ```console
     $ osm namespace list --mesh-name osm --osm-namespace osm-system

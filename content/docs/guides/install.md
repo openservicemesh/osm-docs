@@ -10,6 +10,15 @@ weight: 2
 - Kubernetes cluster running Kubernetes v1.19.0 or greater
 - The [osm CLI](/docs/guides/cli) or the [helm 3 CLI](https://helm.sh/docs/intro/install/) or the OpenShift `oc` CLI.
 
+### Kubernetes support
+
+OSM can be run on Kubernetes versions that are supported at the time of the OSM release. The current support matrix is:
+
+| Open Service Mesh | Kubernetes  |
+| ----------------- | ----------- |
+| 0.11              | 1.19 - 1.22 |
+| 0.10              | 1.19 - 1.21 |
+
 ### Using the OSM CLI
 
 Use the `osm` CLI to install the OSM control plane on to a Kubernetes cluster.
@@ -20,10 +29,9 @@ Each version of the OSM CLI is designed to work only with the matching version o
 
 #### Running the CLI
 
-Run `osm install`.
+Run `osm install` to install the OSM control plane.
 
 ```console
-# Install osm control plane components
 $ osm install
 OSM installed successfully in namespace [osm-system] with mesh name [osm]
 ```
@@ -34,26 +42,26 @@ _Note: Installing OSM via the CLI enforces deploying only one mesh in the cluste
 
 ### Using the Helm CLI
 
-The [OSM chart](https://github.com/openservicemesh/osm/tree/release-v1.0/charts/osm) can be installed directly via the [Helm CLI](https://helm.sh/docs/intro/install/).
+The [OSM chart](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/charts/osm) can be installed directly via the [Helm CLI](https://helm.sh/docs/intro/install/).
 
 #### Editing the Values File
 
 You can configure the OSM installation by overriding the values file.
 
-1. Create a copy of the [values file](https://github.com/openservicemesh/osm/blob/release-v1.0/charts/osm/values.yaml) (make sure to use the version for the chart you wish to install).
+1. Create a copy of the [values file](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/charts/osm/values.yaml) (make sure to use the version for the chart you wish to install).
 1. Change any values you wish to customize. You can omit all other values.
 
    - To see which values correspond to the MeshConfig settings, see the [OSM MeshConfig documentation](/docs/guides/mesh_config)
 
    - For example, to set the `logLevel` field in the MeshConfig to `info`, save the following as `override.yaml`:
      ```
-     OpenServiceMesh:
+     osm:
        envoyLogLevel: info
      ```
 
 #### Helm install
 
-Then run the following `helm install` command. The chart version can be found in the Helm chart you wish to install [here](https://github.com/openservicemesh/osm/blob/release-v1.0/charts/osm/Chart.yaml#L17).
+Then run the following `helm install` command. The chart version can be found in the Helm chart you wish to install [here](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/charts/osm/Chart.yaml#L17).
 
 ```console
 $ helm install <mesh name> osm --repo https://openservicemesh.github.io/osm --version <chart version> --namespace <osm namespace> --values override.yaml
@@ -69,7 +77,7 @@ To install OSM on OpenShift:
 
 1. Enable privileged init containers so that they can properly program iptables. The NET_ADMIN capability is not sufficient on OpenShift.
    ```shell
-   osm install --set="OpenServiceMesh.enablePrivilegedInitContainer=true"
+   osm install --set="osm.enablePrivilegedInitContainer=true"
    ```
    - If you have already installed OSM without enabling privileged init containers, set `enablePrivilegedInitContainer` to `true` in the [OSM MeshConfig](/docs/guides/mesh_config) and restart any pods in the mesh.
 1. Add the `privileged` [security context constraint](https://docs.openshift.com/container-platform/4.7/authentication/managing-security-context-constraints.html) to each service account in the mesh.
@@ -85,17 +93,18 @@ To install OSM on OpenShift:
 
 **PSP support will be removed in OSM 1.0.0**
 
-If you are running OSM in a cluster with PSPs enabled, pass in `--set OpenServiceMesh.pspEnabled=true` to your `osm install` or `helm install` CLI command.
+If you are running OSM in a cluster with PSPs enabled, pass in `--set osm.pspEnabled=true` to your `osm install` or `helm install` CLI command.
 
 ### Enable Reconciler in OSM
 
-If you wish to enable a reconcielr in OSM, pass in `--set OpenServiceMesh.enableReconciler=true` to your `osm install` or `helm install` CLI command. More information on the reconciler can be found in the [Reconciler Guide](/docs/guides/reconciler).
+If you wish to enable a reconcielr in OSM, pass in `--set osm.enableReconciler=true` to your `osm install` or `helm install` CLI command. More information on the reconciler can be found in the [Reconciler Guide](/docs/guides/reconciler).
 
 ## Inspect OSM Components
 
-A few components will be installed by default into the `osm-system` Namespace. Inspect them by using the following `kubectl` command:
+A few components will be installed by default. Inspect them by using the following `kubectl` command:
 
 ```console
+# Replace osm-system with the namespace where OSM is installed
 $ kubectl get pods,svc,secrets,meshconfigs,serviceaccount --namespace osm-system
 ```
 
@@ -108,6 +117,7 @@ kubectl get clusterrolebinding,clusterrole,mutatingwebhookconfiguration,validati
 Under the hood, `osm` is using [Helm](https://helm.sh) libraries to create a Helm `release` object in the control plane Namespace. The Helm `release` name is the mesh-name. The `helm` CLI can also be used to inspect Kubernetes manifests installed in more detail. Goto https://helm.sh for instructions to install Helm.
 
 ```console
+# Replace osm-system with the namespace where OSM is installed
 $ helm get manifest osm --namespace osm-system
 ```
 

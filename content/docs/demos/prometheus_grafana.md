@@ -2,7 +2,7 @@
 title: "Prometheus & Grafana"
 description: "Describes basic steps to get up and running a Prometheus and Grafana stack with OSM specific configuration and Dashboards"
 type: docs
-weight: 6
+weight: 25
 ---
 
 # OSM's Prometheus and Grafana stack
@@ -41,7 +41,7 @@ Let's replace the configuration of `stable-prometheus-server`
 kubectl edit configmap stable-prometheus-server
 ```
 
-Now with your editor of choice, look for the `prometheus.yaml` key entry and replace it with [OSM's scraping config](https://github.com/openservicemesh/osm/blob/release-v1.0/charts/osm/templates/prometheus-configmap.yaml) (proceed with care while formatting the yaml file):
+Now with your editor of choice, look for the `prometheus.yaml` key entry and replace it with [OSM's scraping config](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/charts/osm/templates/prometheus-configmap.yaml) (proceed with care while formatting the yaml file):
 ```
   (....)
   prometheus.yml: |
@@ -316,25 +316,15 @@ Saving and testing at this stage should already be enough, and Grafana should te
 <center><i>"Save and test" should greet you with that green banner</i></center><br>
 
 ## Importing OSM Dashboards
-OSM Dashboards are available both through:
-- [our repository](https://github.com/openservicemesh/osm/tree/release-v1.0/charts/osm/grafana), and are importable as json blobs through the web admin portal
-- or [online at Grafana.com](https://grafana.com/grafana/dashboards/14145)
+OSM Dashboards are available through [our repository](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/charts/osm/grafana/dashboards), which can be imported as json blobs on the web admin portal.
 
-To import a dashboard, look for the `+` sign on the left menu and select `import`.
-You can directly import dashboard by their ID on `Grafana.com`. For example, our `OSM Mesh Details` dashboard uses id `14145`, you can use the ID directly on the form and click `load`:
+To import a dashboard, look for the `+` sign on the left menu and select `Import`.
+Once the json file has been loaded, configure Prometheus as the data source.
 
-<p align="center">
-  <img src="/docs/images/byo_guide/grafana_import.png" width="50%">
-</p>
-<center><i>Should show our dashboard in Grafana.com</i></center><br>
-
-Last step is to configure Prometheus source for the imported dashboard (bottom of previous screenshot).
+![importGrafana](https://user-images.githubusercontent.com/64559656/140592184-2d781ae1-dae6-4d5e-922c-c536298968f7.png)
 
 As soon as you click import, it will bring you automatically to your imported dashboard.
 
-<p align="center">
-  <img src="/docs/images/byo_guide/meshdetails.png" width="80%"/>
-</p>
 <center><i>Ready to go. Happy monitoring!</i></center><br>
 
 

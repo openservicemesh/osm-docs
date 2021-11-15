@@ -2,7 +2,7 @@
 title: "Outbound Traffic IP Range Exclusions"
 description: "Excluding IP address ranges of outbound traffic from sidecar interception"
 type: docs
-weight: 2
+weight: 5
 ---
 
 This guide demonstrates how outbound IP address ranges can be excluded from being intercepted by OSM's proxy sidecar, so as to not subject them to service mesh filtering and routing policies.
@@ -21,7 +21,7 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
 
 1. Disable mesh-wide egress passthrough.
     ```bash
-    export osm_namespace=<osm-namespace> # Replace <osm-namespace> with the namespace where OSM is installed
+    export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
     kubectl patch meshconfig osm-mesh-config -n "$osm_namespace" -p '{"spec":{"traffic":{"enableEgress":false}}}'  --type=merge
     ```
 
@@ -35,7 +35,7 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
     osm namespace add curl
 
     # Deploy curl client in the curl namespace
-    kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/samples/curl/curl.yaml -n curl
+    kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/samples/curl/curl.yaml -n curl
     ```
 
     Confirm the `curl` client pod is up and running.

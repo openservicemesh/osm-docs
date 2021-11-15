@@ -9,7 +9,7 @@ weight: 3
 
 ## Traffic Policy Modes
 
-Once the applications are up and running, they can interact with each other using [permissive traffic policy mode](#permissive-traffic-policy-mode) or [SMI traffic policy mode](#smi-traffic-policy-mode). In permissive traffic policy mode, traffic between application services is automatically configured by `osm-controller`, and SMI policies are not enforced. In the SMI policy mode, all traffic is denied by default unless explicitly allowed using a combination of SMI access and routing policies.
+Once the applications are up and running, they can interact with each other using [permissive traffic policy mode](#permissive-traffic-policy-mode) or [SMI traffic policy mode](#smi-traffic-policy-mode). In permissive traffic policy mode, traffic between application services is automatically configured by `osm-controller`, and access control policies defined by SMI Traffic Targets are not enforced. In the SMI policy mode, all traffic is denied by default unless explicitly allowed using a combination of SMI access and routing policies.
 
 ### Traffic Encryption
 
@@ -35,7 +35,7 @@ In permissive traffic policy mode, application connectivity within the mesh is a
 
 1. During install using `osm` CLI:
   ```bash
-  osm install --set=OpenServiceMesh.enablePermissiveTrafficPolicy=true
+  osm install --set=osm.enablePermissiveTrafficPolicy=true
   ```
 
 1. Post install by patching the `osm-mesh-config` custom resource in the control plane's namespace (`osm-system` by default)
@@ -47,7 +47,7 @@ In permissive traffic policy mode, application connectivity within the mesh is a
 
 Before proceeding, [verify the traffic policy mode](#verify-the-traffic-policy-mode) and ensure the `enablePermissiveTrafficPolicyMode` key is set to `true` in the `osm-mesh-config` `MeshConfig` resource. Refer to the section above to enable permissive traffic policy mode.
 
-In step [Deploy the Bookstore Application](#deploy-the-bookstore-application), we have already deployed the applications needed to verify traffic flow in permissive traffic policy mode. The `bookstore` service we previously deployed is encoded with an identity of `bookstore-v1` for demo purpose, as can be seen in the [Deployment's manifest](https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/bookstore.yaml). The identity reflects which counter increments in the `bookbuyer` and `bookthief` UI, and the identity displayed in the `bookstore` UI.
+In step [Deploy the Bookstore Application](#deploy-the-bookstore-application), we have already deployed the applications needed to verify traffic flow in permissive traffic policy mode. The `bookstore` service we previously deployed is encoded with an identity of `bookstore-v1` for demo purpose, as can be seen in the [Deployment's manifest](https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/apps/bookstore.yaml). The identity reflects which counter increments in the `bookbuyer` and `bookthief` UI, and the identity displayed in the `bookstore` UI.
 
 The counter in the `bookbuyer`, `bookthief` UI for the books bought and stolen respectively from `bookstore v1` should now be incrementing:
 
@@ -93,7 +93,7 @@ Apply the [SMI Traffic Target][https://github.com/servicemeshinterface/smi-spec/
  Deploy SMI TrafficTarget and HTTPRouteGroup policy:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/access/traffic-access-v1.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/access/traffic-access-v1.yaml
 ```
 
 The counters should now be incrementing for the `bookbuyer`, and `bookstore` applications:
@@ -167,7 +167,7 @@ spec:
 Apply the updated TrafficTarget:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/access/traffic-access-v1-allow-bookthief.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/access/traffic-access-v1-allow-bookthief.yaml
 ```
 
 The counter in the `bookthief` window will start incrementing.
@@ -177,7 +177,7 @@ The counter in the `bookthief` window will start incrementing.
 Apply the original Traffic Target object without the bookthief listed as an allowed source:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/access/traffic-access-v1.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/access/traffic-access-v1.yaml
 ```
 
 The counter in the `bookthief` window will stop incrementing.

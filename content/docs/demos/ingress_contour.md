@@ -2,7 +2,7 @@
 title: "Ingress with Contour"
 description: "HTTP and HTTPS ingress with Contour ingress controller"
 type: docs
-weight: 3
+weight: 10
 ---
 
 OSM provides the option to use [Contour](https://projectcontour.io) ingress controller and Envoy based edge proxy to route external traffic to service mesh backends. This guide will demonstrate how to configure HTTP and HTTPS ingress to a service part of an OSM managed service mesh.
@@ -20,13 +20,15 @@ OSM provides the option to use [Contour](https://projectcontour.io) ingress cont
 
 First, we will install OSM and Contour as in the `osm-system` namespace and name the mesh name as `osm`.
 ```bash
-export osm_namespace=osm-system
-export osm_mesh_name=osm
+export osm_namespace=osm-system # Replace osm-system with the namespace where OSM will be installed
+export osm_mesh_name=osm # Replace osm with the desired OSM mesh name
 ```
 
 If using `osm` CLI:
 ```bash
 osm install --set contour.enabled=true \
+    --mesh-name "$osm_mesh_name" \
+    --osm-namespace "$osm_namespace" \
     --set contour.configInline.tls.envoy-client-certificate.name=osm-contour-envoy-client-cert \
     --set contour.configInline.tls.envoy-client-certificate.namespace="$osm_namespace"
 ```
@@ -41,7 +43,7 @@ helm install "$osm_mesh_name" osm --repo https://openservicemesh.github.io/osm \
 
 To restrict ingress traffic on backends to authorized clients, we will set up the IngressBackend configuration such that only ingress traffic from the endpoints of the `osm-contour-envoy` service can route traffic to the service backend. To be able to discover the endpoints of `osm-contour-envoy` service, we need OSM controller to monitor the corresponding namespace. However, Contour must NOT be injected with an Envoy sidecar to function properly.
 ```bash
-osm namespace add "$osm_namespace" --mesh-name "$osm_mesh_name" --disable-sidecar-injection
+kubectl label namespace "$osm_namespace" openservicemesh.io/monitored-by="$osm_mesh_name"
 ```
 
 Save the ingress gateway's external IP address and port which we will later use to test access to the backend application:
@@ -60,7 +62,7 @@ kubectl create ns httpbin
 osm namespace add httpbin
 
 # Deploy the application
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/samples/httpbin/httpbin.yaml -n httpbin
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/samples/httpbin/httpbin.yaml -n httpbin
 ```
 
 Confirm the `httpbin` service and pod is up and running:
@@ -102,7 +104,7 @@ spec:
   backends:
   - name: httpbin
     port:
-      number: 14001
+      number: 14001 # targetPort of httpbin service
       protocol: http
   sources:
   - kind: Service
@@ -132,7 +134,9 @@ To proxy connections to TLS backends using HTTPS, the backend service must be an
 kubectl annotate service httpbin -n httpbin projectcontour.io/upstream-protocol.tls='14001' --overwrite
 ```
 
-Next, we need to create an HTTPProxy configuration to use TLS proxying to the backend service, and providing a CA certificate to validate the server certificate presented by the backend service. For this to work, we need to first delegate to Contour the permission to read OSM's CA certificate secret from the OSM's namespace when referenced in the HTTPProxy configuration in the `httpbin` namespace. Refer to the [Upstream TLS section](https://projectcontour.io/docs/v1.18.0/config/upstream-tls/) to learn more about upstream certificate validation and when certificate delegation is necessary. In addition, we must create an IngressBackend resource that specifies HTTPS ingress traffic directed to the `httpbin` service must only accept traffic from a trusted client, osm-contour-envoy in the ingress edge proxy we deployed. OSM automatically provisioned a client certificate for the `osm-contour-envoy` ingress gateway with the Subject ALternative Name (SAN) `osm-contour-envoy.osm-system.cluster.local` during install, so the IngressBackend configuration needs to reference the same SAN for mTLS authentication between the `osm-contour-envoy` edge and the `httpbin` backend.
+Next, we need to create an HTTPProxy configuration to use TLS proxying to the backend service, and providing a CA certificate to validate the server certificate presented by the backend service. For this to work, we need to first delegate to Contour the permission to read OSM's CA certificate secret from the OSM's namespace when referenced in the HTTPProxy configuration in the `httpbin` namespace. Refer to the [Upstream TLS section](https://projectcontour.io/docs/v1.18.0/config/upstream-tls/) to learn more about upstream certificate validation and when certificate delegation is necessary. In addition, we must create an IngressBackend resource that specifies HTTPS ingress traffic directed to the `httpbin` service must only accept traffic from a trusted client, osm-contour-envoy in the ingress edge proxy we deployed. OSM automatically provisioned a client certificate for the `osm-contour-envoy` ingress gateway with the Subject Alternative Name (SAN) `osm-contour-envoy.$osm_namespace.cluster.local` during install, so the IngressBackend configuration needs to reference the same SAN for mTLS authentication between the `osm-contour-envoy` edge and the `httpbin` backend.
+
+> Note: `<osm-namespace>` refers to the namespace where the osm control plane is installed.
 
 Apply the configurations:
 ```bash
@@ -173,7 +177,7 @@ spec:
   backends:
   - name: httpbin
     port:
-      number: 14001
+      number: 14001 # targetPort of httpbin service
       protocol: https
     tls:
       skipClientCertValidation: false # mTLS (defaults to false)
@@ -213,7 +217,7 @@ spec:
   backends:
   - name: httpbin
     port:
-      number: 14001
+      number: 14001 # targetPort of httpbin service
       protocol: https
     tls:
       skipClientCertValidation: false # mTLS (defaults to false)
@@ -249,7 +253,7 @@ spec:
   backends:
   - name: httpbin
     port:
-      number: 14001
+      number: 14001 # targetPort of httpbin service
       protocol: https
     tls:
       skipClientCertValidation: true

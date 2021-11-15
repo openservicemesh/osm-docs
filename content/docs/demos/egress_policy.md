@@ -2,7 +2,7 @@
 title: "Egress Policy"
 description: "Accessing external services using Egress policies"
 type: docs
-weight: 4
+weight: 15
 ---
 
 This guide demonstrates a client within the service mesh accessing destinations external to the mesh using OSM's Egress policy API.
@@ -20,7 +20,7 @@ This guide demonstrates a client within the service mesh accessing destinations 
 
 1. Enable egress policy if not enabled:
     ```bash
-    export osm_namespace=<osm-namespace> # Replace <osm-namespace> with the namespace where OSM is installed
+    export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
     kubectl patch meshconfig osm-mesh-config -n "$osm_namespace" -p '{"spec":{"featureFlags":{"enableEgressPolicy":true}}}'  --type=merge
     ```
 
@@ -33,7 +33,7 @@ This guide demonstrates a client within the service mesh accessing destinations 
     osm namespace add curl
 
     # Deploy curl client in the curl namespace
-    kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/samples/curl/curl.yaml -n curl
+    kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/samples/curl/curl.yaml -n curl
     ```
 
     Confirm the `curl` client pod is up and running.

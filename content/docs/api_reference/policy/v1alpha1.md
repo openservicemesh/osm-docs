@@ -11,9 +11,9 @@ type: docs
 </li>
 </ul>
 <h2 id="policy.openservicemesh.io/v1alpha1">policy.openservicemesh.io/v1alpha1</h2>
-<p>
+<div>
 <p>Package v1alpha1 is the v1alpha1 version of the API.</p>
-</p>
+</div>
 Resource Types:
 <ul></ul>
 <h3 id="policy.openservicemesh.io/v1alpha1.BackendSpec">BackendSpec
@@ -21,9 +21,9 @@ Resource Types:
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.IngressBackendSpec">IngressBackendSpec</a>)
 </p>
-<p>
+<div>
 <p>BackendSpec is the type used to represent a Backend specified in the IngressBackend policy specification.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -74,12 +74,12 @@ TLSSpec
 </table>
 <h3 id="policy.openservicemesh.io/v1alpha1.Egress">Egress
 </h3>
-<p>
+<div>
 <p>Egress is the type used to represent an Egress traffic policy.
 An Egress policy allows applications to access endpoints
 external to the service mesh or cluster based on the specified
 rules in the policy.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -204,9 +204,9 @@ The destination port of the traffic is matched against the list of Ports specifi
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.EgressSpec">EgressSpec</a>)
 </p>
-<p>
+<div>
 <p>EgressSourceSpec is the type used to represent the Source in the list of Sources specified in an Egress policy specification.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -255,9 +255,9 @@ string
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.Egress">Egress</a>)
 </p>
-<p>
+<div>
 <p>EgressSpec is the type used to represent the Egress policy specification.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -345,11 +345,11 @@ The destination port of the traffic is matched against the list of Ports specifi
 </table>
 <h3 id="policy.openservicemesh.io/v1alpha1.IngressBackend">IngressBackend
 </h3>
-<p>
+<div>
 <p>IngressBackend is the type used to represent an Ingress backend policy.
 An Ingress backend policy authorizes one or more backends to accept
 ingress traffic from one or more sources.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -432,6 +432,20 @@ IngressBackendSpec
 </table>
 </td>
 </tr>
+<tr>
+<td>
+<code>status</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.IngressBackendStatus">
+IngressBackendStatus
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Status is the status of the IngressBackend configuration.</p>
+</td>
+</tr>
 </tbody>
 </table>
 <h3 id="policy.openservicemesh.io/v1alpha1.IngressBackendSpec">IngressBackendSpec
@@ -439,9 +453,9 @@ IngressBackendSpec
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.IngressBackend">IngressBackend</a>)
 </p>
-<p>
+<div>
 <p>IngressBackendSpec is the type used to represent the IngressBackend policy specification.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -492,15 +506,57 @@ IngressBackendSpec
 </tr>
 </tbody>
 </table>
+<h3 id="policy.openservicemesh.io/v1alpha1.IngressBackendStatus">IngressBackendStatus
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.IngressBackend">IngressBackend</a>)
+</p>
+<div>
+<p>IngressBackendStatus is the type used to represent the status of an IngressBackend resource.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>currentStatus</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>CurrentStatus defines the current status of an IngressBackend resource.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>reason</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Reason defines the reason for the current status of an IngressBackend resource.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="policy.openservicemesh.io/v1alpha1.IngressSourceSpec">IngressSourceSpec
 </h3>
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.IngressBackendSpec">IngressBackendSpec</a>)
 </p>
-<p>
+<div>
 <p>IngressSourceSpec is the type used to represent the Source in the list of Sources specified in an
 IngressBackend policy specification.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -550,9 +606,9 @@ string
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.BackendSpec">BackendSpec</a>, <a href="#policy.openservicemesh.io/v1alpha1.EgressSpec">EgressSpec</a>)
 </p>
-<p>
+<div>
 <p>PortSpec is the type used to represent the Port in the list of Ports specified in an Egress policy specification.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -590,9 +646,9 @@ string
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.BackendSpec">BackendSpec</a>)
 </p>
-<p>
+<div>
 <p>TLSSpec is the type used to represent the backend&rsquo;s TLS configuration.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -630,5 +686,5 @@ certificate presented by the client.</p>
 <hr/>
 <p><em>
 Generated with <code>gen-crd-api-reference-docs</code>
-on git commit <code>8ed34b1d</code>.
+on git commit <code>bee1cac8</code>.
 </em></p>

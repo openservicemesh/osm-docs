@@ -72,7 +72,7 @@ $ osm mesh upgrade
 OSM successfully upgraded mesh osm
 ```
 
-This command will upgrade the mesh with the default mesh name in the default OSM namespace. Values from the previous release will carry over to the new release except for `OpenServiceMesh.image.registry` and `OpenServiceMesh.image.tag` which are overridden by default. For example, if OSM v0.7.0 is installed, `osm mesh upgrade` for v1.0.0 of the CLI will update the control plane images to v1.0.0 by default.
+This command will upgrade the mesh with the default mesh name in the default OSM namespace. Values from the previous release will NOT carry over to the new release by default, but may be passed individually with the `--set` flag on `osm mesh upgrade`.
 
 See `osm mesh upgrade --help` for more details
 
@@ -86,13 +86,13 @@ See `osm mesh upgrade --help` for more details
 #### OSM Configuration
 When upgrading, any custom settings used to install or run OSM may be reverted to the default, this only includes any metrics deployments. Please ensure that you carefully follow the guide to prevent these values from being overwritten.
 
-To preserve any changes you've made to the OSM configuration, use the `helm --values` flag. Create a copy of the [values file](https://github.com/openservicemesh/osm/blob/release-v1.0/charts/osm/values.yaml) (make sure to use the version for the upgraded chart) and change any values you wish to customize. You can omit all other values.
+To preserve any changes you've made to the OSM configuration, use the `helm --values` flag. Create a copy of the [values file](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/charts/osm/values.yaml) (make sure to use the version for the upgraded chart) and change any values you wish to customize. You can omit all other values.
 
 **Note: Any configuration changes that go into the MeshConfig will not be applied during upgrade and the values will remain as is prior to the upgrade. If you wish to update any value in the MeshConfig you can do so by patching the resource after an upgrade.
 
 For example, if the `logLevel` field in the MeshConfig was set to `info` prior to upgrade, updating this in `override.yaml` will during an upgrade will not cause any change.
 
-<b>Warning:</b> Do NOT change `OpenServiceMesh.meshName` or `OpenServiceMesh.osmNamespace`
+<b>Warning:</b> Do NOT change `osm.meshName` or `osm.osmNamespace`
 
 #### Helm Upgrade
 Then run the following `helm upgrade` command.
@@ -110,7 +110,7 @@ Run `helm upgrade --help` for more options.
 The envoy version can be updated by changing the value of the `envoyImage` variable in the osm-mesh-config. When doing so, it is recommended to specify the image digest associated with that envoy version to avoid being vulnerable to supply chain attacks. For instance, to update the [envoy-alpine image](https://hub.docker.com/r/envoyproxy/envoy-alpine/tags) to v1.19.1, the following command should be run:
 
 ```bash
-export osm_namespace=<osm-namespace> # Replace <osm-namespace> with the namespace where OSM is installed
+export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
 kubectl patch meshconfig osm-mesh-config -n $osm_namespace -p '{"spec":{"sidecar":{"envoyImage":"envoyproxy/envoy-alpine@sha256:6502a637c6c5fba4d03d0672d878d12da4bcc7a0d0fb3f1d506982dde0039abd"}}}' --type=merge
 ```
 
@@ -121,7 +121,7 @@ After the MeshConfig resource has been updated, all the pods and deployments tha
 If enabled, OSM's Prometheus, Grafana, and Jaeger services are deployed alongside other OSM control plane components. Though these third party dependencies cannot be updated through the meshconfig like Envoy, the versions can still be updated in the deployment directly. For instance, to update prometheus to v2.19.1, the user can run:
 
 ```bash
-export osm_namespace=<osm-namespace> # Replace <osm-namespace> with the namespace where OSM is installed
+export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
 kubectl set image deployment/osm-prometheus -n $osm_namespace prometheus="prom/prometheus:v2.19.1"
 ```
 

@@ -15,7 +15,7 @@ To familiarize yourself on how OSM works with Prometheus, try installing a new m
 1. Install OSM with its own Prometheus instance:
 
    ```console
-   $ osm install --set OpenServiceMesh.deployPrometheus=true,OpenServiceMesh.enablePermissiveTrafficPolicy=true
+   $ osm install --set osm.deployPrometheus=true,osm.enablePermissiveTrafficPolicy=true
    OSM installed successfully in namespace [osm-system] with mesh name [osm]
    ```
 
@@ -118,7 +118,13 @@ To familiarize yourself on how OSM works with Prometheus, try installing a new m
    Then, uninstall OSM:
 
    ```
-   $ osm uninstall
+   $ osm uninstall mesh
    Uninstall OSM [mesh name: osm] ? [y/n]: y
    OSM [mesh name: osm] uninstalled
+   ```
+
+   To remove OSM's cluster wide resources after uninstallation, run the following command. See the [uninstall guide](/docs/guides/uninstall/) for more context and information.
+
+   ```console
+   $ osm uninstall cluster-wide-resources
    ```

@@ -2,7 +2,7 @@
 title: "Ingress with Kubernetes Nginx Ingress Controller"
 description: "HTTP and HTTPS ingress with Kubernetes Nginx Ingress Controller"
 type: docs
-weight: 3
+weight: 11
 ---
 
 This guide will demonstrate how to configure HTTP and HTTPS ingress to a service part of an OSM managed service mesh when using [Kubernetes Nginx Ingress Controller](https://kubernetes.github.io/ingress-nginx/).
@@ -19,8 +19,8 @@ This guide will demonstrate how to configure HTTP and HTTPS ingress to a service
 
 First, note the details regarding OSM and Nginx installations:
 ```bash
-osm_namespace=<osm-namespace> # replace <osm-namespace> with the namespace where OSM is installed
-osm_mesh_name=<osm-mesh-name> # replace <osm-mesh-name> with the mesh name (use `osm mesh list` command)
+osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
+osm_mesh_name=osm # replace osm with the mesh name (use `osm mesh list` command)
 
 nginx_ingress_namespace=<nginx-namespace> # replace <nginx-namespace> with the namespace where Nginx is installed
 nginx_ingress_service=<nginx-ingress-controller-service> # replace <nginx-ingress-controller-service> with the name of the nginx ingress controller service
@@ -43,7 +43,7 @@ kubectl create ns httpbin
 osm namespace add httpbin
 
 # Deploy the application
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/samples/httpbin/httpbin.yaml -n httpbin
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/samples/httpbin/httpbin.yaml -n httpbin
 ```
 
 Confirm the `httpbin` service and pod is up and running:
@@ -90,7 +90,7 @@ spec:
   backends:
   - name: httpbin
     port:
-      number: 14001
+      number: 14001 # targetPort of httpbin service
       protocol: http
   sources:
   - kind: Service
@@ -173,7 +173,7 @@ spec:
   backends:
   - name: httpbin
     port:
-      number: 14001
+      number: 14001 # targetPort of httpbin service
       protocol: https
     tls:
       skipClientCertValidation: false
@@ -212,7 +212,7 @@ spec:
   backends:
   - name: httpbin
     port:
-      number: 14001
+      number: 14001 # targetPort of httpbin service
       protocol: https
     tls:
       skipClientCertValidation: false
@@ -247,7 +247,7 @@ spec:
   backends:
   - name: httpbin
     port:
-      number: 14001
+      number: 14001 # targetPort of httpbin service
       protocol: https
     tls:
       skipClientCertValidation: true

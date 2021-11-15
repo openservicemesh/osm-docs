@@ -2,6 +2,7 @@
 title: "Iptables Redirection"
 description: "Iptables Redirection"
 type: docs
+weight: 1
 ---
 
 # Iptables Redirection
@@ -58,7 +59,7 @@ OSM provides a means to specify a global list of IP ranges to exclude from outbo
 1. During OSM install using the `--set` option:
     ```bash
     # To exclude the IP ranges 1.1.1.1/32 and 2.2.2.2/24 from outbound interception
-    osm install --set="OpenServiceMesh.outboundIPRangeExclusionList={1.1.1.1/32,2.2.2.2/24}
+    osm install --set="osm.outboundIPRangeExclusionList={1.1.1.1/32,2.2.2.2/24}
     ```
 
 1. By setting the `outboundIPRangeExclusionList` key in the `osm-mesh-config` resource:
@@ -66,6 +67,8 @@ OSM provides a means to specify a global list of IP ranges to exclude from outbo
     ## Assumes OSM is installed in the osm-system namespace
     kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"outboundIPRangeExclusionList":["1.1.1.1/32", "2.2.2.2/24"]}}}'  --type=merge
     ```
+
+   When IP ranges are set for exclusion post-install, make sure to restart the relevant pods in monitored namespaces for this change to take effect.
 
 Excluded IP ranges are stored in the `osm-mesh-config` `MeshConfig` custom resource and are read at the time of sidecar injection by `osm-injector`. These dynamically configurable IP ranges are programmed by the init container along with the static rules used to intercept and redirect traffic via the Envoy proxy sidecar. Excluded IP ranges will not be intercepted for traffic redirection to the Envoy proxy sidecar. Refer to the [outbound IP range exclusion demo](/docs/demos/outbound_ip_exclusion) to learn more.
 
@@ -82,7 +85,7 @@ OSM provides the means to specify a global list of ports to exclude from outboun
 1. During OSM install using the `--set` option:
     ```bash
     # To exclude the ports 6379 and 7070 from outbound sidecar interception
-    osm install --set="OpenServiceMesh.outboundPortExclusionList={6379,7070}
+    osm install --set="osm.outboundPortExclusionList={6379,7070}
     ```
 
 1. By setting the `outboundPortExclusionList` key in the `osm-mesh-config` resource:
@@ -90,6 +93,8 @@ OSM provides the means to specify a global list of ports to exclude from outboun
     ## Assumes OSM is installed in the osm-system namespace
     kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"outboundPortExclusionList":[6379, 7070]}}}'  --type=merge
     ```
+
+   When ports are set for exclusion post-install, make sure to restart the relevant pods in monitored namespaces for this change to take effect.
 
 #### 2. Pod scoped outbound port exclusions
 
@@ -114,7 +119,7 @@ OSM provides the means to specify a global list of ports to exclude from inbound
 1. During OSM install using the `--set` option:
     ```bash
     # To exclude the ports 6379 and 7070 from inbound sidecar interception
-    osm install --set="OpenServiceMesh.inboundPortExclusionList={6379,7070}
+    osm install --set="osm.inboundPortExclusionList={6379,7070}
     ```
 
 1. By setting the `inboundPortExclusionList` key in the `osm-mesh-config` resource:
@@ -122,6 +127,8 @@ OSM provides the means to specify a global list of ports to exclude from inbound
     ## Assumes OSM is installed in the osm-system namespace
     kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"inboundPortExclusionList":[6379, 7070]}}}'  --type=merge
     ```
+
+   When ports are set for exclusion post-install, make sure to restart the relevant pods in monitored namespaces for this change to take effect.
 
 #### 2. Pod scoped inbound port exclusions
 
@@ -141,7 +148,7 @@ The following snippet from the demo `curl` client's init container spec shows th
 Init Containers:
   osm-init:
     Container ID:  containerd://80f86af7bc64b7a70f7f2bf64242d735d857559a79cd97e206513368130902f1
-    Image:         openservicemesh/init:v1.0.0
+    Image:         openservicemesh/init:{{< param osm_version >}}
     Image ID:      docker.io/openservicemesh/init@sha256:eb1f6ab02aeaaba8f58aaa29406b1653d7a3983958ea040c2af8845136ed786c
     Port:          <none>
     Host Port:     <none>
