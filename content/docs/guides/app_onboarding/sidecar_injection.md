@@ -19,6 +19,7 @@ Prerequisites:
 - The namespace to which the pods belong must be a monitored namespace that is added to the mesh using the `osm namespace add` command.
 - The namespace to which the pods belong must not be set to be ignored using the `osm namespace ignore` command.
 - The namespace to which the pods belong must not have a label with key `name` and value corresponding to the OSM control plane namespace. For example, a namespace with a label `name: osm-system` where `osm-system` is the control plane namespace cannot have sidecar injection enabled for pods in this namespace.
+- The pod must not have `hostNetwork: true` in the pod spec. Pods with `hostNetwork: true` are not injected with a sidecar since doing so can result in routing failures in the host network.
 
 Automatic Sidecar injection can be enabled in the following ways:
 
