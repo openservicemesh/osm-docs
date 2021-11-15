@@ -8,7 +8,7 @@ type: docs
 
 ### 1. Confirm egress is enabled
 
-Confirm egress is enabled by verifying the value for the `enableEgress` key in the `osm-mesh-config` `MeshConfig` custom resource. `osm-mesh-config` resides in the namespace OSM control plane namespace, `osm-system` by default.
+Confirm egress is enabled by verifying the value for the `enableEgress` key in the `osm-mesh-config` `MeshConfig` custom resource. `osm-mesh-config` resides in the namespace OSM control plane namespace (`osm-system` by default).
 
 ```console
 # Returns true if egress is enabled

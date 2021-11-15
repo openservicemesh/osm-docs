@@ -2,7 +2,7 @@
 title: "Ingress"
 description: "Using Ingress to manage external access to services within the cluster"
 type: docs
-weight: 3
+weight: 5
 ---
 
 # Ingress
@@ -13,7 +13,7 @@ Ingress refers to managing external access to services within the cluster, typic
 
 ## IngressBackend API
 
-OSM leverages its [IngressBackend API][1] to configure a backend service to accept ingress traffic from trusted sources. The specification enables configuring how specific backends must authorize ingress traffic depending on the protocol used, HTTP or HTTPS. When the backend protocol is `http`, the source specified must be a `Service` kind whose endpoints will be authorized to connect to the backend. When the backend protocol is `https`, the source specified must be an `AuthenticatedPrincipal` kind which defines the Subject Alternative Name (SAN) encoded in the client's certificate that the backend will authenticate. A source with the kind `Service` is optional for `https` backends. For `https` backends, client certificate validation is performed by default and can be disabled by setting `skipClientCertValidation: true` in the `tls` field for the backend.
+OSM leverages its [IngressBackend API][1] to configure a backend service to accept ingress traffic from trusted sources. The specification enables configuring how specific backends must authorize ingress traffic depending on the protocol used, HTTP or HTTPS. When the backend protocol is `http`, the source specified must be a `Service` kind whose endpoints will be authorized to connect to the backend. When the backend protocol is `https`, the source specified must be an `AuthenticatedPrincipal` kind which defines the Subject Alternative Name (SAN) encoded in the client's certificate that the backend will authenticate. A source with the kind `Service` is optional for `https` backends. For `https` backends, client certificate validation is performed by default and can be disabled by setting `skipClientCertValidation: true` in the `tls` field for the backend. The `port.number` field for a `backend` service in the `IngressBackend` configuration must correspond to the `targetPort` of a Kubernetes service.
 
 Note that when the `Kind` for a source in an `IngressBackend` configuration is set to `Service`, OSM controller will attempt to discover the endpoints of that service. For OSM to be able to discover the endpoints of a service, the namespace in which the service resides needs to be a monitored namespace. Enable the namespace to be monitored using:
 
@@ -101,7 +101,7 @@ spec:
   backends:
     - name: foo
       port:
-        number: 80
+        number: 80 # targetPort of the service
         protocol: http # http implies no TLS
   sources:
     - kind: Service
@@ -112,7 +112,7 @@ spec:
 The above configurations allow external clients to access the `foo` service in the `test` namespace as follows:
 
 1. The HTTPProxy configuration will route incoming HTTP traffic originating externally with a `Host:` header for `foo-basic.bar.com` to a service named `foo` on port `80` in the `test` namespace.
-1. The IngressBackend configuration will allow access to the `foo` service on port `80` in the `test` namespace only if the source originating the traffic is an endpoint of the `osm-contour-envoy` service in the `osm-system` namespace.
+1. The IngressBackend configuration will allow access to the `foo` service on port `80` in the `test` namespace only if the source originating the traffic is an endpoint of the `osm-contour-envoy` service in the namespace where osm was installed (which by default is the `osm-system` namespace).
 
 #### HTTPS Ingress with Contour (mTLS and TLS)
 
@@ -171,13 +171,13 @@ spec:
 
 The above configurations allow external clients to access the `foo` service in the `test` namespace as follows:
 
-1. The TLSCertificateDelegation configuration will allow Contour access to the `osm-ca-bundle` secret residing in the `osm-system` namespace when parsing HTTPProxy configurations residing in the `test` namespace.
+1. The TLSCertificateDelegation configuration will allow Contour access to the `osm-ca-bundle` secret residing in the namespace where osm was installed (by default the `osm-system` namespace) when parsing HTTPProxy configurations residing in the `test` namespace.
 
 1. The HTTPProxy configuration will route incoming HTTP traffic originating externally with a `Host:` header for `foo-basic.bar.com` to a service named `foo` on port `80` in the `test` namespace over TLS. The vadidation field specified will ensure Contour's Envoy edge proxy validates the TLS certificate presented by the `foo` backend service using the TLS CA certificate stored in the `osm-system/osm-ca-bundle` k8s secret, and that the Subject Alternative Name (SAN) in the server certificate presented by the backend service matches `foo-service-account.test.cluster.local`.
 
    > Note: Certificates issued by OSM have a SAN of the form `<service-account>.<namespace>.cluster.local`
 
-1. The IngressBackend configuration will allow access to the `foo` service on port `80` in the `test` namespace only if the source originating the traffic is an endpoint of the `osm-contour-envoy` service in the `osm-system` namespace and the client certificate has a Subject Alternative Name matching `osm-contour-envoy.osm-system.cluster.local`.
+1. The IngressBackend configuration will allow access to the `foo` service on port `80` in the `test` namespace only if the source originating the traffic is an endpoint of the `osm-contour-envoy` service in the namespace where osm was installed (by default the `osm-system` namespace) and the client certificate has a Subject Alternative Name matching `osm-contour-envoy.<osm-namespace>.cluster.local` (where `<osm-namespace>` refers to the namespace where osm was installed).
    > Note: Client certificate validation on the backend can be skipped by setting `skipClientCertValidation: true` in the IngressBackend configuration.
 
 #### Examples

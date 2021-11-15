@@ -60,31 +60,31 @@ on these namespaces, will start injecting all **new** pods with Envoy sidecars.
 Create the `bookbuyer` service account and deployment:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/bookbuyer.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/apps/bookbuyer.yaml
 ```
 
 Create the `bookthief` service account and deployment:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/bookthief.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/apps/bookthief.yaml
 ```
 
 Create the `bookstore` service account, service, and deployment:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/bookstore.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/apps/bookstore.yaml
 ```
 
 Create the `bookwarehouse` service account, service, and deployment:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/bookwarehouse.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/apps/bookwarehouse.yaml
 ```
 
 Create the `mysql` service account, service, and stateful set:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/main/docs/example/manifests/apps/mysql.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/apps/mysql.yaml
 ```
 
 ### Checkpoint: What Got Installed?
@@ -94,11 +94,11 @@ A Kubernetes Deployment and Pods for each of `bookbuyer`, `bookthief`, `bookstor
 To view these resources on your cluster, run the following commands:
 
 ```bash
-kubectl get pods,deployments,serviceaccounts --n bookbuyer
-kubectl get pods,deployments,serviceaccounts --n bookthief
+kubectl get pods,deployments,serviceaccounts -n bookbuyer
+kubectl get pods,deployments,serviceaccounts -n bookthief
 
-kubectl get pods,deployments,serviceaccounts,services,endpoints --n bookstore
-kubectl get pods,deployments,serviceaccounts,services,endpoints --n bookwarehouse
+kubectl get pods,deployments,serviceaccounts,services,endpoints -n bookstore
+kubectl get pods,deployments,serviceaccounts,services,endpoints -n bookwarehouse
 ```
 
 In addition, a [Kubernetes Service Account](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) was also created for each application. The Service Account serves as the application's identity which will be used later in the demo to create service-to-service access control policies.

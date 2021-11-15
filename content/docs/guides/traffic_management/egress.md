@@ -2,7 +2,7 @@
 title: "Egress"
 description: "Enable access to the Internet and services external to the service mesh."
 type: docs
-weight: 4
+weight: 6
 ---
 
 # Egress
@@ -30,8 +30,8 @@ There are two mechanisms to configure Egress:
 OSM supports configuring fine grained policies for traffic destined to external endpoints using its [Egress policy API][1]. To use this feature, enable it if not enabled:
 
 ```bash
-# Replace <osm-namespace> with the namespace where OSM is installed
-kubectl patch meshconfig osm-mesh-config -n <osm-namespace> -p '{"spec":{"featureFlags":{"enableEgressPolicy":true}}}'  --type=merge
+# Replace osm-system with the namespace where OSM is installed
+kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"featureFlags":{"enableEgressPolicy":true}}}'  --type=merge
 ```
 
 Refer to the [Egress policy demo](/docs/demos/egress_policy) and [API documentation][1] on how to configure policies for routing egress traffic for various protocols.
@@ -42,17 +42,18 @@ Refer to the [Egress policy demo](/docs/demos/egress_policy) and [API documentat
 
 Egress can be enabled mesh-wide during OSM install or post install. When egress is enabled mesh-wide, outbound traffic from pods are allowed to egress the pod as long as the traffic does not match in-mesh traffic policies that otherwise deny the traffic.
 
-1. During OSM install (default `OpenServiceMesh.enableEgress=false`):
+1. During OSM install (default `osm.enableEgress=false`):
 
    ```bash
-   osm install --set OpenServiceMesh.enableEgress=true
+   osm install --set osm.enableEgress=true
    ```
 
 2. After OSM has been installed:
 
-   `osm-controller` retrieves the egress configuration from the `osm-mesh-config` `MeshConfig` custom resource in its namespace (`osm-system` by default). Use `kubectl patch` to set `enableEgress` to `true` in the `osm-mesh-config` resource.
+   `osm-controller` retrieves the egress configuration from the `osm-mesh-config` `MeshConfig` custom resource in the osm mesh control plane namespace (`osm-system` by default). Use `kubectl patch` to set `enableEgress` to `true` in the `osm-mesh-config` resource.
 
    ```bash
+   # Replace osm-system with the namespace where OSM is installed
    kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enableEgress":true}}}' --type=merge
    ```
 
@@ -63,12 +64,13 @@ Similar to enabling egress, mesh-wide egress can be disabled during OSM install 
 1. During OSM install:
 
    ```bash
-   osm install --set OpenServiceMesh.enableEgress=false
+   osm install --set osm.enableEgress=false
    ```
 
 2. After OSM has been installed:
    Use `kubectl patch` to set `enableEgress` to `false` in the `osm-mesh-config` resource.
    ```bash
+   # Replace osm-system with the namespace where OSM is installed
    kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enableEgress":false}}}'  --type=merge
    ```
 
