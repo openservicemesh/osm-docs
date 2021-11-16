@@ -294,16 +294,19 @@ OSM provides some pre-cooked Grafana dashboards to display and track services re
    - **OSM Data Plane Performance Metrics**: This dashboard lets you view the performance of OSM's data plane
      ![image](https://user-images.githubusercontent.com/64559656/138173256-28011b16-cace-4365-b166-db909543472e.png)
    - **OSM Service to Service Metrics**: This dashboard lets you view the traffic metrics from a given source service to a given destination service
-     ![image](https://user-images.githubusercontent.com/64559656/138173019-6d58e3cc-2640-4f6d-820a-adbc3866d3ac.png)
+     ![image](https://user-images.githubusercontent.com/64559656/141853912-10ec3767-3d5b-40e8-8f13-d39a32980183.png)
    - **OSM Pod to Service Metrics**: This dashboard lets you investigate the traffic metrics from a pod to all the services it connects/talks to
-     ![image](https://user-images.githubusercontent.com/64559656/138179705-36a5f27d-72b8-4aef-ac32-dce4919640b9.png)
+     ![image](https://user-images.githubusercontent.com/64559656/140724337-0568dde0-e6c5-4764-8b6f-c1fcaf144b4e.png)
    - **OSM Workload to Service Metrics**: This dashboard provides the traffic metrics from a workload (deployment, replicaSet) to all the services it connects/talks to
-     ![image](https://user-images.githubusercontent.com/64559656/138172685-8b6b6243-8a95-48a2-8b5e-15337bf11fcd.png)
+     ![image](https://user-images.githubusercontent.com/64559656/140724800-8152cb8b-1617-4866-b008-f12c31f702c2.png)
+   - **OSM Workload to Workload Metrics**: This dashboard displays the latencies of requests in the mesh from workload to workload
+     ![image](https://user-images.githubusercontent.com/64559656/140718968-b3999e30-e6d1-4d95-b07b-0043595aca71.png)
+
 2. OSM Control Plane
    - **OSM Control Plane Metrics**: This dashboard provides traffic metrics from the given service to OSM's control plane
      ![image](https://user-images.githubusercontent.com/64559656/138173115-0a012450-0d91-449d-9c09-975b68fde03d.png)
    - **Mesh and Envoy Details**: This dashboard lets you view the performance and behavior of OSM's control plane
-     ![image](https://user-images.githubusercontent.com/64559656/138173158-5baad409-b194-49ed-b4cc-3a939e84f800.png)
+     ![image](https://user-images.githubusercontent.com/64559656/141852750-61da99ac-a431-4251-bd97-8aa4601232c3.png)
 
 [1]: https://prometheus.io/docs/introduction/overview/
 [2]: https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/demo/README.md
