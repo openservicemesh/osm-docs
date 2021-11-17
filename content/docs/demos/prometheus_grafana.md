@@ -285,26 +285,30 @@ Here you should see most of the endpoints connected, up and running for scrape.
 
 ## Deploying a Grafana Instance
 
-Similar to Prometheus, we will deploy a Grafan instance through helm.
+Similar to Prometheus, we will deploy a Grafana instance through helm.
 
 ```
 helm repo add grafana https://grafana.github.io/helm-charts
-helm install stable/grafana --generate-name
+helm install grafana/grafana --generate-name
 ```
 
-Next grab Grafana's admin password
+Next grab Grafana's admin password:
+
 ```
-kubectl get secret --namespace <grafana namespace> <grafana pod> -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+export GRAFANA_NAMESPACE=<grafana namespace> # kubernetes namespace grafana was installed to (can be default)
+export SECRET_NAME=$(kubectl get secret --namespace $GRAFANA_NAMESPACE -l "app.kubernetes.io/name=grafana" -o jsonpath="{.items[0].metadata.name}")
+kubectl get secret --namespace $GRAFANA_NAMESPACE $SECRET_NAME -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
 
 Next forward Grafana's webadmin port:
+
 ```
-export POD_NAME=$(kubectl get pods --namespace <grafana namespace> -l "app.kubernetes.io/name=grafana" -o jsonpath="{.items[0].metadata.name}")
-kubectl --namespace <namespace> port-forward $POD_NAME 3000
+export POD_NAME=$(kubectl get pods --namespace $GRAFANA_NAMESPACE -l "app.kubernetes.io/name=grafana" -o jsonpath="{.items[0].metadata.name}")
+kubectl --namespace $GRAFANA_NAMESPACE port-forward $POD_NAME 3000
 ```
 
 Here use `admin` as user and the password you got from two steps above.
-Next step is to to add Prometheus as data sources for Grafana. To do so, naviagte on the menu on the left and look for `Data Sources`, there select to add a `Prometheus` data source type.
+Next step is to to add Prometheus as data sources for Grafana. To do so, navigate on the menu on the left and look for `Data Sources`, there select to add a `Prometheus` data source type.
 
 On the new tab that will open, we just need to point to the Prometheus FQDN from our previous deployment. On our case, it was `stable-prometheus-server.metrics.svc.cluster.local` - In general this should be of the form of `<service-name>.<namespace>.svc.cluster.local>`.
 
