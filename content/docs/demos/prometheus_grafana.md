@@ -1,49 +1,69 @@
 ---
-title: "Prometheus & Grafana"
-description: "Describes basic steps to get up and running a Prometheus and Grafana stack with OSM specific configuration and Dashboards"
+title: "Integrate OSM with Prometheus and Grafana"
+description: "Describes how to set up an OSM-specific configuration and dashboards with your own Prometheus and Grafana stack"
 type: docs
 weight: 25
 ---
 
-# OSM's Prometheus and Grafana stack
+# Integrate OSM with your own Prometheus and Grafana stack
 
-## Overview
-The following doc walks through the process of creating a simple Prometheus and Grafana stack to enable observability and monitoring of OSM's service mesh.
+The following article shows you how to create an example bring your own (BYO) Prometheus and Grafana stack on your cluster and configure that stack for observability and monitoring of OSM. For an example using an automatic provisioning of a Prometheus and Grafana stack with OSM, see the [Observability](https://docs.openservicemesh.io/docs/getting_started/observability/) getting started guide.
 
-This setup is not meant for production, for production-grade deployments one should refer to [Prometheus Operator](https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/user-guides/getting-started.md).
+> IMPORTANT: The configuration created in this article should not be used in production environments. For production-grade deployments, see [Prometheus Operator](https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/user-guides/getting-started.md) and [Deploy Grafana in Kubernetes](https://grafana.com/docs/grafana/latest/installation/kubernetes/).
 
-## Deploying a Prometheus Instance
-The easiest way to deploy a Prometheus instance is through Helm:
+## Prerequisites
+
+- Kubernetes cluster running Kubernetes v1.19.0 or greater.
+- OSM installed on the Kubernetes cluster.
+- `kubectl` installed and access to the cluster's API server.
+- `osm` CLI installed.
+- `helm` CLI installed.
+
+## Deploy an example Prometheus instance
+
+Use `helm` to deploy a Prometheus instance to your cluster in the default namespace.
+
 ```
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
 helm install stable prometheus-community/prometheus
 ```
-If this step succeeded, helm will output some important information, some of which we will be interested in:
+
+The output of the `helm install` command contains the DNS name of the Prometheus server. For example:
+
 ```
+...
 The Prometheus server can be accessed via port 80 on the following DNS name from within your cluster:
 stable-prometheus-server.metrics.svc.cluster.local
+...
 ```
-Keep the DNS name for later, we will need it to add Prometheus as Data source for Grafana.
 
+Record this DNS name for use in a later step.
 
-In the next step, we need to configure the targets to scrape. OSM uses additional re/labeling and endpoint configuration, we we strongly recommend replacing Prometheus configuration or otherwise the OSM Grafana dashboard might show incomplete data.
+## Configure Prometheus for OSM
+
+Prometheus needs to be configured to scape the OSM endpoints and properly handle OSM's labeling, relabelling, and endpoint configuration. This configuration also helps the OSM Grafana dashboards, which are configured in a later step, properly display the data scraped from OSM.
+
+Use `kubectl get configmap` to verify the `stable-prometheus-sever` configmap has been created. For example:
 
 ```
-kubectl get configmap
+$ kubectl get configmap
+
 NAME                             DATA   AGE
-stable-prometheus-alertmanager   1      22s
-stable-prometheus-server         5      22s
+...
+stable-prometheus-alertmanager   1      18m
+stable-prometheus-server         5      18m
+...
 ```
 
-Let's replace the configuration of `stable-prometheus-server`
+Create `update-prometheus-configmap.yaml` with the following:
 
 ```
-kubectl edit configmap stable-prometheus-server
-```
-
-Now with your editor of choice, look for the `prometheus.yaml` key entry and replace it with [OSM's scraping config](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/charts/osm/templates/prometheus-configmap.yaml) (proceed with care while formatting the yaml file):
-```
-  (....)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stable-prometheus-server
+data:
   prometheus.yml: |
     global:
       scrape_interval: 10s
@@ -91,7 +111,7 @@ Now with your editor of choice, look for the `prometheus.yaml` key entry and rep
         - role: pod
         metric_relabel_configs:
         - source_labels: [__name__]
-          regex: '(envoy_server_live|envoy_cluster_upstream_rq_xx|envoy_cluster_upstream_cx_active|envoy_cluster_upstream_cx_tx_bytes_total|envoy_cluster_upstream_cx_rx_bytes_total|envoy_cluster_upstream_cx_destroy_remote_with_active_rq|envoy_cluster_upstream_cx_connect_timeout|envoy_cluster_upstream_cx_destroy_local_with_active_rq|envoy_cluster_upstream_rq_pending_failure_eject|envoy_cluster_upstream_rq_pending_overflow|envoy_cluster_upstream_rq_timeout|envoy_cluster_upstream_rq_rx_reset|^osm.*)'
+          regex: '(envoy_server_live|envoy_cluster_health_check_.*|envoy_cluster_upstream_rq_xx|envoy_cluster_upstream_cx_active|envoy_cluster_upstream_cx_tx_bytes_total|envoy_cluster_upstream_cx_rx_bytes_total|envoy_cluster_upstream_rq_total|envoy_cluster_upstream_cx_destroy_remote_with_active_rq|envoy_cluster_upstream_cx_connect_timeout|envoy_cluster_upstream_cx_destroy_local_with_active_rq|envoy_cluster_upstream_rq_pending_failure_eject|envoy_cluster_upstream_rq_pending_overflow|envoy_cluster_upstream_rq_timeout|envoy_cluster_upstream_rq_rx_reset|^osm.*)'
           action: keep
         relabel_configs:
         - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
@@ -266,69 +286,73 @@ Now with your editor of choice, look for the `prometheus.yaml` key entry and rep
           regex: (.+)
           target_label: __metrics_path__
           replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
-    (.....)
 ```
 
-After this step, Prometheus should already be able to scrape the mesh and API endpoints; to verify it is, forward its management port
-```
-export POD_NAME=$(kubectl get pods --namespace <promNamespace> -l "app=prometheus,component=server" -o jsonpath="{.items[0].metadata.name}")
-kubectl --namespace <promNamespace> port-forward $POD_NAME 9090
-```
-And followingly access locally through `http://localhost:9090/targets`.
+Use `kubectl apply` to update the Prometheus server configmap.
 
-Here you should see most of the endpoints connected, up and running for scrape.
+```
+kubectl apply -f update-prometheus-configmap.yaml
+```
+
+Verify Prometheus is able to scrape the OSM mesh and API endpoints by using `kubectl port-forward` to forward the traffic between the Prometheus management application and your development computer.
+
+```
+export POD_NAME=$(kubectl get pods -l "app=prometheus,component=server" -o jsonpath="{.items[0].metadata.name}")
+kubectl port-forward $POD_NAME 9090
+```
+
+Open a web browser to `http://localhost:9090/targets` to access the Prometheus management application and verify the endpoints are connected, up, and scrapping is running.
 
 <p align="center">
   <img src="/docs/images/byo_guide/prom_targets.png" width="100%"/>
 </p>
 <center><i>Targets with specific relabeling config established by OSM should be "up"</i></center><br>
 
+Stop the port-forwarding command.
+
 ## Deploying a Grafana Instance
 
-Similar to Prometheus, we will deploy a Grafana instance through helm.
+Use `helm` to deploy a Grafana instance to your cluster in the default namespace.
 
 ```
 helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
 helm install grafana/grafana --generate-name
 ```
 
-Next grab Grafana's admin password:
+Use `kubectl get secret` to display the administrator password for Grafana.
 
 ```
-export GRAFANA_NAMESPACE=<grafana namespace> # kubernetes namespace grafana was installed to (can be default)
-export SECRET_NAME=$(kubectl get secret --namespace $GRAFANA_NAMESPACE -l "app.kubernetes.io/name=grafana" -o jsonpath="{.items[0].metadata.name}")
-kubectl get secret --namespace $GRAFANA_NAMESPACE $SECRET_NAME -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+export SECRET_NAME=$(kubectl get secret -l "app.kubernetes.io/name=grafana" -o jsonpath="{.items[0].metadata.name}")
+kubectl get secret $SECRET_NAME -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
 
-Next forward Grafana's webadmin port:
+Use `kubectl port-forward` to forward the traffic between the Grafana's management application and your development computer.
 
 ```
-export POD_NAME=$(kubectl get pods --namespace $GRAFANA_NAMESPACE -l "app.kubernetes.io/name=grafana" -o jsonpath="{.items[0].metadata.name}")
-kubectl --namespace $GRAFANA_NAMESPACE port-forward $POD_NAME 3000
+export POD_NAME=$(kubectl get pods -l "app.kubernetes.io/name=grafana" -o jsonpath="{.items[0].metadata.name}")
+kubectl port-forward $POD_NAME 3000
 ```
 
-Here use `admin` as user and the password you got from two steps above.
-Next step is to to add Prometheus as data sources for Grafana. To do so, navigate on the menu on the left and look for `Data Sources`, there select to add a `Prometheus` data source type.
+Open a web browser to `http://localhost:3000` to access the Grafana's management application. Use `admin` as the username and administrator password from the previous step. and verify the endpoints are connected, up, and scrapping is running.
 
-On the new tab that will open, we just need to point to the Prometheus FQDN from our previous deployment. On our case, it was `stable-prometheus-server.metrics.svc.cluster.local` - In general this should be of the form of `<service-name>.<namespace>.svc.cluster.local>`.
+From the management application:
 
-Saving and testing at this stage should already be enough, and Grafana should tell you if the connection succeeded.
+* Select `Settings` then `Data Sources`.
+* Select `Add data source`.
+* Find the `Prometheus` data source and select `Select`.
+* Enter the DNS name, for example `stable-prometheus-server.default.svc.cluster.local`, from the earlier step in `URL`.
 
-<p align="center">
-  <img src="/docs/images/byo_guide/data_source.png" width="450" height="500"/>
-</p>
-<center><i>"Save and test" should greet you with that green banner</i></center><br>
+Select `Save and Test` and confirm you see `Data source is working`.
 
 ## Importing OSM Dashboards
-OSM Dashboards are available through [our repository](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/charts/osm/grafana/dashboards), which can be imported as json blobs on the web admin portal.
 
-To import a dashboard, look for the `+` sign on the left menu and select `Import`.
-Once the json file has been loaded, configure Prometheus as the data source.
+OSM Dashboards are available through [OSM GitHub repository](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/charts/osm/grafana/dashboards), which can be imported as json blobs on the management application.
 
-![importGrafana](https://user-images.githubusercontent.com/64559656/140592184-2d781ae1-dae6-4d5e-922c-c536298968f7.png)
+To import a dashboard:
+* Hover your cursor over the `+` and select `Import`.
+* Copy the JSON from the [osm-mesh-envoy-details dashboard](https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/charts/osm/grafana/dashboards/osm-mesh-envoy-details.json) and paste it in `Import via panel json`.
+* Select `Load`.
+* Select `Import`.
 
-As soon as you click import, it will bring you automatically to your imported dashboard.
-
-<center><i>Ready to go. Happy monitoring!</i></center><br>
-
-
+Confirm you see a `Mesh and Envoy Details` dashboard created.
