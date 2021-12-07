@@ -1,5 +1,5 @@
 ---
-title: "Uninstall"
+title: "Uninstall the OSM Control Plane"
 description: "Uninstall"
 type: docs
 weight: 4

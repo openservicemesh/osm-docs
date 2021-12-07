@@ -1,5 +1,5 @@
 ---
-title: "Upgrade Guide"
+title: "Upgrade the OSM Control Plane"
 description: "Upgrade Guide"
 aliases: ["/docs/upgrade_guide","/docs/troubleshooting/cli/mesh_upgrade"]
 type: docs
