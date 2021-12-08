@@ -1,5 +1,5 @@
 ---
-title: "Installation"
+title: "Install the OSM Control Plane"
 description: "This section describes how to install/uninstall Open Service Mesh (OSM) on a Kubernetes cluster"
 type: docs
 weight: 2

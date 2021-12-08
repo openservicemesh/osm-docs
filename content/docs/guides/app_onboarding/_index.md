@@ -2,7 +2,7 @@
 title: "Application onboarding"
 description: "Onboard Services"
 type: docs
-weight: 6
+weight: 5
 ---
 
 # Onboard Services
