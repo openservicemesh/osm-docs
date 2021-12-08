@@ -25,7 +25,9 @@ Refer to the following sections to understand how the `IngressBackend` configura
 
 ## Choices to perform Ingress
 
-OSM supports multiple options to expose mesh services externally using ingress. The following sections describe the various options.
+OSM supports multiple options to expose mesh services externally using ingress which are described in the following sections. OSM has been tested with Contour and OSS Nginx, which work with the ingress controller installed outside the mesh and provisioned with a certificate to participate in the mesh. 
+
+> Note: OSM integration with Nginx Plus has not been fully tested for picking up a self-signed mTLS certificate from a Kubernetes secret. However, an alternative way to incorporate Nginx Plus or any ingress is to install it in the mesh so that it is injected with an Envoy sidecar, which will allow it to participate in the mesh. Additional inbound ports such as 80 and 443 may need to be allowed to bypass the Envoy sidecar.
 
 ### 1. Using Contour Ingress Controller and Gateway
 
