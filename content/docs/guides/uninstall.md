@@ -1,11 +1,11 @@
 ---
-title: "Uninstall the OSM Control Plane"
+title: "Uninstall the OSM Control Plane and Components"
 description: "Uninstall"
 type: docs
 weight: 4
 ---
 
-# Uninstallation Guide
+# Uninstall the OSM Control Plane and Components
 
 This guide describes how to uninstall Open Service Mesh (OSM) from a Kubernetes cluster. This guide assumes there is a single OSM control plane (mesh) running. If there are multiple meshes in a cluster, repeat the process described for each control plane in the cluster before uninstalling any cluster wide resources at the end of the guide. Taking into consideration both the control plane and dataplane, this guide aims to walk through uninstalling all remnants of OSM with minimal downtime.
 
