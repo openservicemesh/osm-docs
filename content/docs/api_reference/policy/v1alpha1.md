@@ -432,6 +432,20 @@ IngressBackendSpec
 </table>
 </td>
 </tr>
+<tr>
+<td>
+<code>status</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.IngressBackendStatus">
+IngressBackendStatus
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Status is the status of the IngressBackend configuration.</p>
+</td>
+</tr>
 </tbody>
 </table>
 <h3 id="policy.openservicemesh.io/v1alpha1.IngressBackendSpec">IngressBackendSpec
@@ -492,6 +506,48 @@ IngressBackendSpec
 </tr>
 </tbody>
 </table>
+<h3 id="policy.openservicemesh.io/v1alpha1.IngressBackendStatus">IngressBackendStatus
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.IngressBackend">IngressBackend</a>)
+</p>
+<p>
+<p>IngressBackendStatus is the type used to represent the status of an IngressBackend resource.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>currentStatus</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>CurrentStatus defines the current status of an IngressBackend resource.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>reason</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Reason defines the reason for the current status of an IngressBackend resource.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="policy.openservicemesh.io/v1alpha1.IngressSourceSpec">IngressSourceSpec
 </h3>
 <p>
@@ -517,7 +573,8 @@ string
 </em>
 </td>
 <td>
-<p>Kind defines the kind for the source in the IngressBackend policy.</p>
+<p>Kind defines the kind for the source in the IngressBackend policy.
+Must be one of: Service, AuthenticatedPrincipal, IPRange</p>
 </td>
 </tr>
 <tr>
@@ -630,5 +687,5 @@ certificate presented by the client.</p>
 <hr/>
 <p><em>
 Generated with <code>gen-crd-api-reference-docs</code>
-on git commit <code>8ed34b1d</code>.
+on git commit <code>386d92a1</code>.
 </em></p>
