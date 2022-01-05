@@ -13,7 +13,7 @@ Ingress refers to managing external access to services within the cluster, typic
 
 ## IngressBackend API
 
-OSM leverages its [IngressBackend API][1] to configure a backend service to accept ingress traffic from trusted sources. The specification enables configuring how specific backends must authorize ingress traffic depending on the protocol used, HTTP or HTTPS. When the backend protocol is `http`, the source specified must be a `Service` kind whose endpoints will be authorized to connect to the backend. When the backend protocol is `https`, the source specified must be an `AuthenticatedPrincipal` kind which defines the Subject Alternative Name (SAN) encoded in the client's certificate that the backend will authenticate. A source with the kind `Service` is optional for `https` backends. For `https` backends, client certificate validation is performed by default and can be disabled by setting `skipClientCertValidation: true` in the `tls` field for the backend. The `port.number` field for a `backend` service in the `IngressBackend` configuration must correspond to the `targetPort` of a Kubernetes service.
+OSM leverages its [IngressBackend API][1] to configure a backend service to accept ingress traffic from trusted sources. The specification enables configuring how specific backends must authorize ingress traffic depending on the protocol used, HTTP or HTTPS. When the backend protocol is `http`, the specified source kind must either be: 1. `Service` kind whose endpoints will be authorized to connect to the backend, or 2. `IPRange` kind that specifies the source IP CIDR range authorized to connect to the backend. When the backend protocol is `https`, the source specified must be an `AuthenticatedPrincipal` kind which defines the Subject Alternative Name (SAN) encoded in the client's certificate that the backend will authenticate. A source with the kind `Service` or `IPRange` is optional for `https` backends, and if specified implies that the client must match the source in addition to its `AuthenticatedPrincipal` value. For `https` backends, client certificate validation is performed by default and can be disabled by setting `skipClientCertValidation: true` in the `tls` field for the backend. The `port.number` field for a `backend` service in the `IngressBackend` configuration must correspond to the `targetPort` of a Kubernetes service.
 
 Note that when the `Kind` for a source in an `IngressBackend` configuration is set to `Service`, OSM controller will attempt to discover the endpoints of that service. For OSM to be able to discover the endpoints of a service, the namespace in which the service resides needs to be a monitored namespace. Enable the namespace to be monitored using:
 
@@ -21,11 +21,70 @@ Note that when the `Kind` for a source in an `IngressBackend` configuration is s
 kubectl label ns <namespace> openservicemesh.io/monitored-by=<mesh name>
 ```
 
+### Examples
+
+The following IngressBackend configuration will allow access to the `foo` service on port `80` in the `test` namespace only if the source originating the traffic is an endpoint of the `myapp` service in the `default` namespace:
+```yaml
+kind: IngressBackend
+apiVersion: policy.openservicemesh.io/v1alpha1
+metadata:
+  name: basic
+  namespace: test
+spec:
+  backends:
+    - name: foo
+      port:
+        number: 80 # targetPort of the service
+        protocol: http
+  sources:
+    - kind: Service
+      namespace: default
+      name: myapp
+```
+
+The following IngressBackend configuration will allow access to the `foo` service on port `80` in the `test` namespace only if the source originating the traffic has an IP address that belongs to the CIDR range `10.0.0.0/8`:
+```yaml
+kind: IngressBackend
+apiVersion: policy.openservicemesh.io/v1alpha1
+metadata:
+  name: basic
+  namespace: test
+spec:
+  backends:
+    - name: foo
+      port:
+        number: 80 # targetPort of the service
+        protocol: http
+  sources:
+    - kind: IPRange
+      name: 10.0.0.0/8
+```
+
+The following IngressBackend configuration will allow access to the `foo` service on port `80` in the `test` namespace only if the source originating the traffic encrypts the traffic with `TLS` and has the Subject Alternative Name (SAN) `client.default.svc.cluster.local` encoded in its client certificate:
+```yaml
+kind: IngressBackend
+apiVersion: policy.openservicemesh.io/v1alpha1
+metadata:
+  name: basic
+  namespace: test
+spec:
+  backends:
+    - name: foo
+      port:
+        number: 80
+        protocol: https # https implies TLS
+      tls:
+        skipClientCertValidation: false # mTLS (optional, default: false)
+  sources:
+    - kind: AuthenticatedPrincipal
+      name: client.default.svc.cluster.local
+```
+
 Refer to the following sections to understand how the `IngressBackend` configuration looks like for `http` and `https` backends.
 
 ## Choices to perform Ingress
 
-OSM supports multiple options to expose mesh services externally using ingress which are described in the following sections. OSM has been tested with Contour and OSS Nginx, which work with the ingress controller installed outside the mesh and provisioned with a certificate to participate in the mesh. 
+OSM supports multiple options to expose mesh services externally using ingress which are described in the following sections. OSM has been tested with Contour and OSS Nginx, which work with the ingress controller installed outside the mesh and provisioned with a certificate to participate in the mesh.
 
 > Note: OSM integration with Nginx Plus has not been fully tested for picking up a self-signed mTLS certificate from a Kubernetes secret. However, an alternative way to incorporate Nginx Plus or any ingress is to install it in the mesh so that it is injected with an Envoy sidecar, which will allow it to participate in the mesh. Additional inbound ports such as 80 and 443 may need to be allowed to bypass the Envoy sidecar.
 
