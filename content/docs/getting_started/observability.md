@@ -1,11 +1,18 @@
 ---
-title: "Observability"
-description: "Use OSM's observability integrations to inspect the traffic between the bookstore applications"
+title: "Configure Observability with Prometheus and Grafana"
+description: "Use OSM's observability integrations with Prometheus and Grafana to inspect the traffic between the bookstore applications"
 type: docs
 weight: 5
 ---
 
-# Observability
+# Configure Observability with Prometheus and Grafana
+
+The following article shows you how to install OSM with automatic provisioning of the Prometheus and Grafana stack for observability and monitoring. For an example using a bring your own (BYO) Prometheus and Grafana stack on your cluster with OSM, see the [Integrate OSM with Prometheus and Grafana](https://docs.openservicemesh.io/docs/demos/prometheus_grafana/) demo.
+
+The configuration created in this article should not be used in production environments. For production-grade deployments, see [Prometheus Operator](https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/user-guides/getting-started.md) and [Deploy Grafana in Kubernetes](https://grafana.com/docs/grafana/latest/installation/kubernetes/).
+
+
+## Install OSM with Prometheus and Grafana
 
 On `osm install`, a Prometheus and/or Grafana instance can be automatically provisioned with the default OSM configuration.
 ```bash

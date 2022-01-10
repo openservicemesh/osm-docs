@@ -89,3 +89,18 @@ The following sections list the features supported in OSM and their versioning s
 | Dapr integration                  | Alpha |
 
 <br/>
+
+## Helm chart values deprecation
+
+Values in the Helm chart may be deprecated in preparation to be removed in a future release. A value that is deprecated will be prefixed with the `DEPRECATED` keyword alongside its comment in the values file and in the title of the corresponding property in the JSON schema for the Helm values.
+
+For example, the value `foo` is considered to be deprecated due to the `DEPRECATED` keyword in its description in the values file:
+```yaml
+# -- DEPRECATED
+# foo configuration
+foo: bar
+```
+
+The `helm show values` command can be used to view the Helm chart's values.
+
+A value marked as `DEPRECATED` in a release will only be removed in the next minor release at the earliest. This means, a value deprecated in release `vX.Y.Z` will only be removed on or after release `vX.Y+1.Z`. Deprecated values will be documented in the release notes.

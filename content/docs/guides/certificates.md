@@ -124,12 +124,12 @@ The following configuration parameters will be required for OSM to integrate wit
 
 `osm install` set flag control how OSM integrates with Vault. The following `osm install` set options must be configured to issue certificates with Vault:
 
-- `--set osm.certificateManager=vault` - set this to `vault`
+- `--set osm.certificateProvider.kind=vault` - set this to `vault`
 - `--set osm.vault.host` - host name of the Vault server (example: `vault.contoso.com`)
 - `--set osm.vault.protocol` - protocol for Vault connection (`http` or `https`)
 - `--set osm.vault.token` - token to be used by OSM to connect to Vault (this is issued on the Vault server for the particular role)
 - `--set osm.vault.role` - role created on Vault server and dedicated to Open Service Mesh (example: `openservicemesh`)
-- `--set osm.serviceCertValidityDuration` - period for which each new certificate issued for service-to-service communication will be valid. It is represented as a sequence of decimal numbers each with optional fraction and a unit suffix, ex: 1h to represent 1 hour, 30m to represent 30 minutes, 1.5h or 1h30m to represent 1 hour and 30 minutes.
+- `--set osm.certificateProvider.serviceCertValidityDuration` - period for which each new certificate issued for service-to-service communication will be valid. It is represented as a sequence of decimal numbers each with optional fraction and a unit suffix, ex: 1h to represent 1 hour, 30m to represent 30 minutes, 1.5h or 1h30m to represent 1 hour and 30 minutes.
 
 Additionally:
 
@@ -206,7 +206,7 @@ VAULT_ROLE=openservicemesh
 When running OSM on your local workstation, use the following `osm install` set options:
 
 ```
---set osm.certificateManager="vault"
+--set osm.certificateProvider.kind="vault"
 --set osm.vault.host="localhost"  # or the host where Vault is installed
 --set osm.vault.protocol="http"
 --set osm.vault.token="xyz"
@@ -217,7 +217,7 @@ When running OSM on your local workstation, use the following `osm install` set 
 #### How OSM Integrates with Vault
 
 When the OSM control plane starts, a new certificate issuer is instantiated.
-The kind of cert issuer is determined by the `osm.certificateManager` set option.
+The kind of cert issuer is determined by the `osm.certificateProvider.kind` set option.
 When this is set to `vault` OSM uses a Vault cert issuer.
 This is a Hashicorp Vault client, which satisfies the `certificate.Manager`
 interface. It provides the following methods:
@@ -313,7 +313,7 @@ kubectl create secret -n osm-system generic osm-ca-bundle --from-file ca.crt
 In order for OSM to use cert-manager with the configured issuer, set the
 following CLI arguments on the `osm install` command:
 
-- `--set osm.certificateManager="cert-manager"` - Required to use cert-manager as the provider.
+- `--set osm.certificateProvider.kind="cert-manager"` - Required to use cert-manager as the provider.
 - `--set osm.certmanager.issuerName` - The name of the [Cluster]Issuer resource (defaulted to `osm-ca`).
 - `--set osm.certmanager.issuerKind` - The kind of issuer (either `Issuer` or `ClusterIssuer`, defaulted to `Issuer`).
 - `--set osm.certmanager.issuerGroup` - The group that the issuer belongs to (defaulted to `cert-manager.io` which is all core issuer types).
