@@ -2,7 +2,6 @@
 title: "OSM Resource Requests and Limits"
 description: "Resource requests and limits for OSM pods and deployments"
 type: docs
-weight: 2
 ---
 
 | Key | Type | Default | Description |

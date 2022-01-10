@@ -1,29 +1,34 @@
 ---
-title: "Cleanup"
+title: "Uninstall OSM"
 description: "Uninstall OSM and the bookstore applications"
 type: docs
 weight: 6
 ---
 
-# Cleanup
+# Uninstall OSM
 
-To cleanup all resources created for the demo, the OSM control plane, SMI resources, and the sample applications need to be deleted.
+The articles in the getting started section outline installing OSM and sample applications. To uninstall all of these resources, delete the sample application and related SMI resources and uninstall the OSM control plane and cluster-wide OSM resources.
 
-To uninstall the sample applications and SMI resources, delete their namespaces with the following command:
+## Delete the sample applications
+
+To clean up the sample applications and related SMI resources, delete their namespaces. For example:
+
 ```bash
 kubectl delete ns bookbuyer bookthief bookstore bookwarehouse
 ```
 
-### Uninstall OSM control plane
+## Uninstall OSM control plane
 
-To uninstall OSM control plane, run the following command.
+To uninstall OSM control plane, use `osm unistall mesh`.
+
 ```bash
 osm uninstall mesh
 ```
 
-### Uninstall OSM cluster wide resources
+## Uninstall OSM cluster-wide resources
 
-To uninstall OSM cluster wide resources, run the following command.
+To uninstall OSM cluster-wide resources, use `osm uninstall cluster-wide-resources`.
+
 ```bash
 osm uninstall cluster-wide-resources
 ```

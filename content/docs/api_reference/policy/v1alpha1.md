@@ -573,7 +573,8 @@ string
 </em>
 </td>
 <td>
-<p>Kind defines the kind for the source in the IngressBackend policy.</p>
+<p>Kind defines the kind for the source in the IngressBackend policy.
+Must be one of: Service, AuthenticatedPrincipal, IPRange</p>
 </td>
 </tr>
 <tr>
@@ -686,5 +687,5 @@ certificate presented by the client.</p>
 <hr/>
 <p><em>
 Generated with <code>gen-crd-api-reference-docs</code>
-on git commit <code>bee1cac8</code>.
+on git commit <code>edb1d453</code>.
 </em></p>
