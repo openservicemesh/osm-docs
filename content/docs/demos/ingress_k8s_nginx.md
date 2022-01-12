@@ -182,7 +182,7 @@ spec:
     name: "$nginx_ingress_service"
     namespace: "$nginx_ingress_namespace"
   - kind: AuthenticatedPrincipal
-    name: ingress-nginx.ingress.cluster.local
+    name: ingress-nginx.ingress-nginx.cluster.local
 EOF
 ```
 
