@@ -129,12 +129,12 @@ certificate:
       name: osm-nginx-client-cert
       namespace: <osm-namespace> # replace <osm-namespace> with the namespace where OSM is installed
     subjectAltNames:
-    - ingress-nginx.ingress.cluster.local
+    - ingress-nginx.ingress-nginx.cluster.local
     validityDuration: 24h
 ```
 > Note: The Subject Alternative Name (SAN) is of the form `<service-account>.<namespace>.cluster.local`, where the service account and namespace correspond to the Ngnix service.
 
-Next, we need to create an Ingress and IngressBackend configuration to use TLS proxying to the backend service, while enabling proxying to the backend over mTLS. For this to work, we must create an IngressBackend resource that specifies HTTPS ingress traffic directed to the `httpbin` service must only accept traffic from a trusted client. OSM provisioned a client certificate for the Nginx ingress service with the Subject ALternative Name (SAN) `ingress-nginx.ingress.cluster.local`, so the IngressBackend configuration needs to reference the same SAN for mTLS authentication between the Nginx ingress service and the `httpbin` backend.
+Next, we need to create an Ingress and IngressBackend configuration to use TLS proxying to the backend service, while enabling proxying to the backend over mTLS. For this to work, we must create an IngressBackend resource that specifies HTTPS ingress traffic directed to the `httpbin` service must only accept traffic from a trusted client. OSM provisioned a client certificate for the Nginx ingress service with the Subject ALternative Name (SAN) `ingress-nginx.ingress-nginx.cluster.local`, so the IngressBackend configuration needs to reference the same SAN for mTLS authentication between the Nginx ingress service and the `httpbin` backend.
 
 Apply the configurations:
 ```bash
@@ -182,7 +182,7 @@ spec:
     name: "$nginx_ingress_service"
     namespace: "$nginx_ingress_namespace"
   - kind: AuthenticatedPrincipal
-    name: ingress-nginx.ingress.cluster.local
+    name: ingress-nginx.ingress-nginx.cluster.local
 EOF
 ```
 
