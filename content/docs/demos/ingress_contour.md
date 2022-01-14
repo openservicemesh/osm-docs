@@ -62,7 +62,7 @@ kubectl create ns httpbin
 osm namespace add httpbin
 
 # Deploy the application
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/samples/httpbin/httpbin.yaml -n httpbin
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/httpbin/httpbin.yaml -n httpbin
 ```
 
 Confirm the `httpbin` service and pod is up and running:

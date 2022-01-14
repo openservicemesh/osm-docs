@@ -43,10 +43,10 @@ To familiarize yourself on how OSM works with Prometheus, try installing a new m
 1. Install sample applications:
 
    ```console
-   $ kubectl apply -f docs/example/manifests/samples/curl/curl.yaml -n metrics-demo
+   $ kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/curl/curl.yaml -n metrics-demo
    serviceaccount/curl created
    deployment.apps/curl created
-   $ kubectl apply -f docs/example/manifests/samples/httpbin/httpbin.yaml -n metrics-demo
+   $ kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/httpbin/httpbin.yaml -n metrics-demo
    serviceaccount/httpbin created
    service/httpbin created
    deployment.apps/httpbin created
