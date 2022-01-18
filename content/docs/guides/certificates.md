@@ -308,6 +308,8 @@ as a Kubernetes secret in the OSM namespace (`osm-system` by default) at the
 kubectl create secret -n osm-system generic osm-ca-bundle --from-file ca.crt
 ```
 
+Refer to the [cert-manager demo](/docs/demos/cert-manager_integration) to learn more.
+
 #### Configure OSM with cert-manager
 
 In order for OSM to use cert-manager with the configured issuer, set the
