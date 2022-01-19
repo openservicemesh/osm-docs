@@ -51,7 +51,7 @@ By default, the Fluent Bit sidecar is configured to simply send logs to the Flue
 
 > Note: `<osm-namespace>` refers to the namespace where the osm control plane is installed.
 
-To quickly bring up Fluent Bit with default values, use the `--set=OpenServiceMesh.enableFluentbit` option:
+To quickly bring up Fluent Bit with default values, use the `--set=osm.enableFluentbit` option:
 ```console
 osm install --set=osm.enableFluentbit=true
 ```

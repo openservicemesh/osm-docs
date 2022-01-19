@@ -16,7 +16,7 @@ To demonstrate usage of SMI traffic access and split policies, we will now deplo
 ```bash
 # Contains the bookstore-v2 Kubernetes Service, Service Account, Deployment and SMI Traffic Target resource to allow
 # `bookbuyer` to communicate with `bookstore-v2` pods
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/apps/bookstore-v2.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/apps/bookstore-v2.yaml
 ```
 
 Wait for the `bookstore-v2` pod to be running in the `bookstore` namespace. Next, exit and restart the `./scripts/port-forward-all.sh` script in order to access v2 of bookstore.
@@ -30,7 +30,7 @@ The counter should _not_ be incrementing because no traffic is flowing yet to th
 Deploy the SMI traffic split policy to direct 100 percent of the traffic sent to the root `bookstore` service to the `bookstore` service backend:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/split/traffic-split-v1.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/split/traffic-split-v1.yaml
 ```
 
 _Note: The root service can be any Kubernetes service. It does not have any label selectors. It also doesn't need to overlap with any of the Backend services specified in the Traffic Split resource. The root service can be referred to in the SMI Traffic Split resource as the name of the service with or without the `.<namespace>` suffix._
@@ -46,7 +46,7 @@ kubectl describe trafficsplit bookstore-split -n bookstore
 Update the SMI Traffic Split policy to direct 50 percent of the traffic sent to the root `bookstore` service to the `bookstore` service and 50 perfect to `bookstore-v2` service by adding the `bookstore-v2` backend to the spec and modifying the weight fields.
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/split/traffic-split-50-50.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/split/traffic-split-50-50.yaml
 ```
 
 Wait for the changes to propagate and observe the counters increment for `bookstore` and `bookstore-v2` in your browser windows. Both
@@ -60,7 +60,7 @@ counters should be incrementing:
 Update the `bookstore-split` TrafficSplit to configure all traffic to go to `bookstore-v2`:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/docs/example/manifests/split/traffic-split-v2.yaml
+kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/split/traffic-split-v2.yaml
 ```
 
 Wait for the changes to propagate and observe the counters increment for `bookstore-v2` and freeze for `bookstore` in your
