@@ -66,7 +66,7 @@ In short, no matter what control plane a proxy connects to, a valid certificate,
 
 ### Horizontal Pod Autoscaling - HPA
 
-HPA will automatically scale up or down control plane pods based on the average target CPU utilization (%).
+HPA will automatically scale up or down control plane pods based on the average target CPU utilization (%) and average target memory utilization (%).
 To enable HPA, use the following command
 
 ```
@@ -79,7 +79,8 @@ Additional parameters for HPA:
 
 - `minReplicas` (int): Minimum number of pods that the autoscaler can set (Allowed values: 1-10)
 - `maxReplicas` (int): Maximum number of pods that the autoscaler can set (Allowed values: 1-10)
-- `targetAverageUtilization` (int): The target value for CPU utilization, representated as a percentage (Allowed values: 0-100)
+- `cpu.targetAverageUtilization` (int): The target value for CPU utilization, representated as a percentage (Allowed values: 0-100)
+- `memory.targetAverageUtilization` (int): The target value for memory utilization, representated as a percentage (Allowed values: 0-100)
 
 ### Pod Disruption Budget - PDB
 
