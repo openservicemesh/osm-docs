@@ -194,6 +194,19 @@ Expect to see:
 ```
 This suggests that the issue is not caused by your Jaeger or tracing configuration.
 
+## Integrate Jaeger Tracing In Your Application
+
+Jaeger tracing does not come effort-free. In order for Jaeger to connect requests to traces automatically, it is the application's responsibility to publish the tracing information correctly.
+
+In Open Service Mesh's sidecar proxy configuration, currently Zipkin is used as the HTTP tracer. Therefore an application can leverage Zipkin supported headers to provide tracing information.  In the initial request of a trace, the Zipkin plugin will generate the required HTTP headers. An application should propagate the headers below if it needs to add subsequent requests to the current trace:
+
+* `x-request-id`
+* `x-b3-traceid`
+* `x-b3-spanid`
+* `x-b3-parentspanid`
+
+For more detail, please refer to [Envoy tracing documentation](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/observability/tracing).
+
 ## Troubleshoot Tracing/Jaeger
 
 When tracing is not working as expected.
