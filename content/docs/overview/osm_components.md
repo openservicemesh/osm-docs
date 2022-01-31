@@ -39,9 +39,9 @@ The Proxy Control Plane plays a key part in operating the [service mesh](https:/
 Certificate Manager is a component that provides each service participating in the service mesh with a TLS certificate.
 These service certificates are used to establish and encrypt connections between services using mTLS.
 
-### (3) Endpoints Providers
+### (3) The Provider
 
-Endpoints Providers are one or more components that communicate with the compute platforms (Kubernetes clusters, on-prem machines, or cloud-providers' VMs) participating in the service mesh. Endpoints providers resolve service names into lists of IP addresses. The Endpoints Providers understand the specific primitives of the compute provider they are implemented for, such as virtual machines, virtual machine scale sets, and Kubernetes clusters.
+The Provider is a component that communicates with the compute platforms (Kubernetes clusters, on-prem machines, or cloud-providers' VMs) participating in the service mesh. Providers resolve service names into lists of IP addresses, can query for service names, and associate service names with service identities. The Providers understand the specific primitives of the compute provider they are implemented for, such as virtual machines, virtual machine scale sets, and Kubernetes clusters.
 
 ### (4) Mesh specification
 
@@ -54,8 +54,8 @@ This component:
 
 1. Communicates with the [mesh specification module (4)](#4-mesh-specification) to detect when a [Kubernetes service](https://kubernetes.io/docs/concepts/services-networking/service/) was created, changed, or deleted via [SMI Spec](https://github.com/deislabs/smi-spec).
 1. Reaches out to the [certificate manager (2)](#2-certificate-manager) and requests a new TLS certificate for the newly discovered service.
-1. Retrieves the IP addresses of the mesh workloads by observing the compute platforms via the [endpoints providers (3)](#3-endpoints-providers).
-1. Combines the outputs of 1, 2, and 3 above into a data structure, which is then passed to the [proxy control plane (1)](#1-proxy-control-plane), serialized and sent to all relevant connected proxies.
+2. Retrieves the IP addresses of the mesh workloads by observing the compute platforms via the [providers (3)](#3-the-provider).
+3. Combines the outputs of 1, 2, and 3 above into a data structure, which is then passed to the [proxy control plane (1)](#1-proxy-control-plane), serialized and sent to all relevant connected proxies.
 
 ![diagram](https://user-images.githubusercontent.com/49918230/73008758-27b3a800-3e07-11ea-894e-93f53e08731e.png)
 
