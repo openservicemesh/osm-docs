@@ -29,6 +29,16 @@ When configured with the `--set=osm.deployPrometheus=true` flag, OSM installatio
 
 OSM can be configured to deploy a [Grafana](https://grafana.com/grafana/) instance using the `--set=osm.deployGrafana=true` flag in `osm install`. OSM provides pre-configured dashboards that are documented in the [OSM Grafana dashboards](/docs/guides/observability/metrics/#osm-grafana-dashboards) section of the Observability Guide.
 
+## Enable Metrics Scraping
+
+Metrics can be enabled at the namespace scope using the `osm metrics` command. By default, OSM **does not** configure metrics scraping for pods in the mesh. 
+```bash
+osm metrics enable --namespace test
+osm metrics enable --namespace "test1, test2"
+
+```
+> Note: The namespace that you are enabling for metrics scraping must already be a part of the mesh.
+
 ## Inspect Dashboards
 
 The OSM Grafana dashboards can be viewed with the following command:
