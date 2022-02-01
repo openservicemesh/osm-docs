@@ -14,7 +14,7 @@ Additionally, OSM generates metrics for the control plane components. These metr
 
 OSM uses [Prometheus][1] to gather and store consistent traffic metrics and statistics for all applications running in the mesh. Prometheus is an open-source monitoring and alerting toolkit which is commonly used on (but not limited to) Kubernetes and Service Mesh environments.
 
-Each application that is part of the mesh runs in a Pod which contains an Envoy sidecar that exposes metrics (proxy metrics) in the Prometheus format. Furthermore, every Pod that is a part of the mesh has Prometheus annotations, which makes it possible for the Prometheus server to scrape the application dynamically. This mechanism automatically enables scraping of metrics whenever a pod is added to the mesh.
+Each application that is part of the mesh runs in a Pod which contains an Envoy sidecar that exposes metrics (proxy metrics) in the Prometheus format. Furthermore, every Pod that is a part of the mesh and in a namespace with metrics enabled has Prometheus annotations, which makes it possible for the Prometheus server to scrape the application dynamically. This mechanism automatically enables scraping of metrics whenever a pod is added to the mesh.
 
 OSM metrics can be viewed with [Grafana][8] which is an open source visualization and analytics software. It allows you to query, visualize, alert on, and explore your metrics.
 
@@ -163,8 +163,6 @@ prometheus.io/scrape: true
 prometheus.io/port: 15010
 prometheus.io/path: /stats/prometheus
 ```
-
-When metrics are disabled for a previously enabled meshed namespace, the existing pods in the namespace will still be configured for scraping. The pods must be recreated for the annotation to be removed. All future pods added to a namespace with metrics disabled will not be updated with the Prometheus annotations.
 
 ## Available Metrics
 
