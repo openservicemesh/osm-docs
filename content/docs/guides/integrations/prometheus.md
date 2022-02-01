@@ -126,5 +126,5 @@ To familiarize yourself on how OSM works with Prometheus, try installing a new m
    To remove OSM's cluster wide resources after uninstallation, run the following command. See the [uninstall guide](/docs/guides/uninstall/) for more context and information.
 
    ```console
-   $ osm uninstall cluster-wide-resources
+   $ osm uninstall mesh --delete-cluster-wide-resources
    ```

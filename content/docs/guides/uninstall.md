@@ -83,8 +83,7 @@ Use the `osm` CLI to uninstall the OSM control plane from a Kubernetes cluster. 
 1. OSM controller resources (deployment, service, mesh config, and RBAC)
 1. Prometheus, Grafana, Jaeger, and Fluent Bit resources installed by OSM
 1. Mutating webhook and validating webhook
-1. The conversion webhook fields patched by OSM to the CRDs installed/required by OSM: [CRDs for OSM](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/cmd/osm-bootstrap/crds) will be unpatched. Refer to [Removal of OSM Cluster Wide Resources](#removal-of-osm-cluster-wide-resources) for more details
-1. `osm-ca-bundle`, `mutating-webhook-cert-secret`, `validating-webhook-cert-secret` and `crd-converter-cert-secret` secrets
+1. The conversion webhook fields patched by OSM to the CRDs installed/required by OSM: [CRDs for OSM](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/cmd/osm-bootstrap/crds) will be unpatched. To delete cluster wide resources refer to [Removal of OSM Cluster Wide Resources](#removal-of-osm-cluster-wide-resources) for more details.
 
 Run `osm uninstall mesh`:
 
@@ -116,46 +115,34 @@ For example, if [Hashicorp Vault](/docs/guides/certificates/#installing-hashi-va
 When installing a mesh, the `osm` CLI creates the namespace the control plane is installed into if it does not already exist. However, when uninstalling the same mesh, the namespace it lives in does not automatically get deleted by the `osm` CLI. This behavior occurs because
 there may be resources a user created in the namespace that they may not want automatically deleted.
 
-If the namespace was only used for OSM and there is nothing that needs to be kept around, the namespace can be deleted at this time with `kubectl`.
-> Warning: Only delete the namespace if resources in the namespace are no longer needed. For example, if osm was installed in `kube-system`, deleting the namespace may delete important cluster resources and may have unintended consequences.
+If the namespace was only used for OSM and there is nothing that needs to be kept around, the namespace can be deleted at the time of uninstall or later using the following command.
 
 ```console
-$ kubectl delete namespace <namespace>
-namespace "<namespace>" deleted
+$ osm uninstall mesh --delete-namespace
 ```
 
-Repeat the steps above for each mesh installed in the cluster. After there are no OSM control planes remaining, move to following step.
+> Warning: Only delete the namespace if resources in the namespace are no longer needed. For example, if osm was installed in `kube-system`, deleting the namespace may delete important cluster resources and may have unintended consequences.
+
 
 ### Removal of OSM Cluster Wide Resources
 
-Uninstalling OSM (through the `osm uninstall mesh` command or through Helm) will uninstall OSM control plane components.
-However, it will leave behind certain OSM resources to prevent unintended consequences for the cluster after uninstalling OSM.
-The resources that are left behind will depend on whether OSM was uninstalled from a managed or unmanaged cluster environment.
+On installation OSM ensures that all the CRDs mentioned [here](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/cmd/osm-bootstrap/crds) exist in the cluster at install time. During installation, if they are not already installed, the `osm-bootstrap` pod will install them before the rest of the control plane components are running. This is the same behavior when using the Helm charts to install OSM as well. 
 
-`osm uninstall mesh` does the following in both unmanaged and managed environments:
+Uninstalling the mesh in both unmanaged and managed environments:
 1. removes OSM control plane components, including control plane pods
 2. removes/un-patches the conversion webhook fields from all the CRDs (which OSM adds to support multiple CR versions)
 
-For _unmanaged_ environments, running `osm uninstall mesh` will uninstall the following additional resources. However, these resources will remain in the cluster when OSM is uninstalled from a _managed_ environment.
-1. OSM resources such as meshconfig, RBAC, control plane deployments, and control plane services
-2. OSM control plane secrets
-3. OSM mutating webhook configurations
-4. OSM validating webhook configurations
-
-OSM ensures that all the CRDs mentioned [here](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/cmd/osm-bootstrap/crds)
-exist in the cluster at install time. During installation, if they are not already installed, the `osm-bootstrap` pod will install them before the rest of the control plane components are running. This is the same behavior when using the Helm charts to install OSM as well.
+leaving behind certain OSM resources to prevent unintended consequences for the cluster after uninstalling OSM.The resources that are left behind will depend on whether OSM was uninstalled from a managed or unmanaged cluster environment.
 
 When uninstalling OSM, both the `osm uninstall mesh` command and Helm uninstallation will not delete any OSM or SMI CRD in any cluster environment (managed and unmanaged) for primarily two reasons:
 1. CRDs are cluster-wide resources and may be used by other service meshes or resources running in the same cluster
 2. deletion of a CRD will cause all custom resources corresponding to that CRD to also be deleted
 
-After uninstalling OSM, to remove cluster wide resources that OSM installs (i.e. the meshconfig, secrets, OSM CRDs, SMI CRDs, and webhook configurations), run the following command.
+To remove cluster wide resources that OSM installs (i.e. the meshconfig, secrets, OSM CRDs, SMI CRDs, and webhook configurations), the following command can be run during or after OSM's uninstillation.
 
 ```bash
-osm uninstall cluster-wide-resources
+osm uninstall mesh --cluster-wide-resources
 ```
-
-> Note: `osm uninstall mesh` and `osm uninstall cluster-wide-resources` do not delete the namespace where osm is installed. This prevents unintended consequences, such as if osm was installed in `kube-system`, as deleting that namespace may delete important cluster resources and may have unintended consequences.
 
 > Warning: Deletion of a CRD will cause all custom resources corresponding to that CRD to also be deleted.
 
