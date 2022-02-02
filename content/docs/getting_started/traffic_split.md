@@ -70,3 +70,8 @@ browser windows:
 - [http://localhost:8083](http://localhost:8084) - **bookstore**
 
 Now, all traffic directed to the `bookstore` service is flowing to `bookstore-v2`.
+
+## Next Steps
+
+- [Configure observability with Prometheus and Grafana](/docs/getting_started/observability/)
+- [Cleanup sample applications and uninstall OSM](/docs/getting_started/cleanup/)

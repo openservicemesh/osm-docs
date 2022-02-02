@@ -129,3 +129,7 @@ In a browser, open up the following urls:
   - _Note: This page will not be available at this time in the demo. This will become available during the SMI Traffic Split configuration set up_
 
 Position the windows so that you can see all four at the same time. The header at the top of the webpage indicates the application and version.
+
+## Next Steps
+
+Now that the sample applications are running, [configure traffic policies](/docs/getting_started/traffic_policies/) between the applications.

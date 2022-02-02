@@ -75,3 +75,7 @@ osm install \
 ```
 
 Read more on OSM's integrations with Prometheus, Grafana, and Jaeger in the [observability documentation](/docs/guides/observability/).
+
+## Next Steps
+
+Now that the OSM control plane is up and running, [add applications](/docs/getting_started/install_apps/) to the mesh.
