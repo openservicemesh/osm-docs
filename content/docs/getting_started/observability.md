@@ -50,3 +50,7 @@ osm dashboard
 > Note: If you still have the additional terminal still running the `./scripts/port-forward-all.sh` script, go ahead and `CTRL+C` to terminate the port forwarding. The `osm dashboard` port redirection will not work simultaneously with the port forwarding script still running.
 
 Navigate to http://localhost:3000 to access the Grafana dashboards. The default user name is `admin` and the default password is `admin`. On the Grafana homepage click on the **Home** icon, you will see a folder containing dashboards for both OSM Control Plane and OSM Data Plane.
+
+## Next Steps
+
+[Cleanup sample applications and uninstall OSM](/docs/getting_started/cleanup/).

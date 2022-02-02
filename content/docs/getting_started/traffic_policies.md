@@ -183,3 +183,7 @@ kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< 
 The counter in the `bookthief` window will stop incrementing.
 
 - [http://localhost:8083](http://localhost:8083) - **bookthief**
+
+## Next Steps
+
+Learn how to balance traffic between services by [configuring traffic split](/docs/getting_started/traffic_split/).
