@@ -7,7 +7,7 @@ type: docs
 
 # OSM Mesh Uninstall Troubleshooting Guide
 
-If for any reason, `osm uninstall mesh` or `osm uninstall cluster-wide-resources` (as documented in the [uninstall guide](/docs/guides/uninstall/)) fails, you may manually delete OSM resources as detailed below.
+If for any reason, `osm uninstall mesh` (as documented in the [uninstall guide](/docs/guides/uninstall/)) fails, you may manually delete OSM resources as detailed below.
 
 Set environment variables for your mesh:
 ```console

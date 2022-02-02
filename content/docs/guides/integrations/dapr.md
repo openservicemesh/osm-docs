@@ -307,5 +307,5 @@ This document walks you through the steps of getting Dapr working with OSM on a 
     4. To remove OSM's cluster wide resources after uninstallation, run the following command. See the [uninstall guide](/docs/guides/uninstall/) for more context and information.
 
        ```console
-       $ osm uninstall cluster-wide-resources
+       $ osm uninstall mesh --delete-cluster-wide-resources
        ```

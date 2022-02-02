@@ -27,10 +27,10 @@ osm uninstall mesh
 
 ## Uninstall OSM cluster-wide resources
 
-To uninstall OSM cluster-wide resources, use `osm uninstall cluster-wide-resources`.
+To uninstall OSM cluster-wide resources, use `osm uninstall mesh --delete-cluster-wide-resources`.
 
 ```bash
-osm uninstall cluster-wide-resources
+osm uninstall mesh --delete-cluster-wide-resources
 ```
 
 For more details about uninstalling OSM, see the [uninstallation guide](/docs/guides/uninstall/).
