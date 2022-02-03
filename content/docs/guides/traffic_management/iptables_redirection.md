@@ -50,11 +50,15 @@ OSM leverages four chains to perform traffic interception and redirection:
 
 Each of the chains above are programmed with rules to intercept and redirect application traffic via the Envoy proxy sidecar.
 
-### Global outbound IP range exclusions
+## Outbound IP range exclusions
 
 Outbound TCP based traffic from applications is by default intercepted using the `iptables` rules programmed by OSM, and redirected to the Envoy proxy sidecar. In some cases, it might be desirable to not subject certain IP ranges to be redirected and routed by the Envoy proxy sidecar based on service mesh policies. A common use case to exclude IP ranges is to not route non-application logic based traffic via the Envoy proxy, such as traffic destined to the Kubernetes API server, or traffic destined to a cloud provider's instance metadata service. In such scenarios, excluding certain IP ranges from being subject to service mesh traffic routing policies becomes necessary.
 
-OSM provides a means to specify a global list of IP ranges to exclude from outbound traffic interception in the following ways:
+Outbound IP ranges can be excluded at a global mesh scope or per pod scope.
+
+### 1. Global outbound IP range exclusions
+
+OSM provides the means to specify a global list of IP ranges to exclude from outbound traffic interception applicable to all pods in the mesh, as follows:
 
 1. During OSM install using the `--set` option:
     ```bash
@@ -62,25 +66,73 @@ OSM provides a means to specify a global list of IP ranges to exclude from outbo
     osm install --set="osm.outboundIPRangeExclusionList={1.1.1.1/32,2.2.2.2/24}
     ```
 
-1. By setting the `outboundIPRangeExclusionList` key in the `osm-mesh-config` resource:
+1. By setting the `outboundIPRangeExclusionList` field in the `osm-mesh-config` resource:
     ```bash
     ## Assumes OSM is installed in the osm-system namespace
     kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"outboundIPRangeExclusionList":["1.1.1.1/32", "2.2.2.2/24"]}}}'  --type=merge
     ```
 
-   When IP ranges are set for exclusion post-install, make sure to restart the relevant pods in monitored namespaces for this change to take effect.
+   When IP ranges are set for exclusion post-install, make sure to restart the pods in monitored namespaces for this change to take effect.
 
-Excluded IP ranges are stored in the `osm-mesh-config` `MeshConfig` custom resource and are read at the time of sidecar injection by `osm-injector`. These dynamically configurable IP ranges are programmed by the init container along with the static rules used to intercept and redirect traffic via the Envoy proxy sidecar. Excluded IP ranges will not be intercepted for traffic redirection to the Envoy proxy sidecar. Refer to the [outbound IP range exclusion demo](/docs/demos/outbound_ip_exclusion) to learn more.
+Globally excluded IP ranges are stored in the `osm-mesh-config` `MeshConfig` custom resource and are read at the time of sidecar injection by `osm-injector`. These dynamically configurable IP ranges are programmed by the init container along with the static rules used to intercept and redirect traffic via the Envoy proxy sidecar. Excluded IP ranges will not be intercepted for traffic redirection to the Envoy proxy sidecar. Refer to the [outbound IP range exclusion demo](/docs/demos/outbound_ip_exclusion) to learn more.
 
-### Outbound port exclusions
+### 2. Pod scoped outbound IP range exclusions
+
+Outbound IP range exclusions can be configured at pod scope by annotating the pod to specify a comma separated list of IP CIDR ranges as `openservicemesh.io/outbound-ip-range-exclusion-list=<comma separated list of IP CIDRs>`.
+
+```bash
+# To exclude the IP ranges 10.244.0.0/16 and 10.96.0.0/16 from outbound interception on the pod
+kubectl annotate pod <pod> openservicemesh.io/outbound-ip-range-exclusion-list="10.244.0.0/16,10.96.0.0/16"
+```
+
+When IP ranges are annotated post pod creation, make sure to restart the corresponding pods for this change to take effect.
+
+## Outbound IP range inclusions
+
+Outbound TCP based traffic from applications is by default intercepted using the `iptables` rules programmed by OSM, and redirected to the Envoy proxy sidecar. In some cases, it might be desirable to only subject certain IP ranges to be redirected and routed by the Envoy proxy sidecar based on service mesh policies, and have remaining traffic not proxied to the sidecar. In such scenarios, inclusion IP ranges can be specified.
+
+Outbound inclusion IP ranges can be specified at a global mesh scope or per pod scope.
+
+### 1. Global outbound IP range inclusions
+
+OSM provides the means to specify a global list of IP ranges to include for outbound traffic interception applicable to all pods in the mesh, as follows:
+
+1. During OSM install using the `--set` option:
+    ```bash
+    # To include the IP ranges 1.1.1.1/32 and 2.2.2.2/24 for outbound interception
+    osm install --set="osm.outboundIPRangeInclusionList={1.1.1.1/32,2.2.2.2/24}
+    ```
+
+1. By setting the `outboundIPRangeInclusionList` field in the `osm-mesh-config` resource:
+    ```bash
+    ## Assumes OSM is installed in the osm-system namespace
+    kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"outboundIPRangeInclusionList":["1.1.1.1/32", "2.2.2.2/24"]}}}'  --type=merge
+    ```
+
+   When IP ranges are set for inclusion post-install, make sure to restart the pods in monitored namespaces for this change to take effect.
+
+Globally included IP ranges are stored in the `osm-mesh-config` `MeshConfig` custom resource and are read at the time of sidecar injection by `osm-injector`. These dynamically configurable IP ranges are programmed by the init container along with the static rules used to intercept and redirect traffic via the Envoy proxy sidecar. IP addresses outside the specified inclusion IP ranges will not be intercepted for traffic redirection to the Envoy proxy sidecar.
+
+### 2. Pod scoped outbound IP range inclusions
+
+Outbound IP range inclusions can be configured at pod scope by annotating the pod to specify a comma separated list of IP CIDR ranges as `openservicemesh.io/outbound-ip-range-inclusion-list=<comma separated list of IP CIDRs>`.
+
+```bash
+# To include the IP ranges 10.244.0.0/16 and 10.96.0.0/16 for outbound interception on the pod
+kubectl annotate pod <pod> openservicemesh.io/outbound-ip-range-inclusion-list="10.244.0.0/16,10.96.0.0/16"
+```
+
+When IP ranges are annotated post pod creation, make sure to restart the corresponding pods for this change to take effect.
+
+## Outbound port exclusions
 
 Outbound TCP based traffic from applications is by default intercepted using the `iptables` rules programmed by OSM, and redirected to the Envoy proxy sidecar. In some cases, it might be desirable to not subject certain ports to be redirected and routed by the Envoy proxy sidecar based on service mesh policies. A common use case to exclude ports is to not route non-application logic based traffic via the Envoy proxy, such as control plane traffic. In such scenarios, excluding certain ports from being subject to service mesh traffic routing policies becomes necessary.
 
-#### 1. Global outbound port exclusions
+Outbound ports can be excluded at a global mesh scope or per pod scope.
 
-In this set up the port exclusions would be applicable to all pods in the mesh.
+### 1. Global outbound port exclusions
 
-OSM provides the means to specify a global list of ports to exclude from outbound traffic interception by the sidecar in the following ways:
+OSM provides the means to specify a global list of ports to exclude from outbound traffic interception applicable to all pods in the mesh, as follows:
 
 1. During OSM install using the `--set` option:
     ```bash
@@ -88,33 +140,34 @@ OSM provides the means to specify a global list of ports to exclude from outboun
     osm install --set="osm.outboundPortExclusionList={6379,7070}
     ```
 
-1. By setting the `outboundPortExclusionList` key in the `osm-mesh-config` resource:
+1. By setting the `outboundPortExclusionList` field in the `osm-mesh-config` resource:
     ```bash
     ## Assumes OSM is installed in the osm-system namespace
     kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"outboundPortExclusionList":[6379, 7070]}}}'  --type=merge
     ```
 
-   When ports are set for exclusion post-install, make sure to restart the relevant pods in monitored namespaces for this change to take effect.
+   When ports are set for exclusion post-install, make sure to restart the pods in monitored namespaces for this change to take effect.
 
-#### 2. Pod scoped outbound port exclusions
+Globally excluded ports are are stored in the `osm-mesh-config` `MeshConfig` custom resource and are read at the time of sidecar injection by `osm-injector`. These dynamically configurable ports are programmed by the init container along with the static rules used to intercept and redirect traffic via the Envoy proxy sidecar. Excluded ports will not be intercepted for traffic redirection to the Envoy proxy sidecar.
 
-OSM provides the means to specify a list of ports to exclude from outbound traffic interception at a per pod scope by annotating the pod with  `openservicemesh.io/outbound-port-exclusion-list=<comma separated list of ports>`:
+### 2. Pod scoped outbound port exclusions
+
+Outbound port exclusions can be configured at pod scope by annotating the pod with a comma separated list of ports as `openservicemesh.io/outbound-port-exclusion-list=<comma separated list of ports>`:
+
 ```bash
 # To exclude the ports 6379 and 7070 from outbound interception on the pod
 kubectl annotate pod <pod> openservicemesh.io/outbound-port-exclusion-list=6379,7070
 ```
 
-Excluded ports set globally are stored in the `osm-mesh-config` `MeshConfig` custom resource; excluded ports that are pod scoped are stored as annotations in the pod's metadata. Both of these are read and merged at the time of sidecar injection by `osm-injector`. These dynamically configurable ports are programmed by the init container along with the static rules used to intercept and redirect traffic via the Envoy proxy sidecar. Excluded ports will not be intercepted for traffic redirection to the Envoy proxy sidecar.
+When ports are annotated post pod creation, make sure to restart the corresponding pods for this change to take effect.
 
-### Inbound port exclusions
+## Inbound port exclusions
 
 Similar to outbound port exclusions described above, inbound traffic on pods can be excluded from being proxied to the sidecar based on the ports the traffic is directed to.
 
-#### 1. Global inbound port exclusions
+### 1. Global inbound port exclusions
 
-In this set up the port exclusions would be applicable to all pods in the mesh.
-
-OSM provides the means to specify a global list of ports to exclude from inbound traffic interception by the sidecar in the following ways:
+OSM provides the means to specify a global list of ports to exclude from inbound traffic interception applicable to all pods in the mesh, as follows:
 
 1. During OSM install using the `--set` option:
     ```bash
@@ -122,49 +175,21 @@ OSM provides the means to specify a global list of ports to exclude from inbound
     osm install --set="osm.inboundPortExclusionList={6379,7070}
     ```
 
-1. By setting the `inboundPortExclusionList` key in the `osm-mesh-config` resource:
+1. By setting the `inboundPortExclusionList` field in the `osm-mesh-config` resource:
     ```bash
     ## Assumes OSM is installed in the osm-system namespace
     kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"inboundPortExclusionList":[6379, 7070]}}}'  --type=merge
     ```
 
-   When ports are set for exclusion post-install, make sure to restart the relevant pods in monitored namespaces for this change to take effect.
+   When ports are set for exclusion post-install, make sure to restart the pods in monitored namespaces for this change to take effect.
 
-#### 2. Pod scoped inbound port exclusions
+### 2. Pod scoped inbound port exclusions
 
-OSM provides the means to specify a list of ports to exclude from inbound traffic interception at a per pod scope by annotating the pod with  `openservicemesh.io/inbound-port-exclusion-list=<comma separated list of ports>`:
+Inbound port exclusions can be configured at pod scope by annotating the pod with a comma separated list of ports as `openservicemesh.io/inbound-port-exclusion-list=<comma separated list of ports>`:
+
 ```bash
 # To exclude the ports 6379 and 7070 from inbound sidecar interception on the pod
 kubectl annotate pod <pod> openservicemesh.io/inbound-port-exclusion-list=6379,7070
 ```
 
-## Iptables configuration
-
-Iptables rules are programmed by OSM's init container when a pod is created in the mesh. The rules are on the pod via a set of `iptables` commands run by the init container.
-
-The following snippet from the demo `curl` client's init container spec shows the set of `iptables` commands along with exclusion rules for reference.
-
-```console
-Init Containers:
-  osm-init:
-    Container ID:  containerd://80f86af7bc64b7a70f7f2bf64242d735d857559a79cd97e206513368130902f1
-    Image:         openservicemesh/init:{{< param osm_version >}}
-    Image ID:      docker.io/openservicemesh/init@sha256:eb1f6ab02aeaaba8f58aaa29406b1653d7a3983958ea040c2af8845136ed786c
-    Port:          <none>
-    Host Port:     <none>
-    Command:
-      /bin/sh
-    Args:
-      -c
-      iptables -t nat -N PROXY_INBOUND && iptables -t nat -N PROXY_IN_REDIRECT && iptables -t nat -N PROXY_OUTPUT && iptables -t nat -N PROXY_REDIRECT && iptables -t nat -A PROXY_REDIRECT -p tcp -j REDIRECT --to-port 15001 && iptables -t nat -A PROXY_REDIRECT -p tcp --dport 15000 -j ACCEPT && iptables -t nat -A OUTPUT -p tcp -j PROXY_OUTPUT && iptables -t nat -A PROXY_OUTPUT -m owner --uid-owner 1500 -j RETURN && iptables -t nat -A PROXY_OUTPUT -d 127.0.0.1/32 -j RETURN && iptables -t nat -A PROXY_OUTPUT -j PROXY_REDIRECT && iptables -t nat -A PROXY_IN_REDIRECT -p tcp -j REDIRECT --to-port 15003 && iptables -t nat -A PREROUTING -p tcp -j PROXY_INBOUND && iptables -t nat -A PROXY_INBOUND -p tcp --dport 15010 -j RETURN && iptables -t nat -A PROXY_INBOUND -p tcp --dport 15901 -j RETURN && iptables -t nat -A PROXY_INBOUND -p tcp --dport 15902 -j RETURN && iptables -t nat -A PROXY_INBOUND -p tcp --dport 15903 -j RETURN && iptables -t nat -A PROXY_INBOUND -p tcp -j PROXY_IN_REDIRECT && iptables -t nat -I PROXY_OUTPUT -d 54.91.118.50/32 -j RETURN
-    State:          Terminated
-      Reason:       Completed
-      Exit Code:    0
-      Started:      Thu, 18 Mar 2021 16:14:30 -0700
-      Finished:     Thu, 18 Mar 2021 16:14:30 -0700
-    Ready:          True
-    Restart Count:  0
-    Environment:    <none>
-    Mounts:
-      /var/run/secrets/kubernetes.io/serviceaccount from curl-token-c4jv9 (ro)
-```
+When ports are annotated post pod creation, make sure to restart the corresponding pods for this change to take effect.
