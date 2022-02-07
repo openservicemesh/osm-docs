@@ -97,7 +97,7 @@ If you are running OSM in a cluster with PSPs enabled, pass in `--set osm.pspEna
 
 ### Enable Reconciler in OSM
 
-If you wish to enable a reconcielr in OSM, pass in `--set osm.enableReconciler=true` to your `osm install` or `helm install` CLI command. More information on the reconciler can be found in the [Reconciler Guide](/docs/guides/reconciler).
+If you wish to enable a reconciler in OSM, pass in `--set osm.enableReconciler=true` to your `osm install` or `helm install` CLI command. More information on the reconciler can be found in the [Reconciler Guide](/docs/guides/reconciler).
 
 ## Inspect OSM Components
 
