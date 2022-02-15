@@ -427,7 +427,7 @@ server: envoy
 
 ## Known issues
 
-- [#2207](https://github.com/openservicemesh/osm/issues/2207)
+- [#4434](https://github.com/openservicemesh/osm/issues/4434)
 
 ## Troubleshooting
 
