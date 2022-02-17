@@ -75,6 +75,9 @@ osm install --set=osm.<control_plane_pod>.autoScale.enable=true
 
 > Note: control_plane_pod can be `osmController` or `injector`
 
+Pod anti-affinities applied to the control plane pods' deployments will ensure that there is better resilience in the distribution of pods across nodes.
+If multiple replicas  of a pod exist, they will schedule on different nodes if possible.
+
 Additional parameters for HPA:
 
 - `minReplicas` (int): Minimum number of pods that the autoscaler can set (Allowed values: 1-10)
