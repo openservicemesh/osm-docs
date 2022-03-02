@@ -84,7 +84,7 @@ project_home = "https://openservicemesh.io/"
 # Version params
 osm_branch = "main"
 osm_version = "v0.11.0"
-envoy_version = "v1.19.1"
+envoy_version = "v1.19.3"
 
 [[params.versions]]
   version = "v1.0 (latest)"
