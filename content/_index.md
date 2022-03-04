@@ -13,3 +13,4 @@ To learn more about OSM:
 * Go through all the [getting started articles](/docs/getting_started/) to install OSM and run a sample application.
 * Read an [overview of OSM](/docs/overview/about/) and more about [the design of its components](/docs/overview/osm_components/).
 * Run additional example scenarios from the [Demos](/docs/demos/) section.
+* Consider using the [OSM add-on](https://docs.microsoft.com/azure/aks/open-service-mesh-about) with an [Azure Kubernetes Service cluster](https://docs.microsoft.com/azure/aks).
