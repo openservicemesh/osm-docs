@@ -223,6 +223,7 @@ annotations:
 | osm_proxy_response_send_error_count   | Count     |                        | Number of responses that errored when being set to proxies                  |
 | osm_proxy_config_update_time          | Histogram | resource_type, success | Histogram to track time spent for proxy configuration                       |
 | osm_proxy_broadcast_event_count       | Count     |                        | Number of ProxyBroadcast events published by the OSM controller             |
+| osm_proxy_xds_request_count           | Count     | common_name, type      | Number of XDS requests made by proxies                                      |
 | osm_cert_issued_count                 | Count     |                        | Total number of XDS certificates issued to proxies                          |
 | osm_cert_issued_time                  | Histogram |                        | Histogram to track time spent to issue xds certificate                      |
 | osm_injector_injector_sidecar_count   | Count     |                        | Total number of injector webhook calls                                      |
