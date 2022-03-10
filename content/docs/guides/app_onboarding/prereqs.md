@@ -12,7 +12,13 @@ weight: 1
 
 * Do not run applications with the user ID (UID) value of **1500**. This is **reserved** for the Envoy proxy sidecar container injected into pods by OSM's sidecar injector.
 * If security context `runAsNonRoot` is set to `true` at the pod level, a `runAsUser` value must be provided either for the pod
-or for each container. If the UID is omitted, application containers may attempt to run as root user by default, causing conflict with the pod's security context.
+or for each container. For example:
+  ```yaml
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 1200
+  ```
+    If the UID is omitted, application containers may attempt to run as root user by default, causing conflict with the pod's security context.
 * Additional capabilities are not required.
 
 > Note: the OSM init container is programmed to run as root and add capability `NET_ADMIN` as it requires these security
