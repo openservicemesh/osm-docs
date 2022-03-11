@@ -27,6 +27,9 @@ Following are the port numbers that are reserved for use by OSM:
 1. `15902`: used by Envoy to serve rewritten HTTP readiness probes
 1. `15903`: used by Envoy to serve rewritten HTTP startup probes
 
+The following are the port numbers that are reserved for use by OSM and allow traffic to bypass Envoy:
+1. `15904`: used by `osm-healthcheck` to serve `tcpSocket` health probes rewritten to `httpGet` health probes
+
 ### Application User ID (UID) reserved for traffic redirection
 
 OSM reserves the user ID (UID) value `1500` for the Envoy proxy sidecar container. This user ID is of utmost importance while performing traffic interception and redirection to ensure the redirection does not result in a loop. The user ID value `1500` is used to program redirection rules to ensure redirected traffic from Envoy is not redirected back to itself!
