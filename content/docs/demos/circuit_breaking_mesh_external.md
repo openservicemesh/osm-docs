@@ -217,7 +217,7 @@ The following demo shows a load-testing client [fortio](https://github.com/forti
 
 1. Examine the `Envoy` sidecar stats to see statistics pertaining to the requests that tripped the circuit breaker.
     ```console
-    $ osm proxy get stats $fortio_pod -n client | grep httpbin.*pending
+    $ osm proxy get stats $fortio_pod -n client | grep 'httpbin.*pending'
     cluster.httpbin_httpbin_svc_cluster_local_14001.circuit_breakers.default.remaining_pending: 1
     cluster.httpbin_httpbin_svc_cluster_local_14001.circuit_breakers.default.rq_pending_open: 0
     cluster.httpbin_httpbin_svc_cluster_local_14001.circuit_breakers.high.rq_pending_open: 0
