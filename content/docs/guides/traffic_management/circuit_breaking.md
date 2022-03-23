@@ -30,6 +30,8 @@ The following circuit breaking configurations are supported:
 - `Maximum active retries`: The maximum number of active retries that a client is allowed to make to the upstream host. This setting can be configured using the `http.maxRetries` field and is only applicable to HTTP traffic. If not specified, the default is `4294967295` (2^32 - 1).
 
 
-To learn more about configuring circuit breaking for traffic to in-cluster destinations, refer to the [Circuit breaking for destinations within the mesh](/docs/demos/circuit_breaking_mesh_internal) demo guide.
+To learn more about configuring circuit breaking, refer to the following demo guides:
+- [Circuit breaking for destinations within the mesh](/docs/demos/circuit_breaking_mesh_internal)
+- [Circuit breaking for destinations external to the mesh](/docs/demos/circuit_breaking_mesh_external)
 
 [1]: /docs/api_reference/policy/v1alpha1/#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingSpec
