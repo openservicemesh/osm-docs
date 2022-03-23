@@ -72,6 +72,54 @@ TLSSpec
 </tr>
 </tbody>
 </table>
+<h3 id="policy.openservicemesh.io/v1alpha1.ConnectionSettingsSpec">ConnectionSettingsSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingSpec">UpstreamTrafficSettingSpec</a>)
+</p>
+<p>
+<p>ConnectionSettingsSpec defines the connection settings for an
+upstream host.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>tcp</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.TCPConnectionSettings">
+TCPConnectionSettings
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>TCP specifies the TCP level connection settings.
+Applies to both TCP and HTTP connections.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>http</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.HTTPConnectionSettings">
+HTTPConnectionSettings
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>HTTP specifies the HTTP level connection settings.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="policy.openservicemesh.io/v1alpha1.Egress">Egress
 </h3>
 <p>
@@ -339,6 +387,84 @@ The destination port of the traffic is matched against the list of Ports specifi
 <td>
 <em>(Optional)</em>
 <p>Matches defines the list of object references the Egress policy should match on.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.HTTPConnectionSettings">HTTPConnectionSettings
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.ConnectionSettingsSpec">ConnectionSettingsSpec</a>)
+</p>
+<p>
+<p>HTTPConnectionSettings defines the HTTP connection settings for an
+upstream host.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>maxRequests</code><br/>
+<em>
+uint32
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>MaxRequests specifies the maximum number of parallel requests
+allowed to the upstream host.
+Defaults to 4294967295 (2^32 - 1) if not specified.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>maxRequestsPerConnection</code><br/>
+<em>
+uint32
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>MaxRequestsPerConnection specifies the maximum number of requests
+per connection allowed to the upstream host.
+Defaults to unlimited if not specified.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>maxPendingRequests</code><br/>
+<em>
+uint32
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>MaxPendingRequests specifies the maximum number of pending HTTP
+requests allowed to the upstream host. For HTTP/2 connections,
+if <code>maxRequestsPerConnection</code> is not configured, all requests will
+be multiplexed over the same connection so this circuit breaker
+will only be hit when no connection is already established.
+Defaults to 4294967295 (2^32 - 1) if not specified.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>maxRetries</code><br/>
+<em>
+uint32
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>MaxRetries specifies the maximum number of parallel retries
+allowed to the upstream host.
+Defaults to 4294967295 (2^32 - 1) if not specified.</p>
 </td>
 </tr>
 </tbody>
@@ -642,6 +768,315 @@ string
 </tr>
 </tbody>
 </table>
+<h3 id="policy.openservicemesh.io/v1alpha1.Retry">Retry
+</h3>
+<p>
+<p>Retry is the type used to represent a Retry policy.
+A Retry policy authorizes retries to failed attempts for outbound traffic
+from one service source to one or more destination services.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>metadata</code><br/>
+<em>
+<a href="https://v1-20.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#objectmeta-v1-meta">
+Kubernetes meta/v1.ObjectMeta
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Object&rsquo;s metadata</p>
+Refer to the Kubernetes API documentation for the fields of the
+<code>metadata</code> field.
+</td>
+</tr>
+<tr>
+<td>
+<code>spec</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.RetrySpec">
+RetrySpec
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Spec is the Retry policy specification</p>
+<br/>
+<br/>
+<table>
+<tr>
+<td>
+<code>source</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.RetrySrcDstSpec">
+RetrySrcDstSpec
+</a>
+</em>
+</td>
+<td>
+<p>Source defines the source the Retry policy applies to.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>destinations</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.RetrySrcDstSpec">
+[]RetrySrcDstSpec
+</a>
+</em>
+</td>
+<td>
+<p>Destinations defines the list of destinations the Retry policy applies to.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>retryPolicy</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.RetryPolicySpec">
+RetryPolicySpec
+</a>
+</em>
+</td>
+<td>
+<p>RetryPolicy defines the retry policy the Retry policy applies.</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.RetryPolicySpec">RetryPolicySpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.RetrySpec">RetrySpec</a>)
+</p>
+<p>
+<p>RetryPolicySpec is the type used to represent the retry policy specified in the Retry policy specification.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>retryOn</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>RetryOn defines the policies to retry on, delimited by comma.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>perTryTimeout</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>PerTryTimeout defines the time allowed for a retry before it&rsquo;s considered a failed attempt.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>numRetries</code><br/>
+<em>
+int
+</em>
+</td>
+<td>
+<p>NumRetries defines the max number of retries to attempt.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>retryBackoffInterval</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>RetryBackoffBaseInterval defines the base interval for exponential retry backoff.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.RetrySpec">RetrySpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.Retry">Retry</a>)
+</p>
+<p>
+<p>RetrySpec is the type used to represent the Retry policy specification.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>source</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.RetrySrcDstSpec">
+RetrySrcDstSpec
+</a>
+</em>
+</td>
+<td>
+<p>Source defines the source the Retry policy applies to.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>destinations</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.RetrySrcDstSpec">
+[]RetrySrcDstSpec
+</a>
+</em>
+</td>
+<td>
+<p>Destinations defines the list of destinations the Retry policy applies to.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>retryPolicy</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.RetryPolicySpec">
+RetryPolicySpec
+</a>
+</em>
+</td>
+<td>
+<p>RetryPolicy defines the retry policy the Retry policy applies.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.RetrySrcDstSpec">RetrySrcDstSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.RetrySpec">RetrySpec</a>)
+</p>
+<p>
+<p>RetrySrcDstSpec is the type used to represent the Destination in the list of Destinations and the Source
+specified in the Retry policy specification.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>kind</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Kind defines the kind for the Src/Dst in the Retry policy.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>name</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Name defines the name of the Src/Dst for the given Kind.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>namespace</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Namespace defines the namespace for the given Src/Dst.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.TCPConnectionSettings">TCPConnectionSettings
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.ConnectionSettingsSpec">ConnectionSettingsSpec</a>)
+</p>
+<p>
+<p>TCPConnectionSettings defines the TCP connection settings for an
+upstream host.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>maxConnections</code><br/>
+<em>
+uint32
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>MaxConnections specifies the maximum number of TCP connections
+allowed to the upstream host.
+Defaults to 4294967295 (2^32 - 1) if not specified.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>connectTimeout</code><br/>
+<em>
+<a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration">
+Kubernetes meta/v1.Duration
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>ConnectTimeout specifies the TCP connection timeout.
+Defaults to 5s if not specified.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="policy.openservicemesh.io/v1alpha1.TLSSpec">TLSSpec
 </h3>
 <p>
@@ -684,8 +1119,206 @@ certificate presented by the client.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="policy.openservicemesh.io/v1alpha1.UpstreamTrafficSetting">UpstreamTrafficSetting
+</h3>
+<p>
+<p>UpstreamTrafficSetting defines the settings applicable to traffic destined
+to an upstream host.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>metadata</code><br/>
+<em>
+<a href="https://v1-20.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#objectmeta-v1-meta">
+Kubernetes meta/v1.ObjectMeta
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Object&rsquo;s metadata</p>
+Refer to the Kubernetes API documentation for the fields of the
+<code>metadata</code> field.
+</td>
+</tr>
+<tr>
+<td>
+<code>spec</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingSpec">
+UpstreamTrafficSettingSpec
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Spec is the UpstreamTrafficSetting policy specification</p>
+<br/>
+<br/>
+<table>
+<tr>
+<td>
+<code>host</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Host the upstream traffic is directed to.
+Must either be an FQDN corresponding to the upstream service
+or the name of the upstream service. If only the service name
+is specified, the FQDN is derived from the service name and
+the namespace of the UpstreamTrafficSetting rule.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>connectionSettings</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.ConnectionSettingsSpec">
+ConnectionSettingsSpec
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>ConnectionSettings specifies the connection settings for traffic
+directed to the upstream host.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>status</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingStatus">
+UpstreamTrafficSettingStatus
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Status is the status of the UpstreamTrafficSetting resource.</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingSpec">UpstreamTrafficSettingSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSetting">UpstreamTrafficSetting</a>)
+</p>
+<p>
+<p>UpstreamTrafficSettingSpec defines the upstream traffic setting specification.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>host</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Host the upstream traffic is directed to.
+Must either be an FQDN corresponding to the upstream service
+or the name of the upstream service. If only the service name
+is specified, the FQDN is derived from the service name and
+the namespace of the UpstreamTrafficSetting rule.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>connectionSettings</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.ConnectionSettingsSpec">
+ConnectionSettingsSpec
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>ConnectionSettings specifies the connection settings for traffic
+directed to the upstream host.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>status</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingStatus">
+UpstreamTrafficSettingStatus
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Status is the status of the UpstreamTrafficSetting resource.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingStatus">UpstreamTrafficSettingStatus
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingSpec">UpstreamTrafficSettingSpec</a>)
+</p>
+<p>
+<p>UpstreamTrafficSettingStatus defines the status of an UpstreamTrafficSetting resource.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>currentStatus</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>CurrentStatus defines the current status of an UpstreamTrafficSetting resource.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>reason</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Reason defines the reason for the current status of an UpstreamTrafficSetting resource.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <hr/>
 <p><em>
 Generated with <code>gen-crd-api-reference-docs</code>
-on git commit <code>386d92a1</code>.
+on git commit <code>7e0674c3</code>.
 </em></p>
