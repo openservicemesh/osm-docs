@@ -10,7 +10,7 @@ This guide demonstrates a client within the service mesh accessing destinations 
 
 ## Prerequisites
 
-- Kubernetes cluster running Kubernetes v1.19.0 or greater.
+- Kubernetes cluster running Kubernetes {{< param min_k8s_version >}} or greater.
 - Have OSM installed.
 - Have `kubectl` available to interact with the API server.
 - Have `osm` CLI available for managing the service mesh.

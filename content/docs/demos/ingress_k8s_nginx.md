@@ -10,7 +10,7 @@ This guide will demonstrate how to configure HTTP and HTTPS ingress to a service
 
 ## Prerequisites
 
-- Kubernetes cluster running Kubernetes v1.19.0 or greater.
+- Kubernetes cluster running Kubernetes {{< param min_k8s_version >}} or greater.
 - Have `kubectl` available to interact with the API server.
 - Have OSM version >= v0.10.0 installed.
 - Have Kubernetes Nginx Ingress Controller installed. Refer to the [deployment guide](https://kubernetes.github.io/ingress-nginx/deploy/) to install it.
