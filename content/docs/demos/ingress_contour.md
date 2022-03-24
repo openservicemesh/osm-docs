@@ -10,7 +10,7 @@ OSM provides the option to use [Contour](https://projectcontour.io) ingress cont
 
 ## Prerequisites
 
-- Kubernetes cluster running Kubernetes v1.19.0 or greater.
+- Kubernetes cluster running Kubernetes {{< param min_k8s_version >}} or greater.
 - Have `kubectl` available to interact with the API server.
 - No existing installation of OSM. Any existing installation must first be uninstalled prior to proceeding with this demo.
 - Have `osm` or `Helm 3` CLI available for installing OSM and Contour.

@@ -13,7 +13,7 @@ The following article shows you how to create an example bring your own (BYO) Pr
 
 ## Prerequisites
 
-- Kubernetes cluster running Kubernetes v1.19.0 or greater.
+- Kubernetes cluster running Kubernetes {{< param min_k8s_version >}} or greater.
 - OSM installed on the Kubernetes cluster.
 - `kubectl` installed and access to the cluster's API server.
 - `osm` CLI installed.
