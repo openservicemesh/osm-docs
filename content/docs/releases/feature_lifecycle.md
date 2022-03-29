@@ -53,6 +53,7 @@ The following sections list the features supported in OSM and their versioning s
 | Egress policies                      | Stable |
 | Ingress policies                     | Stable |
 | Ingress gateway (Contour)            | Beta   |
+| Circuit breaking                     | Alpha  |
 
 <br/>
 
