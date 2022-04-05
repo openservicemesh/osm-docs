@@ -1,25 +1,25 @@
 ---
-title: "Config v1alpha1 API Reference"
-description: "Config v1alpha1 API reference documentation."
+title: "Config v1alpha2 API Reference"
+description: "Config v1alpha2 API reference documentation."
 type: docs
 ---
 
 <p>Packages:</p>
 <ul>
 <li>
-<a href="#config.openservicemesh.io%2fv1alpha1">config.openservicemesh.io/v1alpha1</a>
+<a href="#config.openservicemesh.io%2fv1alpha2">config.openservicemesh.io/v1alpha2</a>
 </li>
 </ul>
-<h2 id="config.openservicemesh.io/v1alpha1">config.openservicemesh.io/v1alpha1</h2>
+<h2 id="config.openservicemesh.io/v1alpha2">config.openservicemesh.io/v1alpha2</h2>
 <div>
-<p>Package v1alpha1 is the v1alpha1 version of the API.</p>
+<p>Package v1alpha2 is the v1alpha2 version of the API.</p>
 </div>
 Resource Types:
 <ul></ul>
-<h3 id="config.openservicemesh.io/v1alpha1.CertificateSpec">CertificateSpec
+<h3 id="config.openservicemesh.io/v1alpha2.CertificateSpec">CertificateSpec
 </h3>
 <p>
-(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfigSpec">MeshConfigSpec</a>)
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
 <div>
 <p>CertificateSpec is the type to reperesent OSM&rsquo;s certificate management configuration.</p>
@@ -58,7 +58,7 @@ int
 <td>
 <code>ingressGateway</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.IngressGatewayCertSpec">
+<a href="#config.openservicemesh.io/v1alpha2.IngressGatewayCertSpec">
 IngressGatewayCertSpec
 </a>
 </em>
@@ -70,10 +70,10 @@ IngressGatewayCertSpec
 </tr>
 </tbody>
 </table>
-<h3 id="config.openservicemesh.io/v1alpha1.ClusterSpec">ClusterSpec
+<h3 id="config.openservicemesh.io/v1alpha2.ClusterSpec">ClusterSpec
 </h3>
 <p>
-(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MultiClusterServiceSpec">MultiClusterServiceSpec</a>)
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MultiClusterServiceSpec">MultiClusterServiceSpec</a>)
 </p>
 <div>
 <p>ClusterSpec is the type used to represent a remote cluster in multicluster scenarios.</p>
@@ -132,10 +132,10 @@ int
 </tr>
 </tbody>
 </table>
-<h3 id="config.openservicemesh.io/v1alpha1.ExternalAuthzSpec">ExternalAuthzSpec
+<h3 id="config.openservicemesh.io/v1alpha2.ExternalAuthzSpec">ExternalAuthzSpec
 </h3>
 <p>
-(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.TrafficSpec">TrafficSpec</a>)
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.TrafficSpec">TrafficSpec</a>)
 </p>
 <div>
 <p>ExternalAuthzSpec is a type to represent external authorization configuration.</p>
@@ -218,10 +218,10 @@ response against the external authorization endpoint.</p>
 </tr>
 </tbody>
 </table>
-<h3 id="config.openservicemesh.io/v1alpha1.FeatureFlags">FeatureFlags
+<h3 id="config.openservicemesh.io/v1alpha2.FeatureFlags">FeatureFlags
 </h3>
 <p>
-(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfigSpec">MeshConfigSpec</a>)
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
 <div>
 <p>FeatureFlags is a type to represent OSM&rsquo;s feature flags.</p>
@@ -326,10 +326,10 @@ bool
 </tr>
 </tbody>
 </table>
-<h3 id="config.openservicemesh.io/v1alpha1.IngressGatewayCertSpec">IngressGatewayCertSpec
+<h3 id="config.openservicemesh.io/v1alpha2.IngressGatewayCertSpec">IngressGatewayCertSpec
 </h3>
 <p>
-(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.CertificateSpec">CertificateSpec</a>)
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.CertificateSpec">CertificateSpec</a>)
 </p>
 <div>
 <p>IngressGatewayCertSpec is the type to represent the certificate specification for an ingress gateway.</p>
@@ -379,7 +379,7 @@ Kubernetes core/v1.SecretReference
 </tr>
 </tbody>
 </table>
-<h3 id="config.openservicemesh.io/v1alpha1.MeshConfig">MeshConfig
+<h3 id="config.openservicemesh.io/v1alpha2.MeshConfig">MeshConfig
 </h3>
 <div>
 <p>MeshConfig is the type used to represent the mesh configuration.</p>
@@ -412,7 +412,7 @@ Refer to the Kubernetes API documentation for the fields of the
 <td>
 <code>spec</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.MeshConfigSpec">
+<a href="#config.openservicemesh.io/v1alpha2.MeshConfigSpec">
 MeshConfigSpec
 </a>
 </em>
@@ -427,7 +427,7 @@ MeshConfigSpec
 <td>
 <code>sidecar</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.SidecarSpec">
+<a href="#config.openservicemesh.io/v1alpha2.SidecarSpec">
 SidecarSpec
 </a>
 </em>
@@ -440,7 +440,7 @@ SidecarSpec
 <td>
 <code>traffic</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.TrafficSpec">
+<a href="#config.openservicemesh.io/v1alpha2.TrafficSpec">
 TrafficSpec
 </a>
 </em>
@@ -453,7 +453,7 @@ TrafficSpec
 <td>
 <code>observability</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.ObservabilitySpec">
+<a href="#config.openservicemesh.io/v1alpha2.ObservabilitySpec">
 ObservabilitySpec
 </a>
 </em>
@@ -466,7 +466,7 @@ ObservabilitySpec
 <td>
 <code>certificate</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.CertificateSpec">
+<a href="#config.openservicemesh.io/v1alpha2.CertificateSpec">
 CertificateSpec
 </a>
 </em>
@@ -479,7 +479,7 @@ CertificateSpec
 <td>
 <code>featureFlags</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.FeatureFlags">
+<a href="#config.openservicemesh.io/v1alpha2.FeatureFlags">
 FeatureFlags
 </a>
 </em>
@@ -493,10 +493,10 @@ FeatureFlags
 </tr>
 </tbody>
 </table>
-<h3 id="config.openservicemesh.io/v1alpha1.MeshConfigSpec">MeshConfigSpec
+<h3 id="config.openservicemesh.io/v1alpha2.MeshConfigSpec">MeshConfigSpec
 </h3>
 <p>
-(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfig">MeshConfig</a>)
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshConfig">MeshConfig</a>)
 </p>
 <div>
 <p>MeshConfigSpec is the spec for OSM&rsquo;s configuration.</p>
@@ -513,7 +513,7 @@ FeatureFlags
 <td>
 <code>sidecar</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.SidecarSpec">
+<a href="#config.openservicemesh.io/v1alpha2.SidecarSpec">
 SidecarSpec
 </a>
 </em>
@@ -526,7 +526,7 @@ SidecarSpec
 <td>
 <code>traffic</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.TrafficSpec">
+<a href="#config.openservicemesh.io/v1alpha2.TrafficSpec">
 TrafficSpec
 </a>
 </em>
@@ -539,7 +539,7 @@ TrafficSpec
 <td>
 <code>observability</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.ObservabilitySpec">
+<a href="#config.openservicemesh.io/v1alpha2.ObservabilitySpec">
 ObservabilitySpec
 </a>
 </em>
@@ -552,7 +552,7 @@ ObservabilitySpec
 <td>
 <code>certificate</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.CertificateSpec">
+<a href="#config.openservicemesh.io/v1alpha2.CertificateSpec">
 CertificateSpec
 </a>
 </em>
@@ -565,7 +565,7 @@ CertificateSpec
 <td>
 <code>featureFlags</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.FeatureFlags">
+<a href="#config.openservicemesh.io/v1alpha2.FeatureFlags">
 FeatureFlags
 </a>
 </em>
@@ -576,7 +576,7 @@ FeatureFlags
 </tr>
 </tbody>
 </table>
-<h3 id="config.openservicemesh.io/v1alpha1.MultiClusterService">MultiClusterService
+<h3 id="config.openservicemesh.io/v1alpha2.MultiClusterService">MultiClusterService
 </h3>
 <div>
 <p>MultiClusterService is the type used to represent the multicluster configuration.
@@ -610,7 +610,7 @@ Refer to the Kubernetes API documentation for the fields of the
 <td>
 <code>spec</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.MultiClusterServiceSpec">
+<a href="#config.openservicemesh.io/v1alpha2.MultiClusterServiceSpec">
 MultiClusterServiceSpec
 </a>
 </em>
@@ -624,7 +624,7 @@ MultiClusterServiceSpec
 <td>
 <code>clusters</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.ClusterSpec">
+<a href="#config.openservicemesh.io/v1alpha2.ClusterSpec">
 []ClusterSpec
 </a>
 </em>
@@ -648,7 +648,7 @@ string
 <td>
 <code>ports</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.PortSpec">
+<a href="#config.openservicemesh.io/v1alpha2.PortSpec">
 []PortSpec
 </a>
 </em>
@@ -662,10 +662,10 @@ string
 </tr>
 </tbody>
 </table>
-<h3 id="config.openservicemesh.io/v1alpha1.MultiClusterServiceSpec">MultiClusterServiceSpec
+<h3 id="config.openservicemesh.io/v1alpha2.MultiClusterServiceSpec">MultiClusterServiceSpec
 </h3>
 <p>
-(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MultiClusterService">MultiClusterService</a>)
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MultiClusterService">MultiClusterService</a>)
 </p>
 <div>
 <p>MultiClusterServiceSpec is the type used to represent the multicluster service specification.</p>
@@ -682,7 +682,7 @@ string
 <td>
 <code>clusters</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.ClusterSpec">
+<a href="#config.openservicemesh.io/v1alpha2.ClusterSpec">
 []ClusterSpec
 </a>
 </em>
@@ -706,7 +706,7 @@ string
 <td>
 <code>ports</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.PortSpec">
+<a href="#config.openservicemesh.io/v1alpha2.PortSpec">
 []PortSpec
 </a>
 </em>
@@ -717,10 +717,10 @@ string
 </tr>
 </tbody>
 </table>
-<h3 id="config.openservicemesh.io/v1alpha1.ObservabilitySpec">ObservabilitySpec
+<h3 id="config.openservicemesh.io/v1alpha2.ObservabilitySpec">ObservabilitySpec
 </h3>
 <p>
-(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfigSpec">MeshConfigSpec</a>)
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
 <div>
 <p>ObservabilitySpec is the type to represent OSM&rsquo;s observability configurations.</p>
@@ -759,7 +759,7 @@ bool
 <td>
 <code>tracing</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.TracingSpec">
+<a href="#config.openservicemesh.io/v1alpha2.TracingSpec">
 TracingSpec
 </a>
 </em>
@@ -770,10 +770,10 @@ TracingSpec
 </tr>
 </tbody>
 </table>
-<h3 id="config.openservicemesh.io/v1alpha1.PortSpec">PortSpec
+<h3 id="config.openservicemesh.io/v1alpha2.PortSpec">PortSpec
 </h3>
 <p>
-(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MultiClusterServiceSpec">MultiClusterServiceSpec</a>)
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MultiClusterServiceSpec">MultiClusterServiceSpec</a>)
 </p>
 <div>
 <p>PortSpec contains information on service&rsquo;s port.</p>
@@ -810,10 +810,10 @@ string
 </tr>
 </tbody>
 </table>
-<h3 id="config.openservicemesh.io/v1alpha1.SidecarSpec">SidecarSpec
+<h3 id="config.openservicemesh.io/v1alpha2.SidecarSpec">SidecarSpec
 </h3>
 <p>
-(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfigSpec">MeshConfigSpec</a>)
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
 <div>
 <p>SidecarSpec is the type used to represent the specifications for the proxy sidecar.</p>
@@ -916,12 +916,56 @@ Kubernetes core/v1.ResourceRequirements
 <p>Resources defines the compute resources for the sidecar.</p>
 </td>
 </tr>
+<tr>
+<td>
+<code>tlsMinProtocolVersion</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>TLSMinProtocolVersion defines the minimum TLS protocol version that the sidecar supports. Valid TLS protocol versions are TLS_AUTO, TLSv1_0, TLSv1_1, TLSv1_2 and TLSv1_3.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>tlsMaxProtocolVersion</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>TLSMaxProtocolVersion defines the maximum TLS protocol version that the sidecar supports. Valid TLS protocol versions are TLS_AUTO, TLSv1_0, TLSv1_1, TLSv1_2 and TLSv1_3.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>cipherSuites</code><br/>
+<em>
+[]string
+</em>
+</td>
+<td>
+<p>CipherSuites defines a list of ciphers that listener supports when negotiating TLS 1.0-1.2. This setting has no effect when negotiating TLS 1.3. For valid cipher names, see the latest OpenSSL ciphers manual page. E.g. <a href="https://www.openssl.org/docs/man1.1.1/apps/ciphers.html">https://www.openssl.org/docs/man1.1.1/apps/ciphers.html</a>.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>ecdhCurves</code><br/>
+<em>
+[]string
+</em>
+</td>
+<td>
+<p>ECDHCurves defines a list of ECDH curves that TLS connection supports. If not specified, the curves are [X25519, P-256] for non-FIPS build and P-256 for builds using BoringSSL FIPS.</p>
+</td>
+</tr>
 </tbody>
 </table>
-<h3 id="config.openservicemesh.io/v1alpha1.TracingSpec">TracingSpec
+<h3 id="config.openservicemesh.io/v1alpha2.TracingSpec">TracingSpec
 </h3>
 <p>
-(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.ObservabilitySpec">ObservabilitySpec</a>)
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.ObservabilitySpec">ObservabilitySpec</a>)
 </p>
 <div>
 <p>TracingSpec is the type to represent OSM&rsquo;s tracing configuration.</p>
@@ -980,10 +1024,10 @@ string
 </tr>
 </tbody>
 </table>
-<h3 id="config.openservicemesh.io/v1alpha1.TrafficSpec">TrafficSpec
+<h3 id="config.openservicemesh.io/v1alpha2.TrafficSpec">TrafficSpec
 </h3>
 <p>
-(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha1.MeshConfigSpec">MeshConfigSpec</a>)
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
 <div>
 <p>TrafficSpec is the type used to represent OSM&rsquo;s traffic management configuration.</p>
@@ -1016,6 +1060,18 @@ bool
 </td>
 <td>
 <p>OutboundIPRangeExclusionList defines a global list of IP address ranges to exclude from outbound traffic interception by the sidecar proxy.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>outboundIPRangeInclusionList</code><br/>
+<em>
+[]string
+</em>
+</td>
+<td>
+<p>OutboundIPRangeInclusionList defines a global list of IP address ranges to include for outbound traffic interception by the sidecar proxy.
+IP addresses outside this range will be excluded from outbound traffic interception by the sidecar proxy.</p>
 </td>
 </tr>
 <tr>
@@ -1055,7 +1111,7 @@ bool
 <td>
 <code>inboundExternalAuthorization</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha1.ExternalAuthzSpec">
+<a href="#config.openservicemesh.io/v1alpha2.ExternalAuthzSpec">
 ExternalAuthzSpec
 </a>
 </em>
