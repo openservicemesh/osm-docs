@@ -16,6 +16,8 @@ OSM can be run on Kubernetes versions that are supported at the time of the OSM 
 
 | Open Service Mesh | Kubernetes  |
 | ----------------- | ----------- |
+| 1.1               | 1.20 - 1.23 |
+| 1.0               | 1.19 - 1.22 |
 | 0.11              | 1.19 - 1.22 |
 | 0.10              | 1.19 - 1.21 |
 
