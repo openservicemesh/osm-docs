@@ -107,7 +107,7 @@ In addition, a [Kubernetes Service Account](https://kubernetes.io/docs/tasks/con
 
 Set up client port forwarding with the following steps to access the applications in the Kubernetes cluster. It is best to start a new terminal session for running the port forwarding script to maintain the port forwarding session, while using the original terminal to continue to issue commands. The port-forward-all.sh script will look for a `.env` file for environment variables needed to run the script. The `.env` creates the necessary variables that target the previously created namespaces. We will use the reference `.env.example` file and then run the port forwarding script.
 
-In a new terminal session, run the following commands to enable port forwarding into the Kubernetes cluster from the root of the project directory (your local clone of https://github.com/openservicemesh/osm).
+In a new terminal session, run the following commands to enable port forwarding into the Kubernetes cluster from the root of the project directory (your local clone of [upstream OSM](https://github.com/openservicemesh/osm)).
 
 ```bash
 cp .env.example .env
