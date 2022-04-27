@@ -180,3 +180,96 @@ Init Containers:
 In the example above, the following `iptables` commands are responsible for explicitly ignoring the configured outbound ports (`6379, 7070 and 8080`) from being redirected to the Envoy proxy sidecar.
 ```console
 iptables -t nat -I PROXY_OUTPUT -p tcp --match multiport --dports 6379,7070,8080 -j RETURN
+```
+
+## When network interface exclusions are configured
+
+By default, all traffic using TCP as the underlying transport protocol are redirected via the Envoy proxy sidecar container. This means all TCP based outbound traffic from applications are redirected and routed via the Envoy proxy sidecar based on service mesh policies. When network interface exclusions are configured, traffic belonging to these network interfaces will not be proxied to the Envoy sidecar.
+
+If network interfaces are configured to be excluded but being subject to service mesh policies, verify they are configured as expected.
+
+### 1. Confirm network interfaces are correctly configured in the `osm-mesh-config` MeshConfig resource
+
+Confirm the network interfaces to be excluded are set correctly:
+
+```console
+# Assumes OSM is installed in the osm-system namespace
+$ kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.traffic.networkInterfaceExclusionList}{"\n"}'
+["net1","net2"]
+```
+
+The output shows the network interfaces that are excluded from outbound traffic redirection, `["net1","net2"]` in the example above.
+
+### 2. Confirm network interfaces are included in init container spec
+
+When network interface exclusions are configured, OSM's `osm-injector` service reads this configuration from the `osm-mesh-config` `MeshConfig` resource and programs `iptables` rules corresponding to these ranges so that they are excluded from traffic redirection via the Envoy sidecar proxy.
+
+Confirm OSM's `osm-init` init container spec has rules corresponding to the configured network interfaces to exclude.
+
+```console
+$ kubectl describe pod server-85f4bc46c5-hprkw
+Name:         server-85f4bc46c5-hprkw
+Namespace:    default
+...
+...
+Init Containers:
+  osm-init:
+    Container ID:  containerd://98840f655f2310b2f441e11efe9dfcf894e4c57e4e26b928542ee698159100c0
+    Image:         openservicemesh/init:2c18593efc7a31986a6ae7f412e73b6067e11a57
+    Image ID:      docker.io/openservicemesh/init@sha256:24456a8391bce5d254d5a1d557d0c5e50feee96a48a9fe4c622036f4ab2eaf8e
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /bin/sh
+    Args:
+      -c
+      iptables-restore --noflush <<EOF
+      # OSM sidecar interception rules
+      *nat
+      :OSM_PROXY_INBOUND - [0:0]
+      :OSM_PROXY_IN_REDIRECT - [0:0]
+      :OSM_PROXY_OUTBOUND - [0:0]
+      :OSM_PROXY_OUT_REDIRECT - [0:0]
+      -A OSM_PROXY_IN_REDIRECT -p tcp -j REDIRECT --to-port 15003
+      -A PREROUTING -p tcp -j OSM_PROXY_INBOUND
+      -A OSM_PROXY_INBOUND -p tcp --dport 15010 -j RETURN
+      -A OSM_PROXY_INBOUND -p tcp --dport 15901 -j RETURN
+      -A OSM_PROXY_INBOUND -p tcp --dport 15902 -j RETURN
+      -A OSM_PROXY_INBOUND -p tcp --dport 15903 -j RETURN
+      -A OSM_PROXY_INBOUND -p tcp --dport 15904 -j RETURN
+      -A OSM_PROXY_INBOUND -p tcp -j OSM_PROXY_IN_REDIRECT
+      -I OSM_PROXY_INBOUND -i net1 -j RETURN
+      -I OSM_PROXY_INBOUND -i net2 -j RETURN
+      -A OSM_PROXY_OUT_REDIRECT -p tcp -j REDIRECT --to-port 15001
+      -A OSM_PROXY_OUT_REDIRECT -p tcp --dport 15000 -j ACCEPT
+      -A OUTPUT -p tcp -j OSM_PROXY_OUTBOUND
+      -A OSM_PROXY_OUTBOUND -o lo ! -d 127.0.0.1/32 -m owner --uid-owner 1500 -j OSM_PROXY_IN_REDIRECT
+      -A OSM_PROXY_OUTBOUND -o lo -m owner ! --uid-owner 1500 -j RETURN
+      -A OSM_PROXY_OUTBOUND -m owner --uid-owner 1500 -j RETURN
+      -A OSM_PROXY_OUTBOUND -d 127.0.0.1/32 -j RETURN
+      -A OSM_PROXY_OUTBOUND -o net1 -j RETURN
+      -A OSM_PROXY_OUTBOUND -o net2 -j RETURN
+      -A OSM_PROXY_OUTBOUND -j OSM_PROXY_OUT_REDIRECT
+      COMMIT
+      EOF
+      
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Wed, 27 Apr 2022 11:19:16 -0500
+      Finished:     Wed, 27 Apr 2022 11:19:16 -0500
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-gqcjp (ro)
+```
+
+In the example above, the following `iptables` commands are responsible for explicitly ignoring the configured network interfaces (`net1 and net2`) from being redirected to the Envoy proxy sidecar.
+```console
+-I OSM_PROXY_INBOUND -i net1 -j RETURN
+-I OSM_PROXY_INBOUND -i net2 -j RETURN
+...
+-A OSM_PROXY_OUTBOUND -o net1 -j RETURN
+-A OSM_PROXY_OUTBOUND -o net2 -j RETURN
+```
