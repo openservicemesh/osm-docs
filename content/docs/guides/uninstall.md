@@ -141,7 +141,7 @@ When uninstalling OSM, both the `osm uninstall mesh` command and Helm uninstalla
 To remove cluster wide resources that OSM installs (i.e. the meshconfig, secrets, OSM CRDs, SMI CRDs, and webhook configurations), the following command can be run during or after OSM's uninstillation.
 
 ```bash
-osm uninstall mesh --cluster-wide-resources
+osm uninstall mesh --delete-cluster-wide-resources
 ```
 
 > Warning: Deletion of a CRD will cause all custom resources corresponding to that CRD to also be deleted.
