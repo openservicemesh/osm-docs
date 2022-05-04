@@ -186,7 +186,7 @@ iptables -t nat -I PROXY_OUTPUT -p tcp --match multiport --dports 6379,7070,8080
 
 By default, all traffic using TCP as the underlying transport protocol are redirected via the Envoy proxy sidecar container. This means all TCP based outbound traffic from applications are redirected and routed via the Envoy proxy sidecar based on service mesh policies. When network interface exclusions are configured, traffic belonging to these network interfaces will not be proxied to the Envoy sidecar.
 
-If network interfaces are configured to be excluded but being subject to service mesh policies, verify they are configured as expected.
+If you have network interfaces that are subjected to mesh policies, verify their configuration to ensure they are properly excluded.
 
 ### 1. Confirm network interfaces are correctly configured in the `osm-mesh-config` MeshConfig resource
 
