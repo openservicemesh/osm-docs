@@ -196,3 +196,25 @@ kubectl annotate pod <pod> openservicemesh.io/inbound-port-exclusion-list=6379,7
 ```
 
 When ports are annotated post pod creation, make sure to restart the corresponding pods for this change to take effect.
+
+## Network interface exclusions
+
+TCP based traffic to and from applications is by default intercepted using the `iptables` rules programmed by OSM, and redirected to the Envoy proxy sidecar. In some cases, it might be desirable to not subject traffic from certain network interfaces to be redirected and routed by the Envoy proxy sidecar based on service mesh policies.
+
+OSM provides the means to specify a global list of network interfaces to exclude from traffic interception applicable to all pods in the mesh, as follows:
+
+1. During OSM install using the `--set` option:
+    ```bash
+    # To exclude the network interfaces eth0 and net1 from interception
+    osm install --set="osm.networkInterfaceExclusionList={eth0,net1}
+    ```
+
+1. By setting the `networkInterfaceExclusionList` field in the `osm-mesh-config` resource:
+    ```bash
+    ## Assumes OSM is installed in the osm-system namespace
+    kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"networkInterfaceExclusionList":["eth0", "net1"]}}}'  --type=merge
+    ```
+
+   When network interfaces are set for exclusion post-install, make sure to restart the pods in monitored namespaces for this change to take effect.
+
+Globally excluded network interfaces are stored in the `osm-mesh-config` `MeshConfig` custom resource and are read at the time of sidecar injection by `osm-injector`. These dynamically configurable network interfaces are programmed by the init container along with the static rules used to intercept and redirect traffic via the Envoy proxy sidecar. Excluded network interfaces will not be intercepted for traffic redirection to the Envoy proxy sidecar.
