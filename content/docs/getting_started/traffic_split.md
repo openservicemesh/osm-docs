@@ -19,7 +19,17 @@ To demonstrate usage of SMI traffic access and split policies, we will now deplo
 kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/apps/bookstore-v2.yaml
 ```
 
-Wait for the `bookstore-v2` pod to be running in the `bookstore` namespace. Next, exit and restart the `./scripts/port-forward-all.sh` script in order to access v2 of bookstore.
+Wait for the `bookstore-v2` pod to be running in the `bookstore` namespace. Next, exit and restart the port-forward scripts in order to access v2 of bookstore:
+
+```bash
+bash <<EOF
+./scripts/port-forward-bookbuyer-ui.sh &
+./scripts/port-forward-bookstore-ui.sh &
+./scripts/port-forward-bookstore-ui-v2.sh &
+./scripts/port-forward-bookthief-ui.sh &
+wait
+EOF
+```
 
 - [http://localhost:8082](http://localhost:8082) - **bookstore-v2**
 
