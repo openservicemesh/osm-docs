@@ -105,19 +105,30 @@ In addition, a [Kubernetes Service Account](https://kubernetes.io/docs/tasks/con
 
 ### View the Application UIs
 
-Set up client port forwarding with the following steps to access the applications in the Kubernetes cluster. It is best to start a new terminal session for running the port forwarding script to maintain the port forwarding session, while using the original terminal to continue to issue commands. The port-forward-all.sh script will look for a `.env` file for environment variables needed to run the script. The `.env` creates the necessary variables that target the previously created namespaces. We will use the reference `.env.example` file and then run the port forwarding script.
+Set up client port forwarding with the following steps to access the applications in the Kubernetes cluster. It is best to start a new terminal session for running the port forwarding scripts to maintain the port forwarding session, while using the original terminal to continue to issue commands. The port-forward scripts will look for a `.env` file for environment variables needed to run the script. The `.env` creates the necessary variables that target the previously created namespaces. We will use the reference `.env.example` file and then run the port forwarding scripts.
 
 In a new terminal session, run the following commands to enable port forwarding into the Kubernetes cluster from the root of the project directory (your local clone of [upstream OSM](https://github.com/openservicemesh/osm)).
 
 ```bash
 cp .env.example .env
-./scripts/port-forward-all.sh
+bash <<EOF
+./scripts/port-forward-bookbuyer-ui.sh &
+./scripts/port-forward-bookstore-ui.sh &
+./scripts/port-forward-bookthief-ui.sh &
+wait
+EOF
 ```
 
-_Note: To override the default ports, prefix the `BOOKBUYER_LOCAL_PORT`, `BOOKSTORE_LOCAL_PORT`, `BOOKSTOREv1_LOCAL_PORT`, `BOOKSTOREv2_LOCAL_PORT`, and/or `BOOKTHIEF_LOCAL_PORT` variable assignments to the `port-forward` scripts. For example:_
+_Note: To override the default ports, prefix the `BOOKBUYER_LOCAL_PORT`, `BOOKSTORE_LOCAL_PORT`, and/or `BOOKTHIEF_LOCAL_PORT` variable assignments to the `port-forward` scripts. For example:_
 
 ```bash
-BOOKBUYER_LOCAL_PORT=7070 BOOKSTOREv1_LOCAL_PORT=7071 BOOKSTOREv2_LOCAL_PORT=7072 BOOKTHIEF_LOCAL_PORT=7073 BOOKSTORE_LOCAL_PORT=7074 ./scripts/port-forward-all.sh
+export BOOKBUYER_LOCAL_PORT=7070 BOOKTHIEF_LOCAL_PORT=7073 BOOKSTORE_LOCAL_PORT=7074
+bash <<EOF
+./scripts/port-forward-bookbuyer-ui.sh &
+./scripts/port-forward-bookstore-ui.sh &
+./scripts/port-forward-bookthief-ui.sh &
+wait
+EOF
 ```
 
 In a browser, open up the following urls:
@@ -125,10 +136,8 @@ In a browser, open up the following urls:
 - [http://localhost:8080](http://localhost:8080) - **bookbuyer**
 - [http://localhost:8083](http://localhost:8083) - **bookthief**
 - [http://localhost:8084](http://localhost:8084) - **bookstore**
-- [http://localhost:8082](http://localhost:8082) - **bookstore-v2**
-  - _Note: This page will not be available at this time in the demo. This will become available during the SMI Traffic Split configuration set up_
 
-Position the windows so that you can see all four at the same time. The header at the top of the webpage indicates the application and version.
+Position the windows so that you can see all of them at the same time. The header at the top of the webpage indicates the application and version.
 
 ## Next Steps
 
