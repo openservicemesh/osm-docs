@@ -8,7 +8,7 @@ Open Service Mesh aims to create a high-performance service mesh while providing
 
 ## Testing environment
 
-This test is performed on a Kubernetes cluster provisioned and managed by [Microsoft Azure Kubernetes Service](https://azure.microsoft.com/en-us/services/kubernetes-service/). The cluster has 100 Standard_DS2_v2 nodes (each node has 2 vCPUs and 7GB memory). It is ensured that there is only one OSM controller pod running with default resource quota during the test. OSM is configured in non-permissive traffic mode.
+This test is performed on a Kubernetes cluster provisioned and managed by [Microsoft Azure Kubernetes Service](https://azure.microsoft.com/en-us/services/kubernetes-service/). The cluster has 100 Standard_DS2_v2 nodes (each node has 2 vCPUs and 7GB memory) and 3 Standard_D32s_v3 nodes (32 vCPUs and 128GB memory) reserved for high intensity tests. It is ensured that there is only one OSM controller pod running with default resource quota during the test. OSM is configured in non-permissive traffic mode.
 
 ## Process
 
@@ -18,55 +18,23 @@ The testing mesh contains two types of services. One is a load generator (modifi
   <img src="/docs/images/perf/mesh-topo.png" width="650"/>
 </p>
 
-
 ## Performance
 
 In this test, we focus on the latency overhead and resource consumption added by the OSM sidecar. We currently test the per pod RPS at 100, 500, 1000, 2000 and 4000 respectively.
 
 ### Latency
 
-Below is the request latency at different RPS levels with and without OSM installed. The added latency comes from both the client and server sidecars.
+#### Test 1: Relation with RPS
+
+In our test, regardless of the RPS level, OSM adds around 0.5ms and 5ms overhead to the 50th percentile and the 99th percentile latency respectively. This is caused by the request processing in both the client and server sidecars, for tasks like mTLS authentication, metrics collection etc. Our test setup was with a single client and server. Performance may vary with more complex applications, or with different traffic policies set on the mesh.
+
+#### Test 2: Relation with number of connections
+
+A similar setup to RPS scenario is used to test the relationship between latency and number of connections to the sidecar proxy. In this test, the per pod RPS is set at 2500. As the number of connections increased, the request latency showed a proportional increase while the sidecar memory usage to maintain those open connections only slightly increased. The sidecar consumes around 5MB memory for every 100 connections maintained.
 
 <p align="center">
-  <img src="/docs/images/perf/latency-wo-osm.png" width="650"/>
+  <img src="/docs/images/perf/latency-conns.png" width="650"/>
 </p>
-
-<p align="center">
-  <img src="/docs/images/perf/latency-w-osm.png" width="650"/>
-</p>
-
-<table style="width: 100%; display: table"">
-<thead>
-<tr>
-<th>Per pod RPS</th>
-<th>100</th>
-<th>500</th>
-<th>1000</th>
-<th>2000</th>
-<th>4000</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>P99 latency w/o OSM (ms)</td>
-<td>4.4</td>
-<td>4.3</td>
-<td>4.2</td>
-<td>4.3</td>
-<td>4.5</td>
-</tr>
-<tr>
-<td>P99 latency w/ OSM (ms)</td>
-<td>9.6</td>
-<td>9.4</td>
-<td>9.7</td>
-<td>9.4</td>
-<td>9.8</td>
-</tr>
-</tbody>
-</table>
-
-Regardless of the existence of OSM, the application performs quite similar across different RPS levels tested. OSM adds around 5ms overhead on the 99 percentile latency. Note that our test setup is very simple, with a single client/server relation. Your mileage may vary with more complex applications, or with different traffic policies set on the mesh.
 
 ### Resource Consumption
 
@@ -108,8 +76,39 @@ There is not much difference between pod-rollout time and stable time in terms o
 
 By looking at the collected metrics, in our testing scenarios, resource consumption of data plane sidecars does not change much along with the mesh size. At stable time, the average CPU usage is close to 0 and average memory usage is around 50MB. CPU usage is related to request processing and memory usage is related the size of Envoy configuration stored locally. These two factors do not change with the mesh scale.
 
-It is also worth mentioning that enabling permissive mode will cause data plane to use much more memory, as each sidecar needs to keep the connection configuration between all other services. The chart below shows the sidecar memory usage when 200 and 400 pods are added in a permissive-mode enabled mesh. Compared to the non-permissive mode, the memory usage is more than doubled. Similar things happen on the control plane.
+### Other Scenarios
+
+#### Permissive mode
+
+When permissive mode is enabled in OSM, services are allowed to communicate with any other services in the mesh without additional traffic policies. This is implemented by adding an allow-all wildcard RBAC policy in the inbound listener and all known services as outbound clusters in the Envoy sidecar. Permissive model still enable mTLS authentication between services and requires the services be added inside the mesh. The same load test described above is performed on a service mesh with permissive mode enabled.
+
+On the control plane, the CPU and memory usage both increase compared to non-permissive mode.
+
+On the data plane, there is no obvious difference in terms of CPU usage. However, the memory usage is much higher in permissive mode. This is expected as more outbound cluster information is stored in the sidecar. The chart below shows the sidecar memory usage when 10 and 20 services are added in permissive mesh and non-permissive mesh respectively. Compared to the non-permissive mode, the memory usage is more than doubled.
 
 <p align="center">
   <img src="/docs/images/perf/perm-memory.png" width="650"/>
 </p>
+
+The request latency from load generator to workloads is lower in permissive mode. This reduction is due to the RBAC policy filter path being a single wildcard filter as described above. This filter path is shorter than non-permissive mode and there is less rule matching operations for incoming requests. In our test, we observe the P99 latency drops to around 80% in permissive mode. The more SMI traffic policies added to services in non-permissive mode, the larger request time overhead we expect. Below is the latency comparison between permissive and non-permissive mode, tested with 250 per pod RPS:
+
+<p align="center">
+  <img src="/docs/images/perf/latency-perm-vs-non-perm.png" width="650"/>
+</p>
+
+#### Ingress traffic
+
+In this test, the load generator is deployed outside of the mesh. The requests enter the mesh via [IngressBackend](https://docs.openservicemesh.io/docs/guides/traffic_management/ingress/#ingressbackend-api). Therefore, the request only goes through one Envoy sidecar instead of two.
+
+We compared three scenarios:
+
+* Normal: load generator is inside the mesh. Request goes through 2 sidecars.
+* Ingress: load generator is outside the mesh. Request goes through 1 sidecar.
+* No OSM installed: Request does not go through any sidecar.
+
+The test result shows that the latency of the ingress scenario is significantly lower than the normal scenario. The ingress scenario is roughly equal to the results of the scenario without OSM installed. This result shows that a single Envoy sidecar does add latency overhead. This complies with our expectation.
+
+<p align="center">
+  <img src="/docs/images/perf/latency-ingress.png" width="650"/>
+</p>
+
