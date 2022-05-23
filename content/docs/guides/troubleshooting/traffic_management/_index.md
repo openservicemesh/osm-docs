@@ -1,6 +1,6 @@
 ---
-title: "Traffic Troubleshooting"
-description: "OSM Traffic Troubleshooting Guide"
+title: "Traffic"
+description: "Troubleshooting traffic problems"
 type: docs
 ---
 

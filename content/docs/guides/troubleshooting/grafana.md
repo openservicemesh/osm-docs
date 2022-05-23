@@ -1,9 +1,12 @@
 ---
-title: "Troubleshoot Grafana"
-description: "How to fix common issues with OSM's Grafana integration"
+title: "Grafana"
+description: "Troubleshooting Grafana integration"
 aliases: "/docs/troubleshooting/observability/grafana"
 type: docs
+weight: 16
 ---
+
+# Troubleshooting Grafana Integration
 
 ## Grafana is unreachable
 

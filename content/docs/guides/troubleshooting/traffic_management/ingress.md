@@ -1,8 +1,11 @@
 ---
-title: "Ingress Troubleshooting"
-description: "Ingress Troubleshooting Guide"
+title: "Ingress"
+description: "Troubleshooting ingress traffic"
 type: docs
+weight: 3
 ---
+
+# Troubleshooting Ingress Traffic
 
 ## When Ingress is not working as expected
 

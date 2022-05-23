@@ -1,10 +1,11 @@
 ---
 title: "Application Container Startup"
-description: "Application Container Startup"
+description: "Troubleshooting application container startup"
 type: docs
+weight: 1
 ---
 
-# Container Startup
+# Troubleshooting Application Container Startup
 
 Since OSM injects application pods that are a part of the service mesh with a sidecar proxy and sets up traffic redirection rules to route all traffic to/from pods via the sidecar proxy, in some circumstances existing application containers might not startup as expected.
 
