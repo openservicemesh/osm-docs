@@ -1,11 +1,12 @@
 ---
-title: "Error Code Troubleshooting"
-description: "OSM Control Plane Error Code Troubleshooting Guide"
+title: "Error Codes"
+description: "Troubleshooting control plane error codes"
 aliases: ["/docs/troubleshooting/observability/errorcodes/"]
 type: docs
+weight: 5
 ---
 
-# OSM Control Plane Error Code Troubleshooting Guide
+# Troubleshooting OSM Control Plane Error Codes
 
 ## Error Code Descriptions
 

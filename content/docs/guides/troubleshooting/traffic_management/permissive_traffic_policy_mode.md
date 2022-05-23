@@ -1,8 +1,11 @@
 ---
-title: "Permissive Traffic Policy Mode Troubleshooting"
-description: "Permissive Traffic Policy Mode Troubleshooting Guide"
+title: "Permissive Traffic Policy Mode"
+description: "Troubleshooting permissive traffic policy"
 type: docs
+weight: 2
 ---
+
+# Troubleshooting Permissive Traffic Policy Mode
 
 ## When permissive traffic policy mode is not working as expected
 

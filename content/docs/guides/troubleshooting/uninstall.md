@@ -1,11 +1,12 @@
 ---
-title: "Uninstall Troubleshooting"
-description: "OSM Mesh Uninstall Troubleshooting Guide"
+title: "Uninstall"
+description: "Troubleshooting OSM uninstall"
 aliases: ["/docs/troubleshooting/uninstall"]
 type: docs
+weight: 20
 ---
 
-# OSM Mesh Uninstall Troubleshooting Guide
+# Troubleshooting OSM Uninstall
 
 If for any reason, `osm uninstall mesh` (as documented in the [uninstall guide](/docs/guides/uninstall/)) fails, you may manually delete OSM resources as detailed below.
 

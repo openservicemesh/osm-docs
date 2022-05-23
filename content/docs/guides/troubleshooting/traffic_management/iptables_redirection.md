@@ -1,8 +1,11 @@
 ---
-title: "Iptables Redirection Troubleshooting"
-description: "Iptables Redirection Troubleshooting Guide"
+title: "Iptables Redirection"
+description: "Troubleshooting Iptables interception and redirection"
 type: docs
+weight: 1
 ---
+
+# Troubleshooting Iptables Interception and Redirection
 
 ## When traffic redirection is not working as expected
 
@@ -252,7 +255,7 @@ Init Containers:
       -A OSM_PROXY_OUTBOUND -j OSM_PROXY_OUT_REDIRECT
       COMMIT
       EOF
-      
+
     State:          Terminated
       Reason:       Completed
       Exit Code:    0

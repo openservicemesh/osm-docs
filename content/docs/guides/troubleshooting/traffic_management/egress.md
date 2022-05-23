@@ -1,8 +1,11 @@
 ---
-title: "Egress Troubleshooting"
-description: "Egress Troubleshooting Guide"
+title: "Egress"
+description: "Troubleshooting egress (external) traffic"
 type: docs
+weight: 4
 ---
+
+# Troubleshooting Egress Traffic
 
 ## When Egress is not working as expected
 
