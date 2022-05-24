@@ -1,6 +1,6 @@
 ---
 title: "Retry Policy"
-description: "Set up application with retry"
+description: "Using retries to enhance service availability"
 type: docs
 weight: 15
 ---
@@ -32,18 +32,13 @@ This guide demonstrates how to configure retry policy for a client and server ap
     Confirm the `httpbin` service and pods are up and running.
 
     ```bash
-    kubectl get svc -n httpbin
+    kubectl get svc,pod -n httpbin
     ```
     Should look similar to below
     ```console
     NAME      TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)     AGE
     httpbin   ClusterIP   10.96.198.23   <none>        14001/TCP   20s
-    ```
-    ```bash
-    kubectl get pods -n httpbin
-    ```
-    Should look similar to below
-    ```console
+
     NAME                     READY   STATUS    RESTARTS   AGE
     httpbin-5b8b94b9-lt2vs   2/2     Running   0          20s
     ```
