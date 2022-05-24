@@ -1,6 +1,6 @@
 ---
 title: "Integrate Flagger with OSM"
-description: "A simple demo showing how OSM integrates with Prometheus for metrics"
+description: "A simple demo showing how OSM integrates with Flagger"
 aliases: "/docs/guides/integrations/demo_flagger"
 type: docs
 weight: 4
