@@ -19,7 +19,7 @@ This guide demonstrates how to configure retry policy for a client and server ap
     osm install --set=osm.enablePermissiveTrafficPolicy=true --set=osm.featureFlags.enableRetryPolicy=true 
     ```
 
-1. Deploy the `httpbin` service into the `httpbin` namespace after enrolling its namespace to the mesh and enabling metrics. The `httpbin` service runs on port `14001`.
+1. Deploy the `httpbin` service into the `httpbin` namespace after enrolling its namespace to the mesh. The `httpbin` service runs on port `14001`.
 
     ```bash
     kubectl create namespace httpbin
