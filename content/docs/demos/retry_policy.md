@@ -5,12 +5,13 @@ type: docs
 weight: 15
 ---
 
+This guide demonstrates how to configure retry policy for a client and server application within the service mesh.
+
 ## Prerequisites
 
 - Kubernetes cluster running Kubernetes {{< param min_k8s_version >}} or greater.
 - Have `kubectl` available to interact with the API server.
 - Have `osm` CLI available for managing the service mesh.
-- OSM version >= v1.1.2.
 
 ## Demo
 1. Install OSM with Prometheus, permissive mode and retry policy enabled.
@@ -89,7 +90,7 @@ EOF
 
 1. Send a HTTP request that returns status code `503` from the `curl` pod to the `httpbin` service.
     ```console
-    $ kubectl exec $(kubectl get pod -n curl -l app=curl -o jsonpath='{.items..metadata.name}') -n curl -c curl -- curl -sI httpbin.httpbin.svc.cluster.local:14001/status/503
+    $ kubectl exec deploy/curl -n curl -c curl -- curl -sI httpbin.httpbin.svc.cluster.local:14001/status/503
     HTTP/1.1 503 Service Unavailable
     server: envoy
     date: Fri, 13 May 2022 19:17:52 GMT
@@ -100,9 +101,8 @@ EOF
     x-envoy-upstream-service-time: 9429
     ```
 
-1. In a new terminal session, run the following command to enable port-forwarding into the Kubernetes cluster from the root of the project directory (your local clone of [upstream OSM](https://github.com/openservicemesh/osm)).
+1. In a new terminal session, run the following command to enable port-forwarding for Prometheus.
     ```bash
-    cp .env.example .env
     ./scripts/port-forward-prometheus.sh
     ```
 
@@ -116,7 +116,7 @@ envoy_cluster_upstream_rq_retry{envoy_cluster_name="httpbin/httpbin|14001", inst
 
 1. Send a HTTP request that returns a non-5xx status code from the `curl` pod to the `httpbin` service.
     ```console
-    $ kubectl exec $(kubectl get pod -n curl -l app=curl -o jsonpath='{.items..metadata.name}') -n curl -c curl -- curl -sI httpbin.httpbin.svc.cluster.local:14001/status/404
+    $ kubectl exec deploy/curl -n curl -c curl -- curl -sI httpbin.httpbin.svc.cluster.local:14001/status/404
     HTTP/1.1 404 Not Found
     server: envoy
     date: Fri, 13 May 2022 19:25:14 GMT
