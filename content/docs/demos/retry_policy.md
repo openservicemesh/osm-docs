@@ -14,9 +14,9 @@ This guide demonstrates how to configure retry policy for a client and server ap
 - Have `osm` CLI available for managing the service mesh.
 
 ## Demo
-1. Install OSM with Prometheus, permissive mode and retry policy enabled.
+1. Install OSM with permissive mode and retry policy enabled.
     ```bash
-    osm install --set=osm.deployPrometheus=true --set=osm.enablePermissiveTrafficPolicy=true --set=osm.featureFlags.enableRetryPolicy=true 
+    osm install --set=osm.enablePermissiveTrafficPolicy=true --set=osm.featureFlags.enableRetryPolicy=true 
     ```
 
 1. Deploy the `httpbin` service into the `httpbin` namespace after enrolling its namespace to the mesh and enabling metrics. The `httpbin` service runs on port `14001`.
@@ -25,8 +25,6 @@ This guide demonstrates how to configure retry policy for a client and server ap
     kubectl create namespace httpbin
 
     osm namespace add httpbin
-
-    osm metrics enable --namespace httpbin
 
     kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/httpbin/httpbin.yaml -n httpbin
     ```
@@ -91,40 +89,32 @@ EOF
 1. Send a HTTP request that returns status code `503` from the `curl` pod to the `httpbin` service.
     ```console
     $ kubectl exec deploy/curl -n curl -c curl -- curl -sI httpbin.httpbin.svc.cluster.local:14001/status/503
-    HTTP/1.1 503 Service Unavailable
-    server: envoy
-    date: Fri, 13 May 2022 19:17:52 GMT
-    content-type: text/html; charset=utf-8
-    access-control-allow-origin: *
-    access-control-allow-credentials: true
-    content-length: 0
-    x-envoy-upstream-service-time: 9429
     ```
 
-1. In a new terminal session, run the following command to enable port-forwarding for Prometheus.
+1. In a new terminal session, run the following command to port-forward the `curl` pod.
     ```bash
-    ./scripts/port-forward-prometheus.sh
+    kubectl port-forward deploy/curl -n curl 15000
     ```
 
-1. In a browser open the prometheus url - http://localhost:7070
+1. Query for the stats between `curl` to `httpbin`.
+    ```bash
+    curl -s localhost:15000/stats | grep "cluster.httpbin/httpbin|14001.upstream_rq_retry"
+    ```
+ The number of times the request from the `curl` pod to the `httpbin` pod was retried using the exponential backoff retry should be equal to the `numRetries` field in the retry policy.
+ The `upstream_rq_retry_limit_exceeded` stat shows the number of requests not retried because it's more than the maximum retries allowed (`numRetries`).
 
-1. Query the `envoy_cluster_upstream_rq_retry` metric. The number of times the request from the `curl` pod to the `httpbin` pod was retried should be equal to the `numRetries` field in the retry policy.
-```console
-envoy_cluster_upstream_rq_retry{envoy_cluster_name="httpbin/httpbin|14001", instance="10.244.1.5:15010", job="kubernetes-pods", source_namespace="curl", source_pod_name="curl-548c575854-lx4b5", source_service="curl", source_workload_kind="Deployment", source_workload_name="curl"}
-5
-```
+    ```console
+    cluster.httpbin/httpbin|14001.upstream_rq_retry: 5
+    cluster.httpbin/httpbin|14001.upstream_rq_retry_backoff_exponential: 5
+    cluster.httpbin/httpbin|14001.upstream_rq_retry_backoff_ratelimited: 0
+    cluster.httpbin/httpbin|14001.upstream_rq_retry_limit_exceeded: 1
+    cluster.httpbin/httpbin|14001.upstream_rq_retry_overflow: 0
+    cluster.httpbin/httpbin|14001.upstream_rq_retry_success: 0
+    ```
 
 1. Send a HTTP request that returns a non-5xx status code from the `curl` pod to the `httpbin` service.
     ```console
     $ kubectl exec deploy/curl -n curl -c curl -- curl -sI httpbin.httpbin.svc.cluster.local:14001/status/404
-    HTTP/1.1 404 Not Found
-    server: envoy
-    date: Fri, 13 May 2022 19:25:14 GMT
-    content-type: text/html; charset=utf-8
-    access-control-allow-origin: *
-    access-control-allow-credentials: true
-    content-length: 0
-    x-envoy-upstream-service-time: 3
     ```
 
 1. The `envoy_cluster_upstream_rq_retry` metric does not increment since the retry policy is set to retry on `5xx` 
