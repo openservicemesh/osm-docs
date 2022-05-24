@@ -11,7 +11,7 @@ weight: 4
 
 ### 1. Confirm egress is enabled
 
-If relying on passthrough egress functionality to unknown destinations, confirm that global passthrough egress is enabled by verifying the value for the `enableEgress` key in the `osm-mesh-config` `MeshConfig` custom resource. `osm-mesh-config` resides in the namespace OSM control plane namespace (`osm-system` by default).
+If relying on passthrough egress functionality to unknown destinations, confirm that global passthrough egress is enabled by verifying the value for the `enableEgress` key in the `osm-mesh-config` `MeshConfig` custom resource. `osm-mesh-config` resides in the OSM control plane namespace (`osm-system` by default).
 
 ```console
 # Returns true if global passthrough egress is enabled
