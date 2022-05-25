@@ -43,13 +43,11 @@ This guide demonstrates how to configure retry policy for a client and server ap
     httpbin-5b8b94b9-lt2vs   2/2     Running   0          20s
     ```
     
-1. Deploy the `curl` into the `curl` namespace after enrolling its namespace to the mesh and enabling metrics.
+1. Deploy the `curl` into the `curl` namespace after enrolling its namespace to the mesh.
     ```bash
     kubectl create namespace curl
 
     osm namespace add curl
-
-    osm metrics enable --namespace curl
 
     kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/curl/curl.yaml -n curl
     ```
@@ -71,17 +69,18 @@ This guide demonstrates how to configure retry policy for a client and server ap
     kind: Retry
     apiVersion: policy.openservicemesh.io/v1alpha1
     metadata:
-    name: retry
+      name: retry
+      namespace: curl
     spec:
-    source:
+      source:
         kind: ServiceAccount
         name: curl
         namespace: curl
-    destinations:
-    - kind: Service
+      destinations:
+      - kind: Service
         name: httpbin
         namespace: httpbin
-    retryPolicy:
+      retryPolicy:
         retryOn: "5xx"
         perTryTimeout: 1s
         numRetries: 5
