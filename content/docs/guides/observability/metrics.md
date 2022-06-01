@@ -219,11 +219,11 @@ annotations:
 | osm_k8s_api_event_count               | Count     | type, namespace                         | Number of events received from the Kubernetes API Server                         |
 | osm_proxy_connect_count               | Gauge     |                                         | Number of proxies connected to OSM controller                                    |
 | osm_proxy_reconnect_count             | Count     |                                         | IngressGateway defines the certificate specification for an ingress gateway      |
-| osm_proxy_response_send_success_count | Count     | common_name, type                       | Number of responses successfully sent to proxies                                 |
-| osm_proxy_response_send_error_count   | Count     | common_name, type                       | Number of responses that errored when being set to proxies                       |
+| osm_proxy_response_send_success_count | Count     | proxy_uuid, identity, type              | Number of responses successfully sent to proxies                                 |
+| osm_proxy_response_send_error_count   | Count     | proxy_uuid, identity, type              | Number of responses that errored when being set to proxies                       |
 | osm_proxy_config_update_time          | Histogram | resource_type, success                  | Histogram to track time spent for proxy configuration                            |
 | osm_proxy_broadcast_event_count       | Count     |                                         | Number of ProxyBroadcast events published by the OSM controller                  |
-| osm_proxy_xds_request_count           | Count     | common_name, type                       | Number of XDS requests made by proxies                                           |
+| osm_proxy_xds_request_count           | Count     | proxy_uuid, identity, type              | Number of XDS requests made by proxies                                           |
 | osm_proxy_max_connections_rejected    | Count     |                                         | Number of proxy connections rejected due to the configured max connections limit |
 | osm_cert_issued_count                 | Count     |                                         | Total number of XDS certificates issued to proxies                               |
 | osm_cert_issued_time                  | Histogram |                                         | Histogram to track time spent to issue xds certificate                           |
