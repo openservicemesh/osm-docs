@@ -234,6 +234,7 @@ annotations:
 | osm_feature_flag_enabled              | Gauge     | feature_flag                            | Represents whether a feature flag is enabled (1) or disabled (0)                 |
 | osm_conversion_webhook_resource_total | Count     | kind, success, from_version, to_version | Number of resources converted by conversion webhooks                             |
 | osm_events_queued                     | Gauge     |                                         | Number of events seen but not yet processed by the control plane                 |
+| osm_reconciliation_total              | Count     | kind                                    | Counter of resource reconciliations invoked                                      |
 
 #### Error Code Metrics
 
