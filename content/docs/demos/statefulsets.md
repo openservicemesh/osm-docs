@@ -16,7 +16,7 @@ This guide will illustrate how to configure stateful applications with OSM and S
 - Have `kubectl` available to interact with the API server.
 - Have OSM version >= v1.2.0 installed.
 - Have `osm` CLI available for managing the service mesh.
-- Have [`localProxyMode`](/docs/apidocs/config/v1alpha2#config.openservicemesh.io/v1alpha2.LocalProxyMode) set to `PodIP` in the OSM `MeshConfig`.
+- Have [`localProxyMode`](/docs/api_reference/config/v1alpha2#config.openservicemesh.io/v1alpha2.LocalProxyMode) set to `PodIP` in the OSM `MeshConfig`.
   - Most applications that run in a statefulset (Apache Kafka included) require all incoming network traffic to come via the pod IP. By default, OSM configures sends traffic over localhost, so it is important to modify that behavior via this MeshConfig setting. **The default behavior will be switched in a later version of OSM**
 
 ## Demo
@@ -112,7 +112,7 @@ Confirm that the pods are ready in the `zookeeper` namespace:
 ```shell
 kubectl get pod -n zookeeper
 
-NAME                READY   STATUS    RESTARTS   AGE
+NAME                    READY   STATUS    RESTARTS   AGE
 zookeeper-zookeeper-0   2/2     Running   0          4m30s
 zookeeper-zookeeper-1   2/2     Running   0          4m30s
 zookeeper-zookeeper-2   2/2     Running   0          4m29s
@@ -142,7 +142,7 @@ kubectl create ns kafka
 osm namespace add kafka
 ```
 
-Just like Zookeeper, we need to create the appropriate traffic policies to allow the Kafka pods to talk to one another. We also allow the default service account to talk to the client-facing Kafka ports *for purposes of this demo only*. **This confiureation is NOT appropriate for production**.
+Just like Zookeeper, we need to create the appropriate traffic policies to allow the Kafka pods to talk to one another. We also allow the default service account to talk to the client-facing Kafka ports *for purposes of this demo only*. **This configuration is NOT appropriate for production**.
 
 ```shell
 kubectl apply -f - <<EOF
