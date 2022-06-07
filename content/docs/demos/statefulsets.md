@@ -16,7 +16,7 @@ This guide will illustrate how to configure stateful applications with OSM and S
 - Have `kubectl` available to interact with the API server.
 - Have OSM version >= v1.2.0 installed.
 - Have `osm` CLI available for managing the service mesh.
-- Have [`localProxyMode`](/docs/api_reference/config/v1alpha2#config.openservicemesh.io/v1alpha2.LocalProxyMode) set to `PodIP` in the OSM `MeshConfig`.
+- Have [`localProxyMode`](https://deploy-preview-382--osm-docs.netlify.app/docs/api_reference/config/v1alpha2/#config.openservicemesh.io/v1alpha2.SidecarSpec) set to `PodIP` in the OSM `MeshConfig`.
   - Most applications that run in a statefulset (Apache Kafka included) require all incoming network traffic to come via the pod IP. By default, OSM configures sends traffic over localhost, so it is important to modify that behavior via this MeshConfig setting. **The default behavior will be switched in a later version of OSM**
 
 ## Demo

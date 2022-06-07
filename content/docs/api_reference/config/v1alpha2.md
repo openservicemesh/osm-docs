@@ -866,6 +866,8 @@ string
 string
 </em>
 </td>
+</tr>
+<tr>
 <td>
 <code>localProxyMode</code><br/>
 <em>
