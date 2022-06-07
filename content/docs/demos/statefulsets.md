@@ -1,13 +1,10 @@
 ---
-title: "Configure Stateful Applications with OSM"
+title: "Configure Stateful Applications"
 description: "Secure your Kubernetes Kafka cluster with OSM"
 type: docs
 weight: 21
 ---
 
-<!---
-Remember to enable PodIP localProxyMode
--->
 This guide will illustrate how to configure stateful applications with OSM and Statefulsets in Kubernetes. For this demo, we will be installing [Apache Kafka](https://kafka.apache.org/) and its backing store [Apache Zookeeper](https://zookeeper.apache.org/) and set traffic policies allowing them to talk to one another. Finally, we'll test that we're able to produce and consume messages to/from a Kafka topic with all communication encrypted via mTLS.
 
 ## Prerequisites
