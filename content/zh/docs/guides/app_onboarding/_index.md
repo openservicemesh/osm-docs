@@ -90,7 +90,6 @@ weight: 5
     默认地，已迁入的命名空间中新部署的应用会自动注入 sidecar。这意味着当在纳入网格的命名空间中创建新 Pod 时，OSM 会自动为其注入 sidecar 代理。
     已有的应用需要重启来让 OSM 在重建 Pod 时自动为其注入 sidecar 代理。被 Deployment 管理的 Pod 可以使用命令 `kubectl rollout restart deploy` 来重启。
 
-    In order to route protocol specific traffic correctly to service ports, configure the application protocol to use. Refer to the [application protocol selection guide](/docs/guides/app_onboarding/app_protocol_selection) to learn more.
     为了正确地将协议指定的流量路由到服务端口，需要配置应用使用的协议。参考 [应用协议选择指南](/docs/guides/app_onboarding/app_protocol_selection)。
 
 #### 注意：移除命名空间
