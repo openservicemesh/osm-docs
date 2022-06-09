@@ -57,6 +57,10 @@ This will provide valuable certificate information, such as the expiration date 
 
 ### Rotate the Root Certificate (Tresor)
 
+WARNING: Rotating root certificates will incur downtime between any services as they transition their mTLS certs from one issuer to the next.
+
+We are currently working on a zero-downtime root cert rotation mechansim that we expect to announce in one of our upcoming releases.
+
 The self-signed root certificate, which is created via the Tresor package within OSM, will expire in a decade. To rotate the root cert, the following steps should be followed:
 
 1. Delete the `osm-ca-bundle` certificate in the osm namesapce
