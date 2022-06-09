@@ -7,18 +7,12 @@ weight: 25
 
 # 将 OSM 与自维护的 Prometheus 和 Grafana 集成
 
-The following article shows you how to create an example bring your own (BYO) Prometheus and Grafana stack on your cluster and configure that stack for observability and monitoring of OSM. For an example using an automatic provisioning of a Prometheus and Grafana stack with OSM, see the [Observability](https://docs.openservicemesh.io/docs/getting_started/observability/) getting started guide.
 本文为你展示如何在集群中创建自维护的 Prometheus 和 Grafana ，并为其配置以实现对 OSM 的可观测性和监控。有关使用 OSM 自动配置 Prometheus 和 Grafana 的示例，请参阅 [Observability](https://docs.openservicemesh.io/docs/getting_started/observability/)  入门指南。
 
 > 重要提示：本文创建的配置不应在生产环境中使用。对于生产级部署，请参阅 [Prometheus Operator](https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/user-guides/getting-started.md) 和 [Deploy Grafana in Kubernetes](https://grafana.com/docs/grafana/latest/installation/kubernetes/)。
 
 ## 先决条件
 
-- Kubernetes cluster running Kubernetes {{< param min_k8s_version >}} or greater.
-- OSM installed on the Kubernetes cluster.
-- `kubectl` installed and access to the cluster's API server.
-- `osm` CLI installed.
-- `helm` CLI installed.
 - Kubernetes 集群版本 {{< param min_k8s_version >}} 或者更高。
 - 集群中已安装 OSM。
 - 已安装 `kubectl` 用于访问 API server 。
@@ -356,7 +350,6 @@ kubectl port-forward $POD_NAME 3000
 OSM Dashboards 可通过 [OSM GitHub 存储库](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/charts/osm/grafana/dashboards) 获得，可以在管理应用程序上以 json blobs 方式导入。
 
 要导入仪表盘：
-* Hover your cursor over the `+` and select `Import`.
 * 鼠标放在 `+` 上并点击 `Import`
 * 从 [osm-mesh-envoy-details dashboard](https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/charts/osm/grafana/dashboards/osm-mesh-envoy-details.json) 复制 JSON 内容并拷贝到 `Import via panel json`。
 * 选择 `Load`。
