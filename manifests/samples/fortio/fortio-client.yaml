@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fortio-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fortio-client
+  template:
+    metadata:
+      labels:
+        app: fortio-client
+    spec:
+      containers:
+      - name: fortio-client
+        image: fortio/fortio:latest_release
+        imagePullPolicy: Always
