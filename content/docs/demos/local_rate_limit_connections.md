@@ -172,7 +172,7 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
 
     Examine the sidecar stats to further confirm this.
     ```console
-    $ osm proxy get stats "$fortio_server" -n demo | grep fortio.*8078.*rate_limit
+    $ osm proxy get stats "$fortio_server" -n demo | grep 'fortio.*8078.*rate_limit'
     local_rate_limit.inbound_demo/fortio_8078_tcp.rate_limited: 7
     ```
 
@@ -182,13 +182,13 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
     apiVersion: policy.openservicemesh.io/v1alpha1
     kind: UpstreamTrafficSetting
     metadata:
-    name: tcp-echo-limit
-    namespace: demo
+      name: tcp-echo-limit
+      namespace: demo
     spec:
-    host: fortio.demo.svc.cluster.local
-    rateLimit:
+      host: fortio.demo.svc.cluster.local
+      rateLimit:
         local:
-        tcp:
+          tcp:
             connections: 1
             unit: minute
             burst: 10
@@ -231,6 +231,6 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
 
     Further, examine the stats to confirm the burst allows additional connections to go through. The number of connections rate limited hasn't increased since our previous rate limit test before we configured the burst setting.
     ```console
-    $ osm proxy get stats "$fortio_server" -n demo | grep fortio.*8078.*rate_limit
+    $ osm proxy get stats "$fortio_server" -n demo | grep 'fortio.*8078.*rate_limit'
     local_rate_limit.inbound_demo/fortio_8078_tcp.rate_limited: 7
     ```
