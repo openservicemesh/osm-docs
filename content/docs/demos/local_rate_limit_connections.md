@@ -102,15 +102,15 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
     apiVersion: policy.openservicemesh.io/v1alpha1
     kind: UpstreamTrafficSetting
     metadata:
-    name: tcp-rate-limit
-    namespace: demo
+      name: tcp-rate-limit
+      namespace: demo
     spec:
-    host: fortio.demo.svc.cluster.local
-    rateLimit:
-    local:
-        tcp:
-        connections: 1
-        unit: minute
+      host: fortio.demo.svc.cluster.local
+      rateLimit:
+        local:
+          tcp:
+            connections: 1
+            unit: minute
     EOF
     ```
 
