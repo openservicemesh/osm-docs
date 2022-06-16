@@ -469,6 +469,208 @@ Defaults to 4294967295 (2^32 - 1) if not specified.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="policy.openservicemesh.io/v1alpha1.HTTPHeaderValue">HTTPHeaderValue
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.HTTPLocalRateLimitSpec">HTTPLocalRateLimitSpec</a>)
+</p>
+<p>
+<p>HTTPHeaderValue defines an HTTP header name/value pair</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>name</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Name defines the name of the HTTP header.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>value</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Value defines the value of the header corresponding to the name key.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.HTTPLocalRateLimitSpec">HTTPLocalRateLimitSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.HTTPPerRouteRateLimitSpec">HTTPPerRouteRateLimitSpec</a>, <a href="#policy.openservicemesh.io/v1alpha1.LocalRateLimitSpec">LocalRateLimitSpec</a>)
+</p>
+<p>
+<p>HTTPLocalRateLimitSpec defines the local rate limiting specification
+for the upstream host at the HTTP level.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>requests</code><br/>
+<em>
+uint32
+</em>
+</td>
+<td>
+<p>Requests defines the number of requests allowed
+per unit of time before rate limiting occurs.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>unit</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Unit defines the period of time within which requests
+over the limit will be rate limited.
+Valid values are &ldquo;second&rdquo;, &ldquo;minute&rdquo; and &ldquo;hour&rdquo;.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>burst</code><br/>
+<em>
+uint32
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Burst defines the number of requests above the baseline
+rate that are allowed in a short period of time.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>responseStatusCode</code><br/>
+<em>
+uint32
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>ResponseStatusCode defines the HTTP status code to use for responses
+to rate limited requests. Code must be in the 400-599 (inclusive)
+error range. If not specified, a default of 429 (Too Many Requests) is used.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>responseHeadersToAdd</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.HTTPHeaderValue">
+[]HTTPHeaderValue
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>ResponseHeadersToAdd defines the list of HTTP headers that should be
+added to each response for requests that have been rate limited.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.HTTPPerRouteRateLimitSpec">HTTPPerRouteRateLimitSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.HTTPRouteSpec">HTTPRouteSpec</a>)
+</p>
+<p>
+<p>HTTPPerRouteRateLimitSpec defines the rate limiting specification
+per HTTP route.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>local</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.HTTPLocalRateLimitSpec">
+HTTPLocalRateLimitSpec
+</a>
+</em>
+</td>
+<td>
+<p>Local defines the local rate limiting specification
+applied per HTTP route.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.HTTPRouteSpec">HTTPRouteSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingSpec">UpstreamTrafficSettingSpec</a>)
+</p>
+<p>
+<p>HTTPRouteSpec defines the settings correspondng to an HTTP route</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>path</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Path defines the HTTP path.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>rateLimit</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.HTTPPerRouteRateLimitSpec">
+HTTPPerRouteRateLimitSpec
+</a>
+</em>
+</td>
+<td>
+<p>RateLimit defines the HTTP rate limiting specification for
+the specified HTTP route.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="policy.openservicemesh.io/v1alpha1.IngressBackend">IngressBackend
 </h3>
 <p>
@@ -728,6 +930,60 @@ string
 </tr>
 </tbody>
 </table>
+<h3 id="policy.openservicemesh.io/v1alpha1.LocalRateLimitSpec">LocalRateLimitSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.RateLimitSpec">RateLimitSpec</a>)
+</p>
+<p>
+<p>LocalRateLimitSpec defines the local rate limiting specification
+for the upstream host.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>tcp</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.TCPLocalRateLimitSpec">
+TCPLocalRateLimitSpec
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>TCP defines the local rate limiting specification at the network
+level. This is a token bucket rate limiter where each connection
+consumes a single token. If the token is available, the connection
+will be allowed. If no tokens are available, the connection will be
+immediately closed.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>http</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.HTTPLocalRateLimitSpec">
+HTTPLocalRateLimitSpec
+</a>
+</em>
+</td>
+<td>
+<p>HTTP defines the local rate limiting specification for HTTP traffic.
+This is a token bucket rate limiter where each request consumes
+a single token. If the token is available, the request will be
+allowed. If no tokens are available, the request will receive the
+configured rate limit status.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="policy.openservicemesh.io/v1alpha1.PortSpec">PortSpec
 </h3>
 <p>
@@ -764,6 +1020,43 @@ string
 </td>
 <td>
 <p>Protocol defines the protocol served by the port.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.RateLimitSpec">RateLimitSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingSpec">UpstreamTrafficSettingSpec</a>)
+</p>
+<p>
+<p>RateLimitSpec defines the rate limiting specification for
+the upstream host.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>local</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.LocalRateLimitSpec">
+LocalRateLimitSpec
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Local specified the local rate limiting specification
+for the upstream host.
+Local rate limiting is enforced directly by the upstream
+host without any involvement of a global rate limiting service.
+This is applied as a token bucket rate limiter.</p>
 </td>
 </tr>
 </tbody>
@@ -889,10 +1182,13 @@ string
 <td>
 <code>perTryTimeout</code><br/>
 <em>
-string
+<a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration">
+Kubernetes meta/v1.Duration
+</a>
 </em>
 </td>
 <td>
+<em>(Optional)</em>
 <p>PerTryTimeout defines the time allowed for a retry before it&rsquo;s considered a failed attempt.</p>
 </td>
 </tr>
@@ -900,21 +1196,25 @@ string
 <td>
 <code>numRetries</code><br/>
 <em>
-int
+uint32
 </em>
 </td>
 <td>
+<em>(Optional)</em>
 <p>NumRetries defines the max number of retries to attempt.</p>
 </td>
 </tr>
 <tr>
 <td>
-<code>retryBackoffInterval</code><br/>
+<code>retryBackoffBaseInterval</code><br/>
 <em>
-string
+<a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration">
+Kubernetes meta/v1.Duration
+</a>
 </em>
 </td>
 <td>
+<em>(Optional)</em>
 <p>RetryBackoffBaseInterval defines the base interval for exponential retry backoff.</p>
 </td>
 </tr>
@@ -1077,6 +1377,63 @@ Defaults to 5s if not specified.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="policy.openservicemesh.io/v1alpha1.TCPLocalRateLimitSpec">TCPLocalRateLimitSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.LocalRateLimitSpec">LocalRateLimitSpec</a>)
+</p>
+<p>
+<p>TCPLocalRateLimitSpec defines the local rate limiting specification
+for the upstream host at the TCP level.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>connections</code><br/>
+<em>
+uint32
+</em>
+</td>
+<td>
+<p>Connections defines the number of connections allowed
+per unit of time before rate limiting occurs.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>unit</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Unit defines the period of time within which connections
+over the limit will be rate limited.
+Valid values are &ldquo;second&rdquo;, &ldquo;minute&rdquo; and &ldquo;hour&rdquo;.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>burst</code><br/>
+<em>
+uint32
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Burst defines the number of connections above the baseline
+rate that are allowed in a short period of time.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="policy.openservicemesh.io/v1alpha1.TLSSpec">TLSSpec
 </h3>
 <p>
@@ -1196,6 +1553,43 @@ directed to the upstream host.</p>
 </tr>
 <tr>
 <td>
+<code>rateLimit</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.RateLimitSpec">
+RateLimitSpec
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>RateLimit specifies the rate limit settings for the traffic
+directed to the upstream host.
+If HTTP rate limiting is specified, the rate limiting is applied
+at the VirtualHost level applicable to all routes within the
+VirtualHost.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>httpRoutes</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.HTTPRouteSpec">
+[]HTTPRouteSpec
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>HTTPRoutes defines the list of HTTP routes settings
+for the upstream host. Settings are applied at a per
+route level.</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td>
 <code>status</code><br/>
 <em>
 <a href="#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingStatus">
@@ -1206,9 +1600,6 @@ UpstreamTrafficSettingStatus
 <td>
 <em>(Optional)</em>
 <p>Status is the status of the UpstreamTrafficSetting resource.</p>
-</td>
-</tr>
-</table>
 </td>
 </tr>
 </tbody>
@@ -1261,16 +1652,36 @@ directed to the upstream host.</p>
 </tr>
 <tr>
 <td>
-<code>status</code><br/>
+<code>rateLimit</code><br/>
 <em>
-<a href="#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingStatus">
-UpstreamTrafficSettingStatus
+<a href="#policy.openservicemesh.io/v1alpha1.RateLimitSpec">
+RateLimitSpec
 </a>
 </em>
 </td>
 <td>
 <em>(Optional)</em>
-<p>Status is the status of the UpstreamTrafficSetting resource.</p>
+<p>RateLimit specifies the rate limit settings for the traffic
+directed to the upstream host.
+If HTTP rate limiting is specified, the rate limiting is applied
+at the VirtualHost level applicable to all routes within the
+VirtualHost.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>httpRoutes</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.HTTPRouteSpec">
+[]HTTPRouteSpec
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>HTTPRoutes defines the list of HTTP routes settings
+for the upstream host. Settings are applied at a per
+route level.</p>
 </td>
 </tr>
 </tbody>
@@ -1278,7 +1689,7 @@ UpstreamTrafficSettingStatus
 <h3 id="policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingStatus">UpstreamTrafficSettingStatus
 </h3>
 <p>
-(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingSpec">UpstreamTrafficSettingSpec</a>)
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSetting">UpstreamTrafficSetting</a>)
 </p>
 <p>
 <p>UpstreamTrafficSettingStatus defines the status of an UpstreamTrafficSetting resource.</p>
@@ -1320,5 +1731,5 @@ string
 <hr/>
 <p><em>
 Generated with <code>gen-crd-api-reference-docs</code>
-on git commit <code>7e0674c3</code>.
+on git commit <code>a5b37165</code>.
 </em></p>
