@@ -17,9 +17,9 @@ weight: 10
 
 | 证书类型 | 如何被使用                                                                                | 有效期限                                                                              | 通用名示例                                             |
 | ---------------- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| xDS 引导    | 为 Envoy-to-controller gRPC 连接所用; 标识 Envoy (Pod) 到 xDS control plane | 一个十年                                                                      | `7b2359d7-f201-4d3f-a217-73fd6e44e39b.bookstore-v2.bookstore` |
+| xDS 引导    | 为 Envoy-to-controller gRPC 连接所用; 标识 Envoy (Pod) 到 xDS control plane | 十年                                                                      | `7b2359d7-f201-4d3f-a217-73fd6e44e39b.bookstore-v2.bookstore` |
 | 服务          | 为 Envoy 之间的 east-west 通信所用; 标识服务账号                  | 默认 `24h`; 被 `osm.certificateProvider.serviceCertValidityDuration` 安装选项所定义 | `bookstore-v2.bookstore.cluster.local`                        |
-| webhook 服务器   | 被突变、验证和 CRD 转换 webhook 服务器所使用                           | 一个十年                                                                                       | `osm-injector.osm-system.svc`                                 |
+| webhook 服务器   | 被突变、验证和 CRD 转换 webhook 服务器所使用                           | 十年                                                                                       | `osm-injector.osm-system.svc`                                 |
 |                  |
 
 
