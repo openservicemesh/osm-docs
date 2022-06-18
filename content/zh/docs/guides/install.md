@@ -50,7 +50,7 @@ _Note: 通过 CLI 安装的 OSM 强制部署唯一一个网格在集群里。OSM
 
 您可以通过覆盖值文件来配置 OSM 安装。
 
-1. 创建一个[值文件](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/charts/osm/values.yaml)的副本（确保使用的针对图表的版本是您所要安装的）。
+1. 创建一个 [values.yaml 文件](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/charts/osm/values.yaml)的副本（确保使用的针对图表的版本是您所要安装的）。
 2. 修改任何您想要定制的值。您可以忽略所有其他的值。
 
    - 要查阅哪些值对应到 MeshConfig 设定，请参阅 [OSM MeshConfig 文档](/docs/guides/mesh_config)

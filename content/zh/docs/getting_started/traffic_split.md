@@ -11,7 +11,7 @@ weight: 4
 
 ### 部署 bookstore v2 应用
 
-要演示 SMI 流量访问和拆分策略的使用，我们现在将要部署书店应用的 v2 版本（`bookstore-v2`）——如果您正在使用 openshift 那么请记住，您必须添加安全上下文容器给 bookstore-v2 服务账号，就像在[安装指南](/docs/install/#openshift)里面规定的那样。
+要演示 SMI 流量访问和拆分策略的使用，我们现在将要部署 bookstore 应用的 v2 版本（`bookstore-v2`）——如果您正在使用 openshift 那么请记住，您必须添加安全上下文容器给 bookstore-v2 服务账号，就像在[安装指南](/docs/install/#openshift)里面规定的那样。
 
 ```bash
 # Contains the bookstore-v2 Kubernetes Service, Service Account, Deployment and SMI Traffic Target resource to allow
@@ -41,7 +41,7 @@ _注意：根服务能够是任何 Kubernetes 服务。它没有任何标签选�
 kubectl describe trafficsplit bookstore-split -n bookstore
 ```
 
-### 拆分流量给书店 v2
+### 拆分流量给 bookstore-v2
 
 更新 SMI 流量拆分策略来定向 50% 的流量发送到根 `bookstore` 服务再到 `bookstore` 服务，然后 50% 的流量到 `bookstore-v2` 服务，这可以通过添加 `bookstore-v2` 后端到规范并修改权重域来完成。
 
@@ -55,7 +55,7 @@ kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< 
 - [http://localhost:8084](http://localhost:8084) - **bookstore**
 - [http://localhost:8082](http://localhost:8082) - **bookstore-v2**
 
-### 拆分全部流量到书店 v2
+### 拆分全部流量到 bookstore-v2
 
 更新 `bookstore-split` 流量拆分来配置全部的流量去往 `bookstore-v2`：
 

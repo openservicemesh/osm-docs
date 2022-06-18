@@ -5,7 +5,7 @@ type: docs
 weight: 10
 ---
 
-SM 可以选择使用 [Contour](https://projectcontour.io) 入口控制器和基于 Envoy 的边缘代理来路由外部的流量到服务网格后端。这个指南演示了如何为 OSM 服务网格管理的服务配置 HTTP 和 HTTPS ingress。
+OSM 可以选择使用 [Contour](https://projectcontour.io) 入口控制器和基于 Envoy 的边缘代理来路由外部的流量到服务网格后端。这个指南演示了如何为 OSM 服务网格管理的服务配置 HTTP 和 HTTPS ingress。
 
 ## 先决条件
 
