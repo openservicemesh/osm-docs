@@ -76,3 +76,6 @@ typings/
 
 # Generated files
 resources/_gen
+
+# Hugo
+.hugo_build.lock

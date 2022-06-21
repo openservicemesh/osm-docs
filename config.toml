@@ -5,6 +5,7 @@ description = "Documentation for Open Service Mesh (OSM)"
 theme = "dosmy"
 RelativeURLs=true
 CanonifyURLs=true
+enableRobotsTXT = true
 
 # Theme General Config
 [languages]
@@ -16,7 +17,6 @@ weight = 1
 [services]
 [services.googleAnalytics]
 id = "UA-130516746-13"
-enableRobotsTXT = true
 enableGitInfo = true
 contentDir = "content"
 version_menu = "Releases"
@@ -114,3 +114,7 @@ ul_show = 1
 enable = true
 yes = 'Glad to hear it! Please <a href="https://github.com/openservicemesh/osm/issues/new">tell us how we can improve</a>.'
 no = 'Sorry to hear that. Please <a href="https://github.com/openservicemesh/osm/issues/new">tell us how we can improve</a>.'
+
+[sitemap]
+  changefreq = 'monthly'
+  priority = 0.5
