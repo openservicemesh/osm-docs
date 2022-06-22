@@ -15,38 +15,38 @@ To familiarize yourself on how OSM works with Prometheus, try installing a new m
 1. Install OSM with its own Prometheus instance:
 
    ```console
-   $ osm install --set osm.deployPrometheus=true,osm.enablePermissiveTrafficPolicy=true
+   osm install --set osm.deployPrometheus=true,osm.enablePermissiveTrafficPolicy=true
    OSM installed successfully in namespace [osm-system] with mesh name [osm]
    ```
 
 1. Create a namespace for sample workloads:
 
    ```console
-   $ kubectl create namespace metrics-demo
+   kubectl create namespace metrics-demo
    namespace/metrics-demo created
    ```
 
 1. Make the new OSM monitor the new namespace:
 
    ```console
-   $ osm namespace add metrics-demo
+   osm namespace add metrics-demo
    Namespace [metrics-demo] successfully added to mesh [osm]
    ```
 
 1. Configure OSM's Prometheus to scrape metrics from the new namespace:
 
    ```console
-   $ osm metrics enable --namespace metrics-demo
+   osm metrics enable --namespace metrics-demo
    Metrics successfully enabled in namespace [metrics-demo]
    ```
 
 1. Install sample applications:
 
    ```console
-   $ kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/curl/curl.yaml -n metrics-demo
+   kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/curl/curl.yaml -n metrics-demo
    serviceaccount/curl created
    deployment.apps/curl created
-   $ kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/httpbin/httpbin.yaml -n metrics-demo
+   kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/httpbin/httpbin.yaml -n metrics-demo
    serviceaccount/httpbin created
    service/httpbin created
    deployment.apps/httpbin created
@@ -55,7 +55,7 @@ To familiarize yourself on how OSM works with Prometheus, try installing a new m
    Ensure the new Pods are Running and all containers are ready:
 
    ```console
-   $ kubectl get pods -n metrics-demo
+   kubectl get pods -n metrics-demo
    NAME                       READY   STATUS    RESTARTS   AGE
    curl-54ccc6954c-q8s89      2/2     Running   0          95s
    httpbin-8484bfdd46-vq98x   2/2     Running   0          72s
@@ -66,7 +66,7 @@ To familiarize yourself on how OSM works with Prometheus, try installing a new m
    The following command makes the curl Pod make about 1 request per second to the httpbin Pod forever:
 
    ```console
-   $ kubectl exec -n metrics-demo -ti "$(kubectl get pod -n metrics-demo -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- sh -c 'while :; do curl -i httpbin.metrics-demo:14001/status/200; sleep 1; done'
+   kubectl exec -n metrics-demo -ti "$(kubectl get pod -n metrics-demo -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- sh -c 'while :; do curl -i httpbin.metrics-demo:14001/status/200; sleep 1; done'
    HTTP/1.1 200 OK
    server: envoy
    date: Tue, 23 Mar 2021 17:27:44 GMT
@@ -93,7 +93,7 @@ To familiarize yourself on how OSM works with Prometheus, try installing a new m
    Forward the Prometheus port:
 
    ```console
-   $ kubectl port-forward -n osm-system $(kubectl get pods -n osm-system -l app=osm-prometheus -o jsonpath='{.items[0].metadata.name}') 7070
+   kubectl port-forward -n osm-system $(kubectl get pods -n osm-system -l app=osm-prometheus -o jsonpath='{.items[0].metadata.name}') 7070
    Forwarding from 127.0.0.1:7070 -> 7070
    Forwarding from [::1]:7070 -> 7070
    ```
@@ -111,14 +111,14 @@ To familiarize yourself on how OSM works with Prometheus, try installing a new m
    Once you are done with the demo resources, clean them up by first deleting the application namespace:
 
    ```console
-   $ kubectl delete ns metrics-demo
+   kubectl delete ns metrics-demo
    namespace "metrics-demo" deleted
    ```
 
    Then, uninstall OSM:
 
    ```
-   $ osm uninstall mesh
+   osm uninstall mesh
    Uninstall OSM [mesh name: osm] ? [y/n]: y
    OSM [mesh name: osm] uninstalled
    ```
@@ -126,5 +126,5 @@ To familiarize yourself on how OSM works with Prometheus, try installing a new m
    To remove OSM's cluster wide resources after uninstallation, run the following command. See the [uninstall guide](/docs/guides/uninstall/) for more context and information.
 
    ```console
-   $ osm uninstall mesh --delete-cluster-wide-resources
+   osm uninstall mesh --delete-cluster-wide-resources
    ```

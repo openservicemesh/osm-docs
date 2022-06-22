@@ -41,14 +41,14 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
     Confirm the `curl` client pod is up and running.
 
     ```console
-    $ kubectl get pods -n curl
+    kubectl get pods -n curl
     NAME                    READY   STATUS    RESTARTS   AGE
     curl-54ccc6954c-9rlvp   2/2     Running   0          20s
     ```
 
 1. Retrieve the public IP address for the `httpbin.org` website. For the purpose of this demo, we will test with a single IP range to be excluded from traffic interception. In this example, we will use the IP address `54.91.118.50` represented by the IP range `54.91.118.50/32`, to make HTTP requests with and without outbound IP range exclusions configured.
     ```console
-    $ nslookup httpbin.org
+    nslookup httpbin.org
     Server:		172.23.48.1
     Address:	172.23.48.1#53
 
@@ -68,7 +68,7 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
 1. Confirm the `curl` client is unable to make successful HTTP requests to the `httpbin.org` website running on `http://54.91.118.50:80`.
 
     ```console
-    $ kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I http://54.91.118.50:80
+    kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I http://54.91.118.50:80
     curl: (7) Failed to connect to 54.91.118.50 port 80: Connection refused
     command terminated with exit code 7
     ```
@@ -83,7 +83,7 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
 1. Confirm the MeshConfig has been updated as expected
     ```console
     # 54.91.118.50 is one of the IP addresses of httpbin.org
-    $ kubectl get meshconfig osm-mesh-config -n "$osm_namespace" -o jsonpath='{.spec.traffic.outboundIPRangeExclusionList}{"\n"}'
+    kubectl get meshconfig osm-mesh-config -n "$osm_namespace" -o jsonpath='{.spec.traffic.outboundIPRangeExclusionList}{"\n"}'
     ["54.91.118.50/32"]
     ```
 
@@ -97,7 +97,7 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
 1. Confirm the `curl` client is able to make successful HTTP requests to the `httpbin.org` website running on `http://54.91.118.50:80`
     ```console
     # 54.91.118.50 is one of the IP addresses for httpbin.org
-    $ kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I http://54.91.118.50:80
+    kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I http://54.91.118.50:80
     HTTP/1.1 200 OK
     Date: Thu, 18 Mar 2021 23:17:44 GMT
     Content-Type: text/html; charset=utf-8
@@ -111,7 +111,7 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
 1. Confirm that HTTP requests to other IP addresses of the `httpbin.org` website that are not excluded fail
     ```console
     # 34.199.75.4 is one of the IP addresses for httpbin.org
-    $ kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I http://34.199.75.4:80
+    kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I http://34.199.75.4:80
     curl: (7) Failed to connect to 34.199.75.4 port 80: Connection refused
     command terminated with exit code 7
     ```

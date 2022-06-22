@@ -40,7 +40,7 @@ The following demo shows a TCP client sending data to a `tcp-echo` server, which
     Confirm the `tcp-echo` service and pod is up and running.
 
     ```console
-    $ kubectl get svc,po -n tcp-demo
+    kubectl get svc,po -n tcp-demo
     NAME               TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
     service/tcp-echo   ClusterIP   10.0.216.68   <none>        9000/TCP   97s
 
@@ -64,7 +64,7 @@ The following demo shows a TCP client sending data to a `tcp-echo` server, which
     Confirm the `curl` client pod is up and running.
 
     ```console
-    $ kubectl get pods -n curl
+    kubectl get pods -n curl
     NAME                    READY   STATUS    RESTARTS   AGE
     curl-54ccc6954c-9rlvp   2/2     Running   0          20s
     ```
@@ -80,7 +80,7 @@ We will enable service discovery using [permissive traffic policy mode](/docs/gu
 
 1. Confirm the `curl` client is able to send and receive a response from the `tcp-echo` service using TCP routing.
     ```console
-    $ kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- sh -c 'echo hello | nc tcp-echo.tcp-demo 9000'
+    kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- sh -c 'echo hello | nc tcp-echo.tcp-demo 9000'
     echo response: hello
     ```
 
@@ -97,7 +97,7 @@ When using SMI traffic policy mode, explicit traffic policies must be configured
 
 1. Confirm the `curl` client is unable to send and receive a response from the `tcp-echo` service in the absence of SMI policies.
     ```console
-    $ kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- sh -c 'echo hello | nc tcp-echo.tcp-demo 9000'
+    kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- sh -c 'echo hello | nc tcp-echo.tcp-demo 9000'
     command terminated with exit code 1
     ```
 
@@ -138,5 +138,5 @@ When using SMI traffic policy mode, explicit traffic policies must be configured
 
 1. Confirm the `curl` client is able to send and receive a response from the `tcp-echo` service using SMI TCP route.
     ```console
-    $ kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- sh -c 'echo hello | nc tcp-echo.tcp-demo 9000'
+    kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- sh -c 'echo hello | nc tcp-echo.tcp-demo 9000'
     echo response: hello

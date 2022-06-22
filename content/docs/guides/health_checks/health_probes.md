@@ -351,7 +351,7 @@ kubectl port-forward -n bookstore deployment/bookstore-v1 15901
 Then, in a separate terminal instance, `curl` may be used to check the endpoint. The following example shows a healthy bookstore-v1:
 
 ```console
-$ curl -i localhost:15901/osm-liveness-probe
+curl -i localhost:15901/osm-liveness-probe
 HTTP/1.1 200 OK
 date: Wed, 31 Mar 2021 16:00:01 GMT
 content-length: 1396

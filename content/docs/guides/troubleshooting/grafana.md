@@ -19,7 +19,7 @@ If a Grafana instance installed with OSM can't be reached, perform the following
     If no such Pod is found, verify the OSM Helm chart was installed with the `osm.deployGrafana` parameter set to `true` with `helm`:
 
     ```console
-    $ helm get values -a <mesh name> -n <OSM namespace>
+    helm get values -a <mesh name> -n <OSM namespace>
     ```
 
     If the parameter is set to anything but `true`, reinstall OSM with the `--set=osm.deployGrafana=true` flag on `osm install`.
@@ -29,8 +29,8 @@ If a Grafana instance installed with OSM can't be reached, perform the following
     The Grafana Pod identified above should be both in a Running state and have all containers ready, as shown in the `kubectl get` output:
 
     ```console
-    $ # Assuming OSM is installed in the osm-system namespace:
-    $ kubectl get pods -n osm-system -l app=osm-grafana
+    # Assuming OSM is installed in the osm-system namespace:
+    kubectl get pods -n osm-system -l app=osm-grafana
     NAME                           READY   STATUS    RESTARTS   AGE
     osm-grafana-7c88b9687d-tlzld   1/1     Running   0          58s
     ```
@@ -38,8 +38,8 @@ If a Grafana instance installed with OSM can't be reached, perform the following
     If the Pod is not showing as Running or its containers ready, use `kubectl describe` to look for other potential issues:
 
     ```console
-    $ # Assuming OSM is installed in the osm-system namespace:
-    $ kubectl describe pods -n osm-system -l app=osm-grafana
+    # Assuming OSM is installed in the osm-system namespace:
+    kubectl describe pods -n osm-system -l app=osm-grafana
     ```
 
     Once the Grafana Pod is found to be healthy, Grafana should be reachable.
@@ -57,7 +57,7 @@ If data appears to be missing from the Grafana dashboards, perform the following
     Start by opening the Grafana UI in a browser:
 
     ```console
-    $ osm dashboard
+    osm dashboard
     [+] Starting Dashboard forwarding
     [+] Issuing open browser http://localhost:3000
     ```

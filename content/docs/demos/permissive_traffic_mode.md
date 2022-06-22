@@ -42,13 +42,13 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
     Confirm the `httpbin` service and pods are up and running.
 
     ```console
-    $ kubectl get svc -n httpbin
+    kubectl get svc -n httpbin
     NAME      TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)     AGE
     httpbin   ClusterIP   10.96.198.23   <none>        14001/TCP   20s
     ```
 
     ```console
-    $ kubectl get pods -n httpbin
+    kubectl get pods -n httpbin
     NAME                     READY   STATUS    RESTARTS   AGE
     httpbin-5b8b94b9-lt2vs   2/2     Running   0          20s
     ```
@@ -69,7 +69,7 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
     Confirm the `curl` client pod is up and running.
 
     ```console
-    $ kubectl get pods -n curl
+    kubectl get pods -n curl
     NAME                    READY   STATUS    RESTARTS   AGE
     curl-54ccc6954c-9rlvp   2/2     Running   0          20s
     ```
@@ -77,7 +77,7 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
 1. Confirm the `curl` client is able to access the `httpbin` service on port `14001`.
 
     ```console
-    $ kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I http://httpbin.httpbin:14001
+    kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I http://httpbin.httpbin:14001
     HTTP/1.1 200 OK
     server: envoy
     date: Mon, 15 Mar 2021 22:45:23 GMT
@@ -97,7 +97,7 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
     ```
 
     ```console
-    $ kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I http://httpbin.httpbin:14001
+    kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I http://httpbin.httpbin:14001
     curl: (7) Failed to connect to httpbin.httpbin port 14001: Connection refused
     command terminated with exit code 7
     ```

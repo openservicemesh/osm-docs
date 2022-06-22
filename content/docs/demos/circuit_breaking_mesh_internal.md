@@ -42,13 +42,13 @@ The following demo shows a load-testing client [fortio](https://github.com/forti
     Confirm the `httpbin` service and pods are up and running.
 
     ```console
-    $ kubectl get svc -n httpbin
+    kubectl get svc -n httpbin
     NAME      TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)     AGE
     httpbin   ClusterIP   10.96.198.23   <none>        14001/TCP   20s
     ```
 
     ```console
-    $ kubectl get pods -n httpbin
+    kubectl get pods -n httpbin
     NAME                     READY   STATUS    RESTARTS   AGE
     httpbin-5b8b94b9-lt2vs   2/2     Running   0          20s
     ```
@@ -68,16 +68,16 @@ The following demo shows a load-testing client [fortio](https://github.com/forti
     Confirm the `fortio` client pod is up and running.
 
     ```console
-    $ kubectl get pods -n client
+    kubectl get pods -n client
     NAME                      READY   STATUS    RESTARTS   AGE
     fortio-6477f8495f-bj4s9   2/2     Running   0          19s
     ```
 
 1. Confirm the `fortio` client is able to successfully make HTTP requests to the `httpbin` service on port `14001`. We call the `httpbin` service with `3` concurrent connections (`-c 3`) and send `50` requests (`-n 50`).
     ```console
-    $ export fortio_pod="$(kubectl get pod -n client -l app=fortio -o jsonpath='{.items[0].metadata.name}')"
+    export fortio_pod="$(kubectl get pod -n client -l app=fortio -o jsonpath='{.items[0].metadata.name}')"
 
-    $ kubectl exec "$fortio_pod" -c fortio -n client -- /usr/bin/fortio load -c 3 -qps 0 -n 50 -loglevel Warning http://httpbin.httpbin.svc.cluster.local:14001/get
+    kubectl exec "$fortio_pod" -c fortio -n client -- /usr/bin/fortio load -c 3 -qps 0 -n 50 -loglevel Warning http://httpbin.httpbin.svc.cluster.local:14001/get
     17:48:46 I logger.go:127> Log level is now 3 Warning (was 2 Info)
     Fortio 1.17.1 running at 0 queries per second, 8->8 procs, for 50 calls: http://httpbin.httpbin.svc.cluster.local:14001/get
     Starting at max qps with 3 thread(s) [gomax 8] for exactly 50 calls (16 per thread + 2)
@@ -138,7 +138,7 @@ The following demo shows a load-testing client [fortio](https://github.com/forti
 
 1. Confirm the `fortio` client is unable to make the same amount of successful requests as before due to the connection and request level circuit breaking limits configured above.
     ```console
-    $ kubectl exec "$fortio_pod" -c fortio -n client -- /usr/bin/fortio load -c 3 -qps 0 -n 50 -loglevel Warning http://httpbin.httpbin.svc.cluster.local:14001/get
+    kubectl exec "$fortio_pod" -c fortio -n client -- /usr/bin/fortio load -c 3 -qps 0 -n 50 -loglevel Warning http://httpbin.httpbin.svc.cluster.local:14001/get
     17:59:19 I logger.go:127> Log level is now 3 Warning (was 2 Info)
     Fortio 1.17.1 running at 0 queries per second, 8->8 procs, for 50 calls: http://httpbin.httpbin.svc.cluster.local:14001/get
     Starting at max qps with 3 thread(s) [gomax 8] for exactly 50 calls (16 per thread + 2)
@@ -212,7 +212,7 @@ The following demo shows a load-testing client [fortio](https://github.com/forti
 
 1. Examine the `Envoy` sidecar stats to see statistics pertaining to the requests that tripped the circuit breaker.
     ```console
-    $ osm proxy get stats "$fortio_pod" -n client | grep 'httpbin.*pending'
+    osm proxy get stats "$fortio_pod" -n client | grep 'httpbin.*pending'
     cluster.httpbin/httpbin|14001.circuit_breakers.default.remaining_pending: 1
     cluster.httpbin/httpbin|14001.circuit_breakers.default.rq_pending_open: 0
     cluster.httpbin/httpbin|14001.circuit_breakers.high.rq_pending_open: 0

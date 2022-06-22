@@ -90,9 +90,9 @@ Building OSM from source requires more steps but is the best way to test the lat
 You must have a working [Go](https://golang.org/doc/install) environment.
 
 ```console
-$ git clone git@github.com:openservicemesh/osm.git
-$ cd osm
-$ make build-osm
+git clone git@github.com:openservicemesh/osm.git
+cd osm
+make build-osm
 ```
 
 `make build-osm` will fetch any required dependencies, compile `osm` and place it in `bin/osm`. Add `bin/osm` to `$PATH` so you can easily use `osm`.
@@ -121,7 +121,7 @@ Run `osm install`.
 
 ```console
 # Install osm control plane components
-$ osm install
+osm install
 OSM installed successfully in namespace [osm-system] with mesh name [osm]
 ```
 

@@ -39,14 +39,14 @@ This guide demonstrates a client within the service mesh accessing destinations 
     Confirm the `curl` client pod is up and running.
 
     ```console
-    $ kubectl get pods -n curl
+    kubectl get pods -n curl
     NAME                    READY   STATUS    RESTARTS   AGE
     curl-54ccc6954c-9rlvp   2/2     Running   0          20s
     ```
 
 1. Confirm the `curl` client is able to make successful HTTPS requests to the `httpbin.org` website on port `443`.
     ```console
-    $ kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I https://httpbin.org:443
+    kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I https://httpbin.org:443
     HTTP/2 200
     date: Tue, 16 Mar 2021 22:19:00 GMT
     content-type: text/html; charset=utf-8
@@ -63,7 +63,7 @@ This guide demonstrates a client within the service mesh accessing destinations 
     kubectl patch meshconfig osm-mesh-config -n "$osm_namespace" -p '{"spec":{"traffic":{"enableEgress":false}}}'  --type=merge
     ```
     ```console
-    $ kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I https://httpbin.org:443
+    kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I https://httpbin.org:443
 	  curl: (7) Failed to connect to httpbin.org port 443 after 3 ms: Connection refused
 	  command terminated with exit code 7
     ```

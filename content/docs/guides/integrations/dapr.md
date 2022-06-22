@@ -20,7 +20,7 @@ This document walks you through the steps of getting Dapr working with OSM on a 
       - Further [hello-kubernetes](https://github.com/dapr/quickstarts/tree/master/hello-kubernetes) sets up everything in the default namespace, it is **strongly recommended** to set up the entire hello-kubernetes demo in a specific namespace (we will later join this namespace to OSM's mesh). For the purpose of this integration, we have the namespace as `dapr-test`
 
         ```console
-         $ kubectl create namespace dapr-test
+         kubectl create namespace dapr-test
          namespace/dapr-test created
         ```
 
@@ -61,14 +61,14 @@ This document walks you through the steps of getting Dapr working with OSM on a 
 2. Install OSM:
 
    ```console
-   $ osm install
+   osm install
    OSM installed successfully in namespace [osm-system] with mesh name [osm]
    ```
 
 3. Enable permissive mode in OSM:
 
    ```console
-   $ kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":true}}}'  --type=merge
+   kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":true}}}'  --type=merge
    meshconfig.config.openservicemesh.io/osm-mesh-config patched
    ```
 
@@ -78,13 +78,13 @@ This document walks you through the steps of getting Dapr working with OSM on a 
 
    1. Get the kubernetes API server cluster IP:
       ```console
-      $ kubectl get svc -n default
+      kubectl get svc -n default
       NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
       kubernetes   ClusterIP   10.0.0.1     <none>        443/TCP   1d
       ```
    2. Add this IP to the MeshConfig so that outbound traffic to it is excluded from interception by OSM's sidecar
       ```console
-      $ kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"outboundIPRangeExclusionList":["10.0.0.1/32"]}}}'  --type=merge
+      kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"outboundIPRangeExclusionList":["10.0.0.1/32"]}}}'  --type=merge
       meshconfig.config.openservicemesh.io/osm-mesh-config patched
       ```
 
@@ -96,7 +96,7 @@ This document walks you through the steps of getting Dapr working with OSM on a 
 
    1. Get the ports of Dapr's placement server (`dapr-placement-server`):
       ```console
-      $ kubectl get svc -n dapr-system
+      kubectl get svc -n dapr-system
       NAME                    TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)              AGE
       dapr-api                ClusterIP   10.0.172.245   <none>        80/TCP               2h
       dapr-dashboard          ClusterIP   10.0.80.141    <none>        8080/TCP             2h
@@ -109,7 +109,7 @@ This document walks you through the steps of getting Dapr working with OSM on a 
    3. Add these ports to the MeshConfig so that outbound traffic to it is excluded from interception by OSM's sidecar
 
       ```console
-      $ kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"outboundPortExclusionList":[50005,8201,6379]}}}'  --type=merge
+      kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"outboundPortExclusionList":[50005,8201,6379]}}}'  --type=merge
       meshconfig.config.openservicemesh.io/osm-mesh-config patched
       ```
 
@@ -122,7 +122,7 @@ This document walks you through the steps of getting Dapr working with OSM on a 
    1. Get the ports of Dapr's api and sentry (`dapr-sentry` and `dapr-api`):
 
       ```console
-      $ kubectl get svc -n dapr-system
+      kubectl get svc -n dapr-system
       NAME                    TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)              AGE
       dapr-api                ClusterIP   10.0.172.245   <none>        80/TCP               2h
       dapr-dashboard          ClusterIP   10.0.80.141    <none>        8080/TCP             2h
@@ -138,38 +138,38 @@ This document walks you through the steps of getting Dapr working with OSM on a 
 7. Make OSM monitor the namespace that was used for the Dapr hello-kubernetes demo setup:
 
    ```console
-   $ osm namespace add dapr-test
+   osm namespace add dapr-test
    Namespace [dapr-test] successfully added to mesh [osm]
    ```
 
 8. Delete and re-deploy the Dapr hello-kubernetes pods:
 
    ```console
-   $ kubectl delete -f ./deploy/node.yaml
+   kubectl delete -f ./deploy/node.yaml
    service "nodeapp" deleted
    deployment.apps "nodeapp" deleted
    ```
 
    ```console
-   $ kubectl delete -f ./deploy/python.yaml
+   kubectl delete -f ./deploy/python.yaml
    deployment.apps "pythonapp" deleted
    ```
 
    ```console
-   $ kubectl apply -f ./deploy/node.yaml
+   kubectl apply -f ./deploy/node.yaml
    service "nodeapp" created
    deployment.apps "nodeapp" created
    ```
 
    ```console
-   $ kubectl apply -f ./deploy/python.yaml
+   kubectl apply -f ./deploy/python.yaml
    deployment.apps "pythonapp" created
    ```
 
    The pythonapp and nodeapp pods on restart will now have 3 containers each, indicating OSM's proxy sidecar has been successfully injected
 
    ```console
-   $ kubectl get pods -n dapr-test
+   kubectl get pods -n dapr-test
    NAME                         READY   STATUS    RESTARTS   AGE
    my-release-redis-master-0    1/1     Running   0          2h
    my-release-redis-slave-0     1/1     Running   0          2h
@@ -193,7 +193,7 @@ This document walks you through the steps of getting Dapr working with OSM on a 
     1. Disable permissive mode:
 
        ```console
-       $ kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}'  --type=merge
+       kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}'  --type=merge
        meshconfig.config.openservicemesh.io/osm-mesh-config patched
        ```
 
@@ -202,12 +202,12 @@ This document walks you through the steps of getting Dapr working with OSM on a 
     3. Create a service account for nodeapp and pythonapp:
 
        ```console
-       $ kubectl create sa nodeapp -n dapr-test
+       kubectl create sa nodeapp -n dapr-test
        serviceaccount/nodeapp created
        ```
 
        ```console
-       $ kubectl create sa pythonapp -n dapr-test
+       kubectl create sa pythonapp -n dapr-test
        serviceaccount/pythonapp created
        ```
 
@@ -289,23 +289,23 @@ This document walks you through the steps of getting Dapr working with OSM on a 
     1. To clean up the Dapr hello-kubernetes demo, clean the `dapr-test` namespace
 
        ```console
-       $ kubectl delete ns dapr-test
+       kubectl delete ns dapr-test
        ```
 
     2. To uninstall Dapr, run
 
        ```console
-       $ dapr uninstall --kubernetes
+       dapr uninstall --kubernetes
        ```
 
     3. To uninstall OSM, run
 
        ```console
-       $ osm uninstall mesh
+       osm uninstall mesh
        ```
 
     4. To remove OSM's cluster wide resources after uninstallation, run the following command. See the [uninstall guide](/docs/guides/uninstall/) for more context and information.
 
        ```console
-       $ osm uninstall mesh --delete-cluster-wide-resources
+       osm uninstall mesh --delete-cluster-wide-resources
        ```

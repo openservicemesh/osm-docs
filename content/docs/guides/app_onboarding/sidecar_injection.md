@@ -30,12 +30,12 @@ Automatic Sidecar injection can be enabled in the following ways:
 
   ```console
   # Enable sidecar injection on a namespace
-  $ kubectl annotate namespace <namespace> openservicemesh.io/sidecar-injection=enabled
+  kubectl annotate namespace <namespace> openservicemesh.io/sidecar-injection=enabled
   ```
 
   ```console
   # Enable sidecar injection on a pod
-  $ kubectl annotate pod <pod> openservicemesh.io/sidecar-injection=enabled
+  kubectl annotate pod <pod> openservicemesh.io/sidecar-injection=enabled
   ```
 
 - Setting the sidecar injection annotation to `enabled` in the Kubernetes resource spec for a namespace or pod:
@@ -61,7 +61,7 @@ Namespaces can be disabled for automatic sidecar injection in the following ways
 
   ```console
   # Disable sidecar injection on a namespace
-  $ kubectl annotate namespace <namespace> openservicemesh.io/sidecar-injection=disabled
+  kubectl annotate namespace <namespace> openservicemesh.io/sidecar-injection=disabled
   ```
 
 ### Explicitly Disabling Automatic Sidecar Injection on Pods
@@ -71,7 +71,7 @@ Individual pods can be explicitly disabled for sidecar injection. This is useful
 - Using `kubectl` to annotate individual pods to disable sidecar injection:
   ```console
   # Disable sidecar injection on a pod
-  $ kubectl annotate pod <pod> openservicemesh.io/sidecar-injection=disabled
+  kubectl annotate pod <pod> openservicemesh.io/sidecar-injection=disabled
   ```
 
 - Setting the sidecar injection annotation to `disabled` in the Kubernetes resource spec for the pod:

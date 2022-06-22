@@ -32,7 +32,7 @@ Each version of the OSM CLI is designed to work only with the matching version o
 Run `osm install` to install the OSM control plane.
 
 ```console
-$ osm install
+osm install
 OSM installed successfully in namespace [osm-system] with mesh name [osm]
 ```
 
@@ -64,7 +64,7 @@ You can configure the OSM installation by overriding the values file.
 Then run the following `helm install` command. The chart version can be found in the Helm chart you wish to install [here](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/charts/osm/Chart.yaml#L17).
 
 ```console
-$ helm install <mesh name> osm --repo https://openservicemesh.github.io/osm --version <chart version> --namespace <osm namespace> --values override.yaml
+helm install <mesh name> osm --repo https://openservicemesh.github.io/osm --version <chart version> --namespace <osm namespace> --values override.yaml
 ```
 
 Omit the `--values` flag if you prefer to use the default settings.
@@ -105,7 +105,7 @@ A few components will be installed by default. Inspect them by using the followi
 
 ```console
 # Replace osm-system with the namespace where OSM is installed
-$ kubectl get pods,svc,secrets,meshconfigs,serviceaccount --namespace osm-system
+  kubectl get pods,svc,secrets,meshconfigs,serviceaccount --namespace osm-system
 ```
 
 A few cluster wide (non Namespaced components) will also be installed. Inspect them using the following `kubectl` command:
@@ -118,7 +118,7 @@ Under the hood, `osm` is using [Helm](https://helm.sh) libraries to create a Hel
 
 ```console
 # Replace osm-system with the namespace where OSM is installed
-$ helm get manifest osm --namespace osm-system
+  helm get manifest osm --namespace osm-system
 ```
 
 ## Next Steps
