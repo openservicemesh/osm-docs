@@ -46,7 +46,7 @@ Prometheus needs to be configured to scape the OSM endpoints and properly handle
 
 Use `kubectl get configmap` to verify the `stable-prometheus-sever` configmap has been created. For example:
 
-```
+```bash
 $ kubectl get configmap
 
 NAME                             DATA   AGE
@@ -58,7 +58,7 @@ stable-prometheus-server         5      18m
 
 Create `update-prometheus-configmap.yaml` with the following:
 
-```
+```yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -322,14 +322,14 @@ helm install grafana/grafana --generate-name
 
 Use `kubectl get secret` to display the administrator password for Grafana.
 
-```
+```bash
 export SECRET_NAME=$(kubectl get secret -l "app.kubernetes.io/name=grafana" -o jsonpath="{.items[0].metadata.name}")
 kubectl get secret $SECRET_NAME -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
 
 Use `kubectl port-forward` to forward the traffic between the Grafana's management application and your development computer.
 
-```
+```bash
 export POD_NAME=$(kubectl get pods -l "app.kubernetes.io/name=grafana" -o jsonpath="{.items[0].metadata.name}")
 kubectl port-forward $POD_NAME 3000
 ```

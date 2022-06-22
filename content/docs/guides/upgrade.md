@@ -68,8 +68,8 @@ The `osm mesh upgrade` command performs a `helm upgrade` of the existing Helm re
 
 Basic usage requires no additional arguments or flags:
 ```console
-$ osm mesh upgrade
-OSM successfully upgraded mesh osm
+osm mesh upgrade
+# OSM successfully upgraded mesh osm
 ```
 
 This command will upgrade the mesh with the default mesh name in the default OSM namespace. Values from the previous release will NOT carry over to the new release by default, but may be passed individually with the `--set` flag on `osm mesh upgrade`.
@@ -97,7 +97,7 @@ For example, if the `logLevel` field in the MeshConfig was set to `info` prior t
 #### Helm Upgrade
 Then run the following `helm upgrade` command.
 ```console
-$ helm upgrade <mesh name> osm --repo https://openservicemesh.github.io/osm --version <chart version> --namespace <osm namespace> --values override.yaml
+helm upgrade <mesh name> osm --repo https://openservicemesh.github.io/osm --version <chart version> --namespace <osm namespace> --values override.yaml
 ```
 Omit the `--values` flag if you prefer to use the default settings.
 

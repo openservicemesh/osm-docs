@@ -47,7 +47,7 @@ The following steps demonstrate the canary rollout deployment strategy.
 
     Confirm the `curl` client pod is up and running.
     ```console
-    $ kubectl get pods -n curl
+    kubectl get pods -n curl
     NAME                    READY   STATUS    RESTARTS   AGE
     curl-54ccc6954c-9rlvp   2/2     Running   0          20s
     ```
@@ -144,7 +144,7 @@ The following steps demonstrate the canary rollout deployment strategy.
 1. Confirm traffic is split proportional to the weights assigned to the backend services. Since we configured a weight of `50` for both `v1` and `v2`, requests should be load balanced to both the versions as seen below.
 
     ```console
-    $ for i in {1..10}; do kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -sI http://httpbin.httpbin:14001/json | egrep 'HTTP|pod'; done
+    for i in {1..10}; do kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -sI http://httpbin.httpbin:14001/json | egrep 'HTTP|pod'; done
     HTTP/1.1 200 OK
     pod: httpbin-v2-6b48697db-cdqld
     HTTP/1.1 200 OK

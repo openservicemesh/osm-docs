@@ -32,16 +32,16 @@ namespaces have sidecar injection enabled. If there are multiple control planes 
 View namespaces in a mesh:
 
 ```console
-$ osm namespace list --mesh-name=<mesh-name>
-NAMESPACE          MESH           SIDECAR-INJECTION
-<namespace1>       <mesh-name>    enabled
-<namespace2>       <mesh-name>    enabled
+osm namespace list --mesh-name=<mesh-name>
+# NAMESPACE          MESH           SIDECAR-INJECTION
+<namespace1>       <mesh-name>      enabled
+<namespace2>       <mesh-name>      enabled
 ```
 
 Remove each namespace from the mesh:
 
 ```console
-$ osm namespace remove <namespace> --mesh-name=<mesh-name>
+osm namespace remove <namespace> --mesh-name=<mesh-name>
 Namespace [<namespace>] successfully removed from mesh [<mesh-name>]
 ```
 
@@ -56,11 +56,11 @@ Restart all pods running with a sidecar:
 ```console
 # If pods are running as part of a Kubernetes deployment
 # Can use this strategy for daemonset as well
-$ kubectl rollout restart deployment <deployment-name> -n <namespace>
+kubectl rollout restart deployment <deployment-name> -n <namespace>
 
 # If pod is running standalone (not part of a deployment or replica set)
-$ kubectl delete pod <pod-name> -n namespace
-$ k apply -f <pod-spec> # if pod is not restarted as part of replicaset
+kubectl delete pod <pod-name> -n namespace
+k apply -f <pod-spec> # if pod is not restarted as part of replicaset
 ```
 
 Now, there should be no OSM Envoy sidecar containers running as part of the applications that were once part of the mesh. Traffic is no
@@ -89,7 +89,7 @@ Run `osm uninstall mesh`:
 
 ```console
 # Uninstall osm control plane components
-$ osm uninstall mesh --mesh-name=<mesh-name>
+osm uninstall mesh --mesh-name=<mesh-name>
 Uninstall OSM [mesh name: <mesh-name>] ? [y/n]: y
 OSM [mesh name: <mesh-name>] uninstalled
 ```
@@ -99,7 +99,7 @@ Run `osm uninstall mesh --help` for more options.
 Alternatively, if you used Helm to install the control plane, run the following `helm uninstall` command:
 
 ```console
-$ helm uninstall <mesh name> --namespace <osm namespace>
+helm uninstall <mesh name> --namespace <osm namespace>
 ```
 
 Run `helm uninstall --help` for more options.
@@ -118,7 +118,7 @@ there may be resources a user created in the namespace that they may not want au
 If the namespace was only used for OSM and there is nothing that needs to be kept around, the namespace can be deleted at the time of uninstall or later using the following command.
 
 ```console
-$ osm uninstall mesh --delete-namespace
+osm uninstall mesh --delete-namespace
 ```
 
 > Warning: Only delete the namespace if resources in the namespace are no longer needed. For example, if osm was installed in `kube-system`, deleting the namespace may delete important cluster resources and may have unintended consequences.

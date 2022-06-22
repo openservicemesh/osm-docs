@@ -13,7 +13,7 @@ weight: 3
 
 ```console
 # Returns true if HTTPS ingress is enabled
-$ kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.traffic.useHTTPSIngress}{"\n"}'
+kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.traffic.useHTTPSIngress}{"\n"}'
 false
 ```
 

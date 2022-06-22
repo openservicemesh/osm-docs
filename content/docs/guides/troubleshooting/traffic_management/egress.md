@@ -15,7 +15,7 @@ If relying on passthrough egress functionality to unknown destinations, confirm 
 
 ```console
 # Returns true if global passthrough egress is enabled
-$ kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.traffic.enableEgress}{"\n"}'
+kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.traffic.enableEgress}{"\n"}'
 true
 ```
 
@@ -23,7 +23,7 @@ If using [Egress policy](/docs/guides/traffic_management/egress/#1-configuring-e
 
 ```console
 # Returns true if egress policy capability is enabled
-$ kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.featureFlags.enableEgressPolicy}{"\n"}'
+kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.featureFlags.enableEgressPolicy}{"\n"}'
 true
 ```
 
@@ -48,7 +48,7 @@ Examples:
 To verify if the pod `curl-7bb5845476-zwxbt` in the namespace `curl` can direct HTTPS traffic to the the external `httpbin.org` host on port `443`:
 
 ```console
-$ osm verify connectivity --from-pod curl/curl-7bb5845476-zwxbt --to-ext-port 443 --to-ext-host httpbin.org --app-protocol https
+osm verify connectivity --from-pod curl/curl-7bb5845476-zwxbt --to-ext-port 443 --to-ext-host httpbin.org --app-protocol https
 ---------------------------------------------
 [+] Context: Verify if pod "curl/curl-7bb5845476-zwxbt" can access external service on port 443
 Status: Success
@@ -58,7 +58,7 @@ Status: Success
 
 To verify if the pod `curl-7bb5845476-zwxbt` in the namespace `curl` can direct HTTP traffic to the the external `httpbin.org` host on port `80`:
 ```console
-$ osm verify connectivity --from-pod curl/curl-7bb5845476-zwxbt --to-ext-port 80 --to-ext-host httpbin.org --app-protocol http
+osm verify connectivity --from-pod curl/curl-7bb5845476-zwxbt --to-ext-port 80 --to-ext-host httpbin.org --app-protocol http
 ---------------------------------------------
 [+] Context: Verify if pod "curl/curl-7bb5845476-zwxbt" can access external service on port 80
 Status: Success

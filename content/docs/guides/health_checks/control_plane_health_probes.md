@@ -81,7 +81,7 @@ kubectl port-forward -n osm-system $(kubectl get pods -n osm-system -l app=osm-c
 Then, in a separate terminal instance, `curl` may be used to check the endpoint. The following example shows a healthy osm-controller:
 
 ```console
-$ curl -i localhost:9091/health/alive
+curl -i localhost:9091/health/alive
 HTTP/1.1 200 OK
 Date: Thu, 18 Mar 2021 20:15:29 GMT
 Content-Length: 16
@@ -100,8 +100,8 @@ If any health probes are consistently failing, perform the following steps to id
 
     For example, an osm-controller Pod that includes an Envoy container:
     ```console
-    $ # Assuming OSM is installed in the osm-system namespace:
-    $ kubectl get pod -n osm-system $(kubectl get pods -n osm-system -l app=osm-controller -o jsonpath='{.items[0].metadata.name}') -o jsonpath='{range .spec.containers[*]}{.image}{"\n"}{end}'
+    # Assuming OSM is installed in the osm-system namespace:
+    kubectl get pod -n osm-system $(kubectl get pods -n osm-system -l app=osm-controller -o jsonpath='{.items[0].metadata.name}') -o jsonpath='{range .spec.containers[*]}{.image}{"\n"}{end}'
     openservicemesh/osm-controller:v0.8.0
     envoyproxy/envoy-alpine:v1.17.2
     ```
@@ -110,8 +110,8 @@ If any health probes are consistently failing, perform the following steps to id
 
     For example, an osm-injector Pod that includes an Envoy container:
     ```console
-    $ # Assuming OSM is installed in the osm-system namespace:
-    $ kubectl get pod -n osm-system $(kubectl get pods -n osm-system -l app=osm-injector -o jsonpath='{.items[0].metadata.name}') -o jsonpath='{range .spec.containers[*]}{.image}{"\n"}{end}'
+    # Assuming OSM is installed in the osm-system namespace:
+    kubectl get pod -n osm-system $(kubectl get pods -n osm-system -l app=osm-injector -o jsonpath='{.items[0].metadata.name}') -o jsonpath='{range .spec.containers[*]}{.image}{"\n"}{end}'
     openservicemesh/osm-injector:v0.8.0
     envoyproxy/envoy-alpine:v1.17.2
     ```
@@ -121,7 +121,7 @@ If any health probes are consistently failing, perform the following steps to id
     For example, for all of the following meshes:
 
     ```console
-    $ osm mesh list
+    osm mesh list
 
     MESH NAME   NAMESPACE      CONTROLLER PODS                  VERSION     SMI SUPPORTED
     osm         osm-system     osm-controller-5494bcffb6-qpjdv  v0.8.0      HTTPRouteGroup:specs.smi-spec.io/v1alpha4,TCPRoute:specs.smi-spec.io/v1alpha4,TrafficSplit:split.smi-spec.io/v1alpha2,TrafficTarget:access.smi-spec.io/v1alpha3
@@ -131,7 +131,7 @@ If any health probes are consistently failing, perform the following steps to id
     Note how `osm-system` (the mesh control plane namespace) is present in the following list of namespaces:
 
     ```console
-    $ osm namespace list --mesh-name osm --osm-namespace osm-system
+    osm namespace list --mesh-name osm --osm-namespace osm-system
     NAMESPACE    MESH    SIDECAR-INJECTION
     osm-system   osm2    enabled
     bookbuyer    osm2    enabled
@@ -141,7 +141,7 @@ If any health probes are consistently failing, perform the following steps to id
     If the OSM namespace is found in any `osm namespace list` command with `SIDECAR-INJECTION` enabled, remove the namespace from the mesh injecting the sidecars. For the example above:
 
     ```console
-    $ osm namespace remove osm-system --mesh-name osm2 --osm-namespace osm-system2
+    osm namespace remove osm-system --mesh-name osm2 --osm-namespace osm-system2
     ```
 
 1. Determine if Kubernetes encountered any errors while scheduling or starting the Pod.
@@ -151,15 +151,15 @@ If any health probes are consistently failing, perform the following steps to id
     For osm-controller:
 
     ```console
-    $ # Assuming OSM is installed in the osm-system namespace:
-    $ kubectl describe pod -n osm-system $(kubectl get pods -n osm-system -l app=osm-controller -o jsonpath='{.items[0].metadata.name}')
+    # Assuming OSM is installed in the osm-system namespace:
+    kubectl describe pod -n osm-system $(kubectl get pods -n osm-system -l app=osm-controller -o jsonpath='{.items[0].metadata.name}')
     ```
 
     For osm-injector:
 
     ```console
-    $ # Assuming OSM is installed in the osm-system namespace:
-    $ kubectl describe pod -n osm-system $(kubectl get pods -n osm-system -l app=osm-injector -o jsonpath='{.items[0].metadata.name}')
+    # Assuming OSM is installed in the osm-system namespace:
+    kubectl describe pod -n osm-system $(kubectl get pods -n osm-system -l app=osm-injector -o jsonpath='{.items[0].metadata.name}')
     ```
 
     Resolve any errors and verify OSM's health again.
@@ -171,15 +171,15 @@ If any health probes are consistently failing, perform the following steps to id
     For osm-controller:
 
     ```console
-    $ # Assuming OSM is installed in the osm-system namespace:
-    $ kubectl logs -n osm-system $(kubectl get pods -n osm-system -l app=osm-controller -o jsonpath='{.items[0].metadata.name}')
+    # Assuming OSM is installed in the osm-system namespace:
+    kubectl logs -n osm-system $(kubectl get pods -n osm-system -l app=osm-controller -o jsonpath='{.items[0].metadata.name}')
     ```
 
     For osm-injector:
 
     ```console
-    $ # Assuming OSM is installed in the osm-system namespace:
-    $ kubectl logs -n osm-system $(kubectl get pods -n osm-system -l app=osm-injector -o jsonpath='{.items[0].metadata.name}')
+    # Assuming OSM is installed in the osm-system namespace:
+    kubectl logs -n osm-system $(kubectl get pods -n osm-system -l app=osm-injector -o jsonpath='{.items[0].metadata.name}')
     ```
 
     Resolve any errors and verify OSM's health again.

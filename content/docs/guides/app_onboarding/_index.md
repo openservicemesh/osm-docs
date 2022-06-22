@@ -23,7 +23,7 @@ The following guide describes how to onboard a Kubernetes microservice to an OSM
 
    First get the Kubernetes API server cluster IP:
    ```console
-   $ kubectl get svc -n default
+   kubectl get svc -n default
    NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
    kubernetes   ClusterIP   10.0.0.1     <none>        443/TCP   1d
    ```
@@ -32,7 +32,7 @@ The following guide describes how to onboard a Kubernetes microservice to an OSM
 
     Add this IP to the MeshConfig so that outbound traffic to it is excluded from interception by OSM's sidecar:
     ```console
-    $ kubectl patch meshconfig osm-mesh-config -n <osm-namespace> -p '{"spec":{"traffic":{"outboundIPRangeExclusionList":["10.0.0.1/32"]}}}'  --type=merge
+    kubectl patch meshconfig osm-mesh-config -n <osm-namespace> -p '{"spec":{"traffic":{"outboundIPRangeExclusionList":["10.0.0.1/32"]}}}'  --type=merge
     meshconfig.config.openservicemesh.io/osm-mesh-config patched
     ```
     
@@ -74,7 +74,7 @@ The following guide describes how to onboard a Kubernetes microservice to an OSM
     To onboard a namespace containing applications to be managed by OSM, run the `osm namespace add` command:
 
     ```console
-    $ osm namespace add <namespace> --mesh-name <mesh-name>
+    osm namespace add <namespace> --mesh-name <mesh-name>
     ```
 
     By default, the `osm namespace add` command enables automatic sidecar injection for pods in the namespace.
@@ -93,7 +93,7 @@ The following guide describes how to onboard a Kubernetes microservice to an OSM
 Namespaces can be removed from the OSM mesh with the `osm namespace remove` command:
 
 ```console
-$ osm namespace remove <namespace>
+osm namespace remove <namespace>
 ```
 
 > **Please Note:**

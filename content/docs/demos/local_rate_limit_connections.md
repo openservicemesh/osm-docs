@@ -41,7 +41,7 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
     Confirm the `fortio` service pod is up and running.
 
     ```console
-    $ kubectl get pods -n demo
+    kubectl get pods -n demo
     NAME                            READY   STATUS    RESTARTS   AGE
     fortio-c4bd7857f-7mm6w          2/2     Running   0          22m
     ```
@@ -60,9 +60,9 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
 
 1. Confirm the `fortio-client` app is able to successfully make TCP connections and send data to the `frotio` `TCP echo` service on port `8078`. We call the `fortio` service with `3` concurrent connections (`-c 3`) and send `10` calls (`-n 10`).
     ```console
-    $ fortio_client="$(kubectl get pod -n demo -l app=fortio-client -o jsonpath='{.items[0].metadata.name}')"
+    fortio_client="$(kubectl get pod -n demo -l app=fortio-client -o jsonpath='{.items[0].metadata.name}')"
 
-    $ $ kubectl exec "$fortio_client" -n demo -c fortio-client -- fortio load -qps -1 -c 3 -n 10 tcp://fortio.demo.svc.cluster.local:8078
+     kubectl exec "$fortio_client" -n demo -c fortio-client -- fortio load -qps -1 -c 3 -n 10 tcp://fortio.demo.svc.cluster.local:8078
     Fortio 1.32.3 running at -1 queries per second, 8->8 procs, for 10 calls: tcp://fortio.demo.svc.cluster.local:8078
     20:41:47 I tcprunner.go:238> Starting tcp test for tcp://fortio.demo.svc.cluster.local:8078 with 3 threads at -1.0 qps
     Starting at max qps with 3 thread(s) [gomax 8] for exactly 10 calls (3 per thread + 1)
@@ -90,7 +90,7 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
     ```
 
     As seen above, all the TCP connections from the `fortio-client` pod succeeded.
-    ```
+    ```console
     Total Bytes sent: 240, received: 240
     tcp OK : 10 (100.0 %)
     All done 10 calls (plus 0 warmup) 10.966 ms avg, 226.2 qps
@@ -116,15 +116,15 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
 
     Confirm no traffic has been rate limited yet by examining the stats on the `fortio` backend pod.
     ```console
-    $ fortio_server="$(kubectl get pod -n demo -l app=fortio -o jsonpath='{.items[0].metadata.name}')"
+    fortio_server="$(kubectl get pod -n demo -l app=fortio -o jsonpath='{.items[0].metadata.name}')"
 
-    $ osm proxy get stats "$fortio_server" -n demo | grep fortio.*8078.*rate_limit
+    osm proxy get stats "$fortio_server" -n demo | grep fortio.*8078.*rate_limit
     local_rate_limit.inbound_demo/fortio_8078_tcp.rate_limited: 0
     ```
 
 1. Confirm TCP connections are rate limited.
     ```console
-    $ kubectl exec "$fortio_client" -n demo -c fortio-client -- fortio load -qps -1 -c 3 -n 10 tcp://fortio.demo.svc.cluster.local:8078
+    kubectl exec "$fortio_client" -n demo -c fortio-client -- fortio load -qps -1 -c 3 -n 10 tcp://fortio.demo.svc.cluster.local:8078
     Fortio 1.32.3 running at -1 queries per second, 8->8 procs, for 10 calls: tcp://fortio.demo.svc.cluster.local:8078
     20:49:38 I tcprunner.go:238> Starting tcp test for tcp://fortio.demo.svc.cluster.local:8078 with 3 threads at -1.0 qps
     Starting at max qps with 3 thread(s) [gomax 8] for exactly 10 calls (3 per thread + 1)
@@ -172,7 +172,7 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
 
     Examine the sidecar stats to further confirm this.
     ```console
-    $ osm proxy get stats "$fortio_server" -n demo | grep 'fortio.*8078.*rate_limit'
+    osm proxy get stats "$fortio_server" -n demo | grep 'fortio.*8078.*rate_limit'
     local_rate_limit.inbound_demo/fortio_8078_tcp.rate_limited: 7
     ```
 
@@ -197,7 +197,7 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
 
 1. Confirm the burst capability allows a burst of connections within a small window of time.
     ```console
-    $ kubectl exec "$fortio_client" -n demo -c fortio-client -- fortio load -qps -1 -c 3 -n 10 tcp://fortio.demo.svc.cluster.local:8078
+    kubectl exec "$fortio_client" -n demo -c fortio-client -- fortio load -qps -1 -c 3 -n 10 tcp://fortio.demo.svc.cluster.local:8078
     Fortio 1.32.3 running at -1 queries per second, 8->8 procs, for 10 calls: tcp://fortio.demo.svc.cluster.local:8078
     20:56:56 I tcprunner.go:238> Starting tcp test for tcp://fortio.demo.svc.cluster.local:8078 with 3 threads at -1.0 qps
     Starting at max qps with 3 thread(s) [gomax 8] for exactly 10 calls (3 per thread + 1)
@@ -223,7 +223,7 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
     ```
 
     As seen above, all the TCP connections from the `fortio-client` pod succeeded.
-    ```
+    ```console
     Total Bytes sent: 240, received: 240
     tcp OK : 10 (100.0 %)
     All done 10 calls (plus 0 warmup) 1.531 ms avg, 1897.1 qps
