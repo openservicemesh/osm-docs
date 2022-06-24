@@ -581,3 +581,42 @@ footer {
     }
   }
 }
+
+
+#banner {
+  background: $blue;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  z-index: 1450;
+  display: none;
+
+  p {
+    color: white;
+    padding: 0.333rem 0 0.35rem;
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  a {
+    color: white;
+    @include transition;
+    border-bottom: 2px solid rgba(255,255,255,0.5);
+  }
+}
+
+body.has-banner {
+  padding-top: 1.5rem;
+
+  #banner {
+    display: block;
+  }
+
+  .td-navbar {
+    top: 1.5rem;
+  }
+}
