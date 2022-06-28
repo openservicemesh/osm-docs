@@ -27,7 +27,7 @@ TCP connections can be rate limited per unit of time. An optional burst limit ca
 
 The following attributes nested under `spec.rateLimit.local.tcp` define the rate limiting attributes for TCP connections:
 
-- `connections`: The number of connections allowed per unit of time before rate limiting occurs on all backends belonging to the upstream host specified via the `spec.host` field in the `UpstreamTrafficSetting` configuration. This setting can be configured using the `connections` field and is applicable to both TCP and HTTP traffic.
+- `connections`: The number of connections allowed per unit of time before rate limiting occurs on all backends belonging to the upstream host specified via the `spec.host` field in the `UpstreamTrafficSetting` configuration. This setting is applicable to both TCP and HTTP traffic.
 
 - `unit`: The period of time within which connections over the limit will be rate limited. Valid values are `second`, `minute` and `hour`.
 
@@ -35,9 +35,28 @@ The following attributes nested under `spec.rateLimit.local.tcp` define the rate
 
 Refer to the [TCP local rate limiting API](/docs/api_reference/policy/v1alpha1/#policy.openservicemesh.io/v1alpha1.TCPLocalRateLimitSpec) for additional information regarding API usage.
 
+### Rate limiting HTTP requests
+
+HTTP requests can be rate limited per unit of time. An optional burst limit can be specified to allow a burst of requests above the baseline rate to accommodate for request bursts in a short interval of time. HTTP rate limiting is applied as a token bucket rate limiter at the virtual host and/or HTTP route level at the upstream backend, depending on the rate limiting configuration. Each incoming request processed by the filter consumes a single token. If the token is available, the request will be allowed. If no tokens are available, the request will receive the configured rate limit status.
+
+HTTP request rate limiting can be configured at the [virtual host](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#config-route-v3-virtualhost) level by specifying the rate limiting attributes nested under the `spec.rateLimit.local.http` field. Alternatively, rate limiting can be configured per HTTP route allowed on the upstream backend by specifying the rate limiting attributes as a part of the `spec.httpRoutes` field. It is important to note that when configuring rate limiting per HTTP route, the route matches an HTTP path that has already been permitted by a service mesh policy, otherwise the rate limiting policy will be ignored.
+
+The following rate limiting attributes can be configured for HTTP traffic:
+
+- `requests`: The number of requests allowed per unit of time before rate limiting occurs on all backends belonging to the upstream host specified via the `spec.host` field in the `UpstreamTrafficSetting` configuration.
+
+- `unit`: The period of time within which requests over the limit will be rate limited. Valid values are `second`, `minute` and `hour`.
+
+- `burst`: The number of requests above the baseline rate that are allowed in a short period of time.
+
+- `responseStatusCode`: The HTTP status code to use for responses to rate limited requests. Code must be in the 400-599 (inclusive) error range. If not specified, a default of 429 (Too Many Requests) is used. The code must be a [status code supported by Envoy](https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/v3/http_status.proto#enum-type-v3-statuscode).
+
+- `responseHeadersToAdd`: The list of HTTP headers as key-value pairs that should be added to each response for requests that have been rate limited.
+
 ## Demos
 
 To learn more about configuring rate limting, refer to the following demo guides:
 - [Local rate limiting of TCP connections](/docs/demos/local_rate_limit_connections)
+- [Local rate limiting of HTTP requests](/docs/demos/local_rate_limit_http)
 
 [1]: /docs/api_reference/policy/v1alpha1/#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingSpec

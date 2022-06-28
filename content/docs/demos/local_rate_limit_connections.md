@@ -62,7 +62,7 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
     ```console
     $ fortio_client="$(kubectl get pod -n demo -l app=fortio-client -o jsonpath='{.items[0].metadata.name}')"
 
-    $ $ kubectl exec "$fortio_client" -n demo -c fortio-client -- fortio load -qps -1 -c 3 -n 10 tcp://fortio.demo.svc.cluster.local:8078
+    $ kubectl exec "$fortio_client" -n demo -c fortio-client -- fortio load -qps -1 -c 3 -n 10 tcp://fortio.demo.svc.cluster.local:8078
     Fortio 1.32.3 running at -1 queries per second, 8->8 procs, for 10 calls: tcp://fortio.demo.svc.cluster.local:8078
     20:41:47 I tcprunner.go:238> Starting tcp test for tcp://fortio.demo.svc.cluster.local:8078 with 3 threads at -1.0 qps
     Starting at max qps with 3 thread(s) [gomax 8] for exactly 10 calls (3 per thread + 1)
