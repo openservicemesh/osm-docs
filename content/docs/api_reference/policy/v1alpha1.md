@@ -575,7 +575,9 @@ uint32
 <em>(Optional)</em>
 <p>ResponseStatusCode defines the HTTP status code to use for responses
 to rate limited requests. Code must be in the 400-599 (inclusive)
-error range. If not specified, a default of 429 (Too Many Requests) is used.</p>
+error range. If not specified, a default of 429 (Too Many Requests) is used.
+See <a href="https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/v3/http_status.proto#enum-type-v3-statuscode">https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/v3/http_status.proto#enum-type-v3-statuscode</a>
+for the list of HTTP status codes supported by Envoy.</p>
 </td>
 </tr>
 <tr>
@@ -1731,5 +1733,5 @@ string
 <hr/>
 <p><em>
 Generated with <code>gen-crd-api-reference-docs</code>
-on git commit <code>a5b37165</code>.
+on git commit <code>f3966a3c</code>.
 </em></p>
