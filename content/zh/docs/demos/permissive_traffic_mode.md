@@ -5,11 +5,11 @@ type: docs
 weight: 1
 ---
 
-本指南演示在 OSM 宽松流量策略模式下在服务网格中进行通信的客户端和服务端应用，该模式使用服务发现配置应用程序连接，无需显式的 [SMI 流量访问策略](https://github.com/servicemeshinterface/smi-spec/blob/main/apis/traffic-access/v1alpha3/traffic-access.md)
+在 OSM 宽松流量策略模式下，本指南演示了客户端和服务端应用在服务网格中进行通信。这允许应用互通建立而无需显式的配置 [SMI 流量访问策略](https://github.com/servicemeshinterface/smi-spec/blob/main/apis/traffic-access/v1alpha3/traffic-access.md)
 
 ## 先决条件
 
-- Kubernetes 集群版本 {{< param min_k8s_version >}} 或者更高。
+- Kubernetes 集群运行版本 {{< param min_k8s_version >}} 或者更高。
 - 已安装 OSM。
 - 使用 `kubectl` 与 API server 交互。
 - 已安装 `osm` 命令行工具，用于管理服务网格。
@@ -17,16 +17,16 @@ weight: 1
 
 ## 演示
 
-以下演示了一个 HTTP `curl` 客户端，在宽松流量策略模式下向 `httpbin` 服务发送 HTTP 请求。
+以下演示了一个 HTTP `curl` 客户端，在宽松流量策略模式下，向 `httpbin` service 发送 HTTP 请求。
 
-1. 如果未开启，开启宽松流量模式。
+1. 开启宽松流量模式
 
     ```bash
     export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
     kubectl patch meshconfig osm-mesh-config -n "$osm_namespace" -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":true}}}'  --type=merge
     ```
 
-2. 在 `httpbin` 命名空间下部署 `httpbin` 服务，并纳入网格管理。 `httpbin` 服务运行在 `14001` 端口。
+2. 在 `httpbin` 命名空间下部署 `httpbin` service ，并纳入网格管理。 `httpbin` service 运行在 `14001` 端口。
 
     ```bash
     # Create the httpbin namespace
@@ -39,7 +39,7 @@ weight: 1
     kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/httpbin/httpbin.yaml -n httpbin
     ```
 
-    确认 `httpbin` 服务 pod 启动并运行。
+    确认 `httpbin` service 和pod 启动并运行。
 
     ```console
     $ kubectl get svc -n httpbin
@@ -88,7 +88,7 @@ weight: 1
     x-envoy-upstream-service-time: 2
     ```
 
-    `200 OK` 响应表示 `curl` 客户端访问`httpbin` 服务成功。
+    `200 OK` 响应表示 `curl` 客户端访问`httpbin` service 成功。
 
 5. 确认在禁用宽松流量模式后 HTTP 请求失败。
 

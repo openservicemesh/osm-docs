@@ -5,11 +5,11 @@ type: docs
 weight: 16
 ---
 
-本指南演示了服务网格内的客户端使用 OSM 的 Egress 功能访问外部的目标，以便在没有 Egress 策略的情况下将流量传递到未知目标。
+本指南演示了在服务网格内的客户端使用 OSM 的 Egress 功能访问外部的目标，以便在没有 Egress 策略的情况下将流量传递到未知目标。
 
 ## 先决条件
 
-- Kubernetes 集群版本 {{< param min_k8s_version >}} 或者更高。
+- Kubernetes 集群运行版本 {{< param min_k8s_version >}} 或者更高。
 - 已安装 OSM。
 - 使用 `kubectl` 与 API server 交互。
 - 已安装 `osm` 命令行工具，用于管理服务网格。
@@ -36,7 +36,7 @@ weight: 16
     kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/curl/curl.yaml -n curl
     ```
 
-    确保 `curl` 客户端 pod 就绪并运行。
+    确认 `curl` 客户端 pod 启动并运行。
 
     ```console
     $ kubectl get pods -n curl
@@ -57,9 +57,9 @@ weight: 16
     access-control-allow-credentials: true
     ```
 
-    `200 OK` 响应说明 `curl` 客户端发往 `httpbin.org` 的请求成功了。
+    `200 OK` 响应说明 `curl` 客户端请求 `httpbin.org` 网站的HTTPS请求成功了。
 
-4. 确认当网格出口禁用时 HTTPS 请求失败。
+4. 当网格出口禁用，确认 HTTPS 请求失败。
 
     ```bash
     kubectl patch meshconfig osm-mesh-config -n "$osm_namespace" -p '{"spec":{"traffic":{"enableEgress":false}}}'  --type=merge

@@ -1,27 +1,27 @@
 ---
 title: "将 OSM 与 Prometheus 和 Grafana 集成"
-description: "描述如何使用自维护的 Prometheus 和 Grafana 配置 OSM 特定的配置和仪表板"
+description: "描述如何使用自行维护的 Prometheus 和 Grafana 来配置 OSM 特定的配置和仪表板"
 type: docs
 weight: 25
 ---
 
 # 将 OSM 与自维护的 Prometheus 和 Grafana 集成
 
-本文为你展示如何在集群中创建自维护的 Prometheus 和 Grafana ，并为其配置以实现对 OSM 的可观测性和监控。有关使用 OSM 自动配置 Prometheus 和 Grafana 的示例，请参阅 [Observability](https://docs.openservicemesh.io/docs/getting_started/observability/)  入门指南。
+本文为你展示如何在集群中创建自行维护的 Prometheus 和 Grafana ，并为其配置以实现对 OSM 的可观测性和监控。有关使用 OSM 自动配置 Prometheus 和 Grafana 的示例，请参阅 [Observability](https://docs.openservicemesh.io/docs/getting_started/observability/)  入门指南。
 
 > 重要提示：本文创建的配置不应在生产环境中使用。对于生产级部署，请参阅 [Prometheus Operator](https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/user-guides/getting-started.md) 和 [Deploy Grafana in Kubernetes](https://grafana.com/docs/grafana/latest/installation/kubernetes/)。
 
 ## 先决条件
 
-- Kubernetes 集群版本 {{< param min_k8s_version >}} 或者更高。
+- Kubernetes 集群运行版本 {{< param min_k8s_version >}} 或者更高。
 - 集群中已安装 OSM。
 - 已安装 `kubectl` 用于访问 API server 。
 - 已安装 `osm` 命令行工具
 - 已安装 `helm` 命令行工具
 
-## 部署示例 Prometheus 实例
+## 部署示例化的 Prometheus 实例
 
-在 default 命名空间下使用 `helm` 安装 Prometheus 实例。
+在 default 命名空间下，使用 `helm` 安装 Prometheus 实例。
 
 ```
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
@@ -29,7 +29,7 @@ helm repo update
 helm install stable prometheus-community/prometheus
 ```
 
-`helm install` 命令的输出中包含了 Prometheus 服务器的 DNS 名字。比如：
+`helm install` 命令的输出中包含了 Prometheus 服务端的 DNS 链接。例如：
 
 ```
 ...
@@ -38,11 +38,11 @@ stable-prometheus-server.metrics.svc.cluster.local
 ...
 ```
 
-记下 DNS 名字，后面会用到。
+记下 DNS 链接，后面步骤会用到。
 
 ## 为 OSM 配置 Prometheus
 
-Prometheus 需要配置为对 OSM 端点进行抓取并正确处理 OSM 的标记、重新标记和端点配置。此配置还有助于在后续步骤中配置的 OSM Grafana 仪表板正确显示从 OSM 抓取的数据。
+Prometheus 需要对 OSM 端点进行抓取配置，并对应地处理 OSM 的标记、重新标记和端点配置。此配置还有助于 OSM Grafana 仪表板 正确显示从 OSM 抓取的数据 （OSM Grafana 仪表板会在后续步骤中配置）
 
 使用 `kubectl get configmap` 来验证 `stable-prometheus-server` configmap 是否已创建。 例如：
 
@@ -288,13 +288,13 @@ data:
           replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
 ```
 
-使用 `kubectl apply` 来更新 Prometheus 服务器 configmap。
+使用 `kubectl apply` 来更新 Prometheus 服务端 configmap。
 
 ```
 kubectl apply -f update-prometheus-configmap.yaml
 ```
 
-验证 Prometheus 是否能够通过使用 `kubectl port-forward` 在 Prometheus 管理应用程序和开发机器之间转发流量来抓取 OSM 网格和 API 端点。
+通过使用 `kubectl port-forward` 来转发 Prometheus 管理应用程序和你的开发机器间的流量，来验证 Prometheus 是否能够来抓取 OSM 网格和 API 端点。
 
 ```
 export POD_NAME=$(kubectl get pods -l "app=prometheus,component=server" -o jsonpath="{.items[0].metadata.name}")
@@ -312,7 +312,7 @@ kubectl port-forward $POD_NAME 9090
 
 ## 部署 Grafana 实例
 
-使用 `helm` 部署 Grafana 实例到集群的 default 命名空间中。
+在 default 命名空间下，使用 `helm` 安装 Grafana 实例。
 
 ```
 helm repo add grafana https://grafana.github.io/helm-charts
@@ -327,7 +327,7 @@ export SECRET_NAME=$(kubectl get secret -l "app.kubernetes.io/name=grafana" -o j
 kubectl get secret $SECRET_NAME -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
 
-使用 `kubectl port-forward` 来转发 Grafana 管理应用和开发机器间的流量。
+使用 `kubectl port-forward` 来转发 Grafana 管理应用和你的开发机器间的流量。
 
 ```
 export POD_NAME=$(kubectl get pods -l "app.kubernetes.io/name=grafana" -o jsonpath="{.items[0].metadata.name}")
@@ -350,7 +350,7 @@ kubectl port-forward $POD_NAME 3000
 OSM Dashboards 可通过 [OSM GitHub 存储库](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/charts/osm/grafana/dashboards) 获得，可以在管理应用程序上以 json blobs 方式导入。
 
 要导入仪表盘：
-* 鼠标放在 `+` 上并点击 `Import`
+* 鼠标移放在 `+` 上并点击 `Import`
 * 从 [osm-mesh-envoy-details dashboard](https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/charts/osm/grafana/dashboards/osm-mesh-envoy-details.json) 复制 JSON 内容并拷贝到 `Import via panel json`。
 * 选择 `Load`。
 * 选择 `Import`。
