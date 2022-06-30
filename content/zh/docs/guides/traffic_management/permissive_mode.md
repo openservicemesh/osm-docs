@@ -16,9 +16,6 @@ OSM 中的宽松流量策略模式是绕过 [SMI][1] 流量访问策略执行的
 
 允许流量策略模式的替代方案是 SMI 流量策略模式，其中应用程序之间的流量默认被拒绝，并且显式 SMI 流量策略是允许应用程序连接所必需的。当需要执行策略时，必须使用 SMI 流量策略模式。
 
-## Configuring permissive traffic policy mode
-Permissive traffic policy mode can be enabled or disabled at the time of OSM install, or after OSM has been installed.
-
 ## 配置宽松流策略模式
 
 可以在安装 OSM 时或安装 OSM 后启用或禁用宽松流量策略模式。

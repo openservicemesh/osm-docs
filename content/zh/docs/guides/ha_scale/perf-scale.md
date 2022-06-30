@@ -4,8 +4,6 @@ description: "控制平面和数据平面 sidecar 的性能基准测试以及开
 type: docs
 ---
 
-Open Service Mesh aims to create a high-performance service mesh while providing all the essential service mesh features. This document describes the tests performed to evaluate the performance and scalability of OSM.
-
 开放服务网格致力于在提供基本的服务网格功能的同时创建高性能的服务网格。本篇描述了如何对 OSM 进行性能基准测试和可扩展性测试。
 
 ## 测试环境
@@ -14,7 +12,6 @@ Open Service Mesh aims to create a high-performance service mesh while providing
 
 ## 过程
 
-The testing mesh contains two types of services. One is a load generator (modified from [wrk2](https://github.com/giltene/wrk2)), which can send requests at specified rate, load balanced among all other services in the mesh. Currently we test HTTP 1 requests only. The load generator serves as the client side of a request. Throughout our test, there will be at most one load generator service. The other type of service is a simple echo application that replies with whatever it receives from an inbound request. It serves as the server side of a request. We can deploy multiple copies of the echo application in the mesh. In short, the mesh topology is a typical 1-to-N service architecture.
 测试网格包含两种类型的服务。一种是负载生成器（修改自 [wrk2](https://github.com/giltene/wrk2)），它可以以指定的速率发送请求，在网格中的所有其他服务之间进行负载平衡。目前我们只测试 HTTP 1 请求。负载生成器充当请求的客户端。在我们的整个测试过程中，最多会有一个负载生成器服务。另一种类型的服务是一个简单的回显应用，它会回复从入站请求中接收到的任何内容。它充当请求的服务器端。我们可以在网格中部署回显应用的多个副本。简而言之，网状拓扑是典型的 1 对 N 服务架构。
 
 <p align="center">
@@ -28,7 +25,6 @@ The testing mesh contains two types of services. One is a load generator (modifi
 
 ### 延迟
 
-Below is the request latency at different RPS levels with and without OSM installed. The added latency comes from both the client and server sidecars.
 以下是安装和未安装 OSM 的不同 RPS 级别的请求延迟。增加的延迟来自客户端和服务器 sidecar。
 
 <p align="center">

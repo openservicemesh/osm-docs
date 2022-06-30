@@ -1,12 +1,12 @@
 ---
-title: "命名空间添加"
+title: "添加命名空间"
 description: "本节介绍 OSM 如何以及为何监控 Kubernetes 命名空间"
 aliases: "/docs/tasks/namespace_monitoring"
 type: docs
 weight: 2
 ---
 
-# 命名空间添加
+# 添加命名空间
 
 ## 概述
 

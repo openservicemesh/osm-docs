@@ -79,7 +79,6 @@ OSM 提供了一种方法来指定 IP 范围的全局列表，以从适用于网
 
    如果将 IP 范围设置为安装后排除，请确保重新启动受监视命名空间中的 Pod，以使此更改生效。
 
-Globally excluded IP ranges are stored in the `osm-mesh-config` `MeshConfig` custom resource and are read at the time of sidecar injection by `osm-injector`. These dynamically configurable IP ranges are programmed by the init container along with the static rules used to intercept and redirect traffic via the Envoy proxy sidecar. Excluded IP ranges will not be intercepted for traffic redirection to the Envoy proxy sidecar. Refer to the [outbound IP range exclusion demo](/docs/demos/outbound_ip_exclusion) to learn more.
 全局排除的 IP 范围存储在 `osm-mesh-config` `MeshConfig` 自定义资源中，并在 `osm-injector` 注入 sidecar 时读取。这些动态可配置的 IP 范围由初始化容器以及用于通过 Envoy 代理 sidecar 拦截和重定向流量的静态规则进行编程。排除的 IP 范围不会被拦截以将流量重定向到 Envoy 代理 sidecar。请参阅[出站 IP 范围排除演示](/docs/demos/outbound_ip_exclusion) 了解更多信息。
 
 ### 2. Pod 范围的出站 IP 范围排除项

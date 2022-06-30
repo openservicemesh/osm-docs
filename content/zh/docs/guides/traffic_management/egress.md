@@ -9,15 +9,6 @@ weight: 6
 
 ## 允许访问互联网和网外服务（出口）
 
-This document describes the steps required to enable access to the Internet and services external to the service mesh, referred to as `Egress` traffic.
-
-OSM redirects all outbound traffic from a pod within the mesh to the pod's sidecar proxy. Outbound traffic can be classified into two categories:
-
-1. Traffic to services within the mesh cluster, referred to as in-mesh traffic
-2. Traffic to services external to the mesh cluster, referred to as egress traffic
-
-While in-mesh traffic is routed based on L7 traffic policies, egress traffic is routed differently and is not subject to in-mesh traffic policies. OSM supports access to external services as a passthrough without subjecting such traffic to filtering policies.
-
 本文档描述了启用对 Internet 和服务网格外部服务（称为 `Egress` 流量）的访问所需的步骤。
 
 OSM 将所有出站流量从网格中的 pod 重定向到 pod 的 sidecar 代理。出站流量可以分为两类：

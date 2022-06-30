@@ -93,7 +93,6 @@ OSM [mesh name: <mesh-name>] uninstalled
 
 运行 `osm uninstall mesh --help` 以了解更多选项。
 
-Alternatively, if you used Helm to install the control plane, run the following `helm uninstall` command:
 可选择的，如果您使用了 Helm 安装的 Control Plane，运行下面的 `helm uninstall` 命令：
 
 ```console
