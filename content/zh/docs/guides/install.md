@@ -77,11 +77,11 @@ $ helm install <mesh name> osm --repo https://openservicemesh.github.io/osm --ve
 
 在 OpenShift 上安装 OSM：
 
-1. 使能特权初始化容器，它们能够正确地设置 iptables。在 OpenShift 上，NET_ADMIN 的能力是不够的。
+1. 启用特权初始化容器，它们能够正确地设置 iptables。在 OpenShift 上，NET_ADMIN 的能力是不够的。
    ```shell
    osm install --set="osm.enablePrivilegedInitContainer=true"
    ```
-   - 如果您已经安装了 OSM，但是没有使能特权初始化容器，那么在 [OSM MeshConfig](/docs/guides/mesh_config)里设置 `enablePrivilegedInitContainer` 为 `true`，然后重启网格中的任意的 Pod。
+   - 如果您已经安装了 OSM，但是没有启用特权初始化容器，那么在 [OSM MeshConfig](/docs/guides/mesh_config)里设置 `enablePrivilegedInitContainer` 为 `true`，然后重启网格中的任意的 Pod。
 2. 添加 `privileged` [安全上下文限制](https://docs.openshift.com/container-platform/4.7/authentication/managing-security-context-constraints.html)到网格中的每个服务账号。
    - 安装 [oc CLI](https://docs.openshift.com/container-platform/4.7/cli_reference/openshift_cli/getting-started-cli.html)。
    - 添加安全上下文限制到 service account
@@ -95,7 +95,7 @@ $ helm install <mesh name> osm --repo https://openservicemesh.github.io/osm --ve
 
 **PSP 支持在 OSM 1.0.0 中将被移除**
 
-如果您正在一个集群中运行 OSM，并带 PSP 使能，传递 `--set osm.pspEnabled=true` 给您的 `osm install` 或者 `helm install` CLI 命令。
+如果您正在一个集群中运行 OSM，并启用 PSP，传递 `--set osm.pspEnabled=true` 给您的 `osm install` 或者 `helm install` CLI 命令。
 
 ### 在 OSM 中启用 Reconciler
 

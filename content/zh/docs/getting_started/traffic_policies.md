@@ -17,7 +17,7 @@ weight: 3
 
 ### 如何检查流量策略模式
 
-检查是否许可流量策略模式被使能，可以通过对在`osm-mesh-config` `MeshConfig` 资源中的 `enablePermissiveTrafficPolicyMode` 键获取值来看。
+检查是否许可流量策略模式被启用，可以通过对在`osm-mesh-config` `MeshConfig` 资源中的 `enablePermissiveTrafficPolicyMode` 键获取值来看。
 
 ```bash
 # Replace osm-system with osm-controller's namespace if using a non default namespace
@@ -27,25 +27,25 @@ kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.traffic
 # true: permissive traffic policy mode is enabled, SMI policy mode is disabled
 ```
 
-接下来的章节演示了使用带[宽松流量策略模式](#宽松流量策略模式)和 [SMI 流量策略模式](#SMI-流量策略模式)的OSM。
+接下来的章节演示了使用带[宽松流量策略模式](#宽松流量策略模式)和 [SMI 流量策略模式](#SMI-流量策略模式)的 OSM。
 
 ## 宽松流量策略模式
 
-在流量宽松流量策略模式里面，在网格中的应用连接性通过 `osm-controller` 被自动配置。在接下来的方法中，它能够被使能。
+在流量宽松流量策略模式里面，在网格中的应用连接性通过 `osm-controller` 被自动配置。在接下来的方法中，它能够被启用。
 
 1. 使用 `osm` CLI 来当时安装：
   ```bash
   osm install --set=osm.enablePermissiveTrafficPolicy=true
   ```
 
-2. 在 control plane 的命名空间通过修正 `osm-mesh-config` 定制资源来后置安装（默认 `osm-system`）。
+2. 在控制平面的命名空间通过修正 `osm-mesh-config` 定制资源来后置安装（默认 `osm-system`）。
   ```bash
   kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":true}}}'  --type=merge
   ```
 
 ### 验证 OSM 处于宽松流量策略模式
 
-开始行动之前，[验证流量策略模式](#验证流量策略模式)并且确保 `enablePermissiveTrafficPolicyMode` 键在 `osm-mesh-config` `MeshConfig` 资源里面被设置成 `true`。参考上面的章节来使能宽松流量策略模式。
+开始行动之前，[验证流量策略模式](#验证流量策略模式)并且确保 `enablePermissiveTrafficPolicyMode` 键在 `osm-mesh-config` `MeshConfig` 资源里面被设置成 `true`。参考上面的章节来启用宽松流量策略模式。
 
 在步骤[部署书店应用](#部署书店应用)里面，我们已经部署了应用，并按照宽松流量策略模式来验证流量的流动。我们之前部署的 `bookstore` 服务为了演示目的以 `bookstore-v1` 的身份被编码，同样能够在[部署清单](https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/apps/bookstore.yaml)里面被看到。这个身份反映了在 `bookbuyer` 和 `bookthief` UI 中谁的计数在增长，在 `bookstore` UI 中身份的显示。
 
@@ -58,7 +58,7 @@ kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.traffic
 
 - [http://localhost:8084](http://localhost:8084) - **bookstore**
 
-`bookbuyer` 和 `bookthief` 应用能够分别从新近部署的 `bookstore` 应用购买和盗窃书籍，这是因为宽松流量策略模式被使能，从而允许应用们之间有连接而不需要 SMI 流量控制策略。
+`bookbuyer` 和 `bookthief` 应用能够分别从新近部署的 `bookstore` 应用购买和盗窃书籍，这是因为宽松流量策略模式被启用，从而允许应用们之间有连接而不需要 SMI 流量控制策略。
 
 这个可以被进一步地演示，通过禁用许可流量策略模式，然后从 `bookstore` 验证书籍购买计数，会发现计数将不再增加：
 
@@ -78,7 +78,7 @@ SMI 流量策略能够被用在以下情况：
 
 接下来的章节描述了如何撬动这些策略的每一个来执行服务网格中流量流动的精细粒度控制，[验证流量策略模式](#验证流量策略模式)并且确保在 `osm-mesh-config` `MeshConfig` 资源中的 `enablePermissiveTrafficPolicyMode` 键值被设置成 `false`。
 
-SMI 流量策略模式能够通过禁用许可流量策略模式来使能：
+SMI 流量策略模式能够通过禁用许可流量策略模式来启用：
 
 ```bash
 kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}'  --type=merge

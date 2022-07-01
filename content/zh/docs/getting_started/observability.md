@@ -38,7 +38,7 @@ osm metrics enable --namespace test
 osm metrics enable --namespace "test1, test2"
 
 ```
-> 注意：您正在为指标抓取所使能的命名空间必须已经是网格的一部分。
+> 注意：您正在为指标抓取所启用的命名空间必须已经是网格的一部分。
 
 ## 检查仪表板
 

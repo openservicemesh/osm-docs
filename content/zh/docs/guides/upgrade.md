@@ -117,9 +117,9 @@ kubectl patch meshconfig osm-mesh-config -n $osm_namespace -p '{"spec":{"sidecar
 
 在 MeshConfig 资源已经被更新之后，所有的作为网格一部分的 Pod 和部署必须被重启，这样更新版本的 Envoy sidecar 能够被注入到 Pod 上以作为 OSM 执行的自动化 sidecar 注入的一部分。这个可以通过 `kubectl rollout restart deploy` 命令来完成。
 
-### Prometheus, Grafana 和 Jaeger
+### Prometheus、Grafana 和 Jaeger
 
-如果使能了，OSM 的 Prometheus，Grafana 和 Jaeger 服务被部署到其他 OSM Control Plane 组件旁边。虽然这些第三方的依赖不能够通过像 Envoy 这样的 MeshConfig 来更新，它们的版本仍旧能够在部署中被直接更新。例如，要更新 Prometheus 到 v2.19.1，用户能够运行：
+如果启用了，OSM 的 Prometheus，Grafana 和 Jaeger 服务被部署到其他 OSM Control Plane 组件旁边。虽然这些第三方的依赖不能够通过像 Envoy 这样的 MeshConfig 来更新，它们的版本仍旧能够在部署中被直接更新。例如，要更新 Prometheus 到 v2.19.1，用户能够运行：
 
 ```bash
 export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed

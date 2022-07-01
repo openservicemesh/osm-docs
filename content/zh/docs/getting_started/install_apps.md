@@ -103,7 +103,7 @@ kubectl get pods,deployments,serviceaccounts,services,endpoints -n bookwarehouse
 
 建立客户端端口转发，需按照如下步骤，以访问在 Kubernetes 集群中的应用。我们最好开一个新的终端会话来运行端口转发脚本，以维护这个端口转发会话，同时使用原来的终端继续发送命令。port-forward-all.sh 脚本将寻找一个 `.env` 文件来满足环境变量的需要，从而可以执行该脚本。`.env` 文件创建必要的变量，目标是之前创建的那些命名空间。我们将使用参考文件 `.env.example` 然后运行端口转发脚本。
 
-在一个新的终端会话里，运行下面的命令来使能端口转发进入 Kubernetes 集群，这将从项目根目录开始（https://github.com/openservicemesh/osm 在您的本地的 clone 版本）。
+在一个新的终端会话里，运行下面的命令来启用端口转发进入 Kubernetes 集群，这将从项目根目录开始（https://github.com/openservicemesh/osm 在您的本地的 clone 版本）。
 
 ```bash
 cp .env.example .env

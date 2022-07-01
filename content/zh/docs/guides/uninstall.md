@@ -26,7 +26,7 @@ OSM Envoy sidecar 和相关的 secret 将按照如下步骤被移除：
 
 ### 禁用自动 Sidecar 注入
 
-OSM 自动 Sidecar 注入是最常见的使能功能，它通过 `osm` CLI 添加命名空间到网格来使能。使用 `osm` CLI 来查看哪个命名空间已经使能了 Sidecar 注入。如果有多个 Control Plane 被安装，请确保指定了 `--mesh-name` 标志。
+OSM 自动 Sidecar 注入是最常见的启用的功能，它通过 `osm` CLI 添加命名空间到网格来启用。使用 `osm` CLI 来查看哪个命名空间已经启用了 Sidecar 注入。如果有多个 Control Plane 被安装，请确保指定了 `--mesh-name` 标志。
 
 查看网格里的命名空间：
 
@@ -46,7 +46,7 @@ Namespace [<namespace>] successfully removed from mesh [<mesh-name>]
 
 这将从命名空间移除 `openservicemesh.io/sidecar-injection: enabled` 标注和 `openservicemesh.io/monitored-by: <mesh name>` 标签。
 
-可选地，如果 Sidecar 注入是通过 Pod 上的标注而不是逐个命名空间被使能的，请修改 Pod 或者部署规范来移除 Sidecar 注入标注。
+可选地，如果 Sidecar 注入是通过 Pod 上的标注而不是逐个命名空间被启用的，请修改 Pod 或者部署规范来移除 Sidecar 注入标注。
 
 ### 重启 Pod
 
