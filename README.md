@@ -109,6 +109,44 @@ Proceed with the following steps once the release branch has been created in the
 
 Once a new OSM version has been released, update the [OSM and Kubernetes support matrix](./content/docs/guides/install.md#kubernetes-support). The Kubernetes version support will be the [current releases of Kubernetes](https://kubernetes.io/releases/) at the time of the OSM release.
 
+### Copy files for localization
+
+Copy entire directory structure under `content/en` to each other localization directory, such as `content/zh`. Each file in each localization must be individually translated for a given release. For more details on the translation process, see [Localization](#localization).
+
+## Localization
+
+The OSM docs can be translated into multiple localizations. To ensure the most accurate content, each localization must be translated for every release and each file should be manually translated for a given localization. When a new release is published, the English version of every content file for that release is copied to each localization. Those temporary English files can then be individually translated.
+
+**If you find a technical error in the content, file a PR to the English version of the content file in the `main` branch so that the fix is carried forward into future releases. Localized content for a release is not carried forward into the next release so any fixes applied directly to localized content will be lost.**
+
+### Localizing a file
+
+To localize one or more files:
+
+- Create a new branch off of the latest release branch, such as `release-v1.1`.
+- Translate the temporary English version of the file(s) in the existing localization directory, such as `content/zh/_index.md`.
+- File a PR targeting the latest release branch.
+
+### Adding a new localization
+
+When you add a new localization, you need to create *BOTH* an initial translation for the latest release as well as the scaffold for the new localization in the `main` branch. 
+
+To create the initial translation for the latest release:
+
+- Create a branch based on the latest release branch, such as `release-v1.1`.
+- Add a new localization directory to the `content/` directory.
+- Copy the entire directory structure under `content/en` to the new localization directory.
+- Add a new language to `config.toml` in the `[languages]` section.
+- Optionally, you can begin translating one or more files in the new localization directory.
+- File a PR targeting the latest release branch.
+
+To create the scaffold for the new localization:
+
+- Create a branch based on `main`.
+- Add the same localization directory to the `content/` directory, but only containing a `.gitkeep` file.
+- Copy the new language configuration to `config.toml` in the `[languages]` section, but comment it out.
+- File a PR targeting the `main` branch.
+
 # Site Development
 
 ## Notes
