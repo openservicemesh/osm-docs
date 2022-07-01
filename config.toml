@@ -105,6 +105,10 @@ min_k8s_version = "v1.22.9"
 [[params.versions]]
   version = "v0.8"
   url = "https://release-v0-8.docs.openservicemesh.io/"
+[params.versionbanner]
+	show = false
+	archive = "v1.0"
+	latest = "https://docs.openservicemesh.io/"
 
 [params.ui]
 navbar_logo = true
