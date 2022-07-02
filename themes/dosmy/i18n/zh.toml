@@ -41,3 +41,9 @@ other = "Create documentation issue"
 other = "Create project issue"
 [post_posts_in]
 other = "Posts in"
+
+[feedback_title]
+other = "反馈"
+
+[feedback_content]
+other = "该内容是否有帮助？"
