@@ -43,7 +43,7 @@ other = "Create project issue"
 other = "Posts in"
 
 [feedback_title]
-other = "Feedback"
+other = "反馈"
 
 [feedback_content]
-other = "Was this page helpful?"
+other = "该内容是否有帮助？"
