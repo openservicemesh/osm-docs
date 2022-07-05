@@ -349,11 +349,11 @@ Select `Save and Test` and confirm you see `Data source is working`.
 
 OSM Dashboards are available from the following sources:
 - [OSM GitHub repository](https://github.com/openservicemesh/osm/tree/{{< param osm_branch >}}/charts/osm/grafana/dashboards)
-- [Online at Grafana.com](https://grafana.com/orgs/openservicemesh/dashboards)
+- [OSM Grafana Dashboard repository](https://grafana.com/orgs/openservicemesh/dashboards)
 
 To import a dashboard:
 * Hover your cursor over the `+` and select `Import`.
-* Copy the JSON from the [osm-mesh-envoy-details dashboard](https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/charts/osm/grafana/dashboards/osm-mesh-envoy-details.json) and paste it in `Import via panel json`. Alternatively, you can enter the dashboard's ID from `Grafana.com`. For example, the `osm-mesh-envoy-details` dashboard uses id `14145`.
+* Copy the JSON from the [osm-mesh-envoy-details dashboard](https://raw.githubusercontent.com/openservicemesh/osm/{{< param osm_branch >}}/charts/osm/grafana/dashboards/osm-mesh-envoy-details.json) and paste it in `Import via panel json`. Alternatively, you can enter the dashboard's ID from [Grafana Dashboards](https://grafana.com/grafana/dashboards/). For example, the [OSM Mesh Details](https://grafana.com/grafana/dashboards/14145) dashboard uses ID `14145`.
 * Select `Load`.
 * Select `Import`.
 
