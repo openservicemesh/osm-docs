@@ -23,7 +23,9 @@ It is important to note that the [container's restart policy](https://kubernetes
 
 ## When the application container is designed to run to completion
 
-Application containers like those running in Kubernetes Jobs that are meant to perform a certain set of tasks and then exit may not appear to have finished based on the Job's status because the Envoy sidecar container runs indefinitely. For the Pods controlled by Jobs to exit as they would without the sidecar, it is recommended for the application container to signal for Envoy to exit when its tasks are complete on its `/quitquitquit` HTTP endpoint. For Jobs driven by shell scripts, this may look something like
+Application containers, like those running in [Kubernetes Jobs](https://kubernetes.io/docs/concepts/workloads/controllers/job/), that are meant to perform a certain set of tasks and then exit may not appear to have finished based on the Job's status. This status is  expected and is due to the Envoy sidecar container running indefinitely. Update your pods controlled by Jobs to use the Envoy sidedcar's `/quitquitquit` HTTP endpoint to signal for Envoy to exit when your pod has completed its tasks. 
+
+ For Jobs driven by shell scripts, this may look something like
 
 ```
 trap 'curl localhost:15000/quitquitquit -X POST' EXIT
