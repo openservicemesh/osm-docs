@@ -37,11 +37,8 @@ metadata:
       namespace: osm-system
 data:
   ca.crt: <base64 encoded root cert>
-  expiration: <base64 encoded ISO 8601 certificate expiration date; for example: 2031-01-11T23:15:09.299Z>
   private.key: <base64 encoded private key>
 ```
-
-For details and code where this is used see [osm-controller.go](https://github.com/openservicemesh/osm/blob/{{< param osm_branch >}}/cmd/osm-controller/osm-controller.go#L182-L183).
 
 To read the root certificate (with the exception of Hashicorp Vault), you can retrieve the corresponding secret and decode it:
 
@@ -55,15 +52,17 @@ kubectl get secret -n $osm_namespace $osm_ca_bundle -o jsonpath='{.data.ca\.crt}
 
 This will provide valuable certificate information, such as the expiration date and the issuer.
 
-### Rotate the Root Certificate (Tresor)
+### Root Certificate Rotation
 
-WARNING: Rotating root certificates will incur downtime between any services as they transition their mTLS certs from one issuer to the next.
+#### Tresor
 
-We are currently working on a zero-downtime root cert rotation mechansim that we expect to announce in one of our upcoming releases.
+>  WARNING: Rotating root certificates will incur downtime between any services as they transition their mTLS certs from one issuer to the next.
+
+We are currently working on a zero-downtime root cert rotation mechanism that we expect to announce in one of our upcoming releases.
 
 The self-signed root certificate, which is created via the Tresor package within OSM, will expire in a decade. To rotate the root cert, the following steps should be followed:
 
-1. Delete the `osm-ca-bundle` certificate in the osm namesapce
+1. Delete the `osm-ca-bundle` certificate in the osm namespace
    ```console
    export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
    kubectl delete secret osm-ca-bundle -n $osm_namespace
@@ -90,10 +89,14 @@ osm-ca-bundle                  Opaque                                3      74m
 The new expiration date can be found with the following command:
 
 ```console
-kubectl get secrets -n $osm_namespace osm-ca-bundle -o json | jq -r '.data.expiration' | base64 -d
+kubectl get secret -n $osm_namespace $osm_ca_bundle -o jsonpath='{.data.ca\.crt}' |
+    base64 -d |
+    openssl x509 -noout -dates
 ```
 
-#### Other certificate issuers
+For the Envoy service and validation certificates to be rotated the data plane components must restarted.
+
+#### Hashicorp Vault and Certmanager
 
 For certificate providers other than Tresor, the process of rotating the root certificate will be different. For Hashicorp Vault and cert-manager.io, users will need to rotate the root certificate themselves outside of OSM.
 
@@ -132,9 +135,14 @@ The following configuration parameters will be required for OSM to integrate wit
 - `--set osm.certificateProvider.kind=vault` - set this to `vault`
 - `--set osm.vault.host` - host name of the Vault server (example: `vault.contoso.com`)
 - `--set osm.vault.protocol` - protocol for Vault connection (`http` or `https`)
-- `--set osm.vault.token` - token to be used by OSM to connect to Vault (this is issued on the Vault server for the particular role)
 - `--set osm.vault.role` - role created on Vault server and dedicated to Open Service Mesh (example: `openservicemesh`)
 - `--set osm.certificateProvider.serviceCertValidityDuration` - period for which each new certificate issued for service-to-service communication will be valid. It is represented as a sequence of decimal numbers each with optional fraction and a unit suffix, ex: 1h to represent 1 hour, 30m to represent 30 minutes, 1.5h or 1h30m to represent 1 hour and 30 minutes.
+
+The Vault token must be provided to OSM so it can connect to Vault. The token can be configured as a set option or stored in a Kubernetes secret in the namespace of the OSM installation. If the `osm.vault.token` option is not set, the `osm.vault.secret.name` and `osm.vault.secret.key` options must be configured.
+
+- `--set osm.vault.token` - token to be used by OSM to connect to Vault (this is issued on the Vault server for the particular role)
+- `--set osm.vault.secret.name` - the string name of the Kubernetes secret storing the Vault token
+- `--set osm.vault.secret.key` - the key of the Vault token in the Kubernetes secret
 
 Additionally:
 
