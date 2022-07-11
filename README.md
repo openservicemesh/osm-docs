@@ -103,6 +103,7 @@ Proceed with the following steps once the release branch has been created in the
 	    show = true
 	    archive = "v0.7"
     ```
+6. Update `content/docs/releases/docs.md` to include the new release and update the inactive releases list.
 
 ### Update the release support matrix
 
