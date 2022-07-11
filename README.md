@@ -96,14 +96,14 @@ Proceed with the following steps once the release branch has been created in the
 2. Each previous release-specific site that is still supported needs to be able to access the latest release from the Release drop down. On the previous release branches, update the [config.toml](https://github.com/openservicemesh/osm-docs/blob/main/config.toml) to list the new release version as shown above.
 3. The `latest` tag must be removed from all previous versions. For example, the `latest` tag must be removed from `v0.7 (latest)` on the `release-v0.7` branch.
 4. Add the [banner](https://github.com/openservicemesh/osm-docs/blob/release-v0.9/themes/dosmy/layouts/partials/banner.html) to a previous release specific site if it has not been configured.
-5. Add or update the version banner parameter in `config.toml` to enable the banner at the top of each previous release-specific site that will tell visitors which version they are looking at. For example, the version banner for `release-v0-7` would be configured as follows:
+5. Update the version banner parameter in `config.toml` to enable the banner at the top of each previous release-specific site that will tell visitors which version they are looking at. For example, the version banner for `release-v0-7` would be configured as follows:
 
     ```toml
     [params.versionbanner]
 	    show = true
 	    archive = "v0.7"
-	    latest = "https://release-v0-8.docs.openservicemesh.io/"
     ```
+6. Update `content/docs/releases/docs.md` to include the new release and update the inactive releases list.
 
 ### Update the release support matrix
 
