@@ -11,9 +11,9 @@ type: docs
 </li>
 </ul>
 <h2 id="policy.openservicemesh.io/v1alpha1">policy.openservicemesh.io/v1alpha1</h2>
-<p>
+<div>
 <p>Package v1alpha1 is the v1alpha1 version of the API.</p>
-</p>
+</div>
 Resource Types:
 <ul></ul>
 <h3 id="policy.openservicemesh.io/v1alpha1.BackendSpec">BackendSpec
@@ -21,9 +21,9 @@ Resource Types:
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.IngressBackendSpec">IngressBackendSpec</a>)
 </p>
-<p>
+<div>
 <p>BackendSpec is the type used to represent a Backend specified in the IngressBackend policy specification.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -77,10 +77,10 @@ TLSSpec
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingSpec">UpstreamTrafficSettingSpec</a>)
 </p>
-<p>
+<div>
 <p>ConnectionSettingsSpec defines the connection settings for an
 upstream host.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -122,12 +122,12 @@ HTTPConnectionSettings
 </table>
 <h3 id="policy.openservicemesh.io/v1alpha1.Egress">Egress
 </h3>
-<p>
+<div>
 <p>Egress is the type used to represent an Egress traffic policy.
 An Egress policy allows applications to access endpoints
 external to the service mesh or cluster based on the specified
 rules in the policy.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -252,9 +252,9 @@ The destination port of the traffic is matched against the list of Ports specifi
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.EgressSpec">EgressSpec</a>)
 </p>
-<p>
+<div>
 <p>EgressSourceSpec is the type used to represent the Source in the list of Sources specified in an Egress policy specification.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -303,9 +303,9 @@ string
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.Egress">Egress</a>)
 </p>
-<p>
+<div>
 <p>EgressSpec is the type used to represent the Egress policy specification.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -396,10 +396,10 @@ The destination port of the traffic is matched against the list of Ports specifi
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.ConnectionSettingsSpec">ConnectionSettingsSpec</a>)
 </p>
-<p>
+<div>
 <p>HTTPConnectionSettings defines the HTTP connection settings for an
 upstream host.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -474,9 +474,9 @@ Defaults to 4294967295 (2^32 - 1) if not specified.</p>
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.HTTPLocalRateLimitSpec">HTTPLocalRateLimitSpec</a>)
 </p>
-<p>
+<div>
 <p>HTTPHeaderValue defines an HTTP header name/value pair</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -514,10 +514,10 @@ string
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.HTTPPerRouteRateLimitSpec">HTTPPerRouteRateLimitSpec</a>, <a href="#policy.openservicemesh.io/v1alpha1.LocalRateLimitSpec">LocalRateLimitSpec</a>)
 </p>
-<p>
+<div>
 <p>HTTPLocalRateLimitSpec defines the local rate limiting specification
 for the upstream host at the HTTP level.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -602,10 +602,10 @@ added to each response for requests that have been rate limited.</p>
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.HTTPRouteSpec">HTTPRouteSpec</a>)
 </p>
-<p>
+<div>
 <p>HTTPPerRouteRateLimitSpec defines the rate limiting specification
 per HTTP route.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -635,9 +635,9 @@ applied per HTTP route.</p>
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingSpec">UpstreamTrafficSettingSpec</a>)
 </p>
-<p>
+<div>
 <p>HTTPRouteSpec defines the settings correspondng to an HTTP route</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -675,11 +675,11 @@ the specified HTTP route.</p>
 </table>
 <h3 id="policy.openservicemesh.io/v1alpha1.IngressBackend">IngressBackend
 </h3>
-<p>
+<div>
 <p>IngressBackend is the type used to represent an Ingress backend policy.
 An Ingress backend policy authorizes one or more backends to accept
 ingress traffic from one or more sources.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -783,9 +783,9 @@ IngressBackendStatus
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.IngressBackend">IngressBackend</a>)
 </p>
-<p>
+<div>
 <p>IngressBackendSpec is the type used to represent the IngressBackend policy specification.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -841,9 +841,9 @@ IngressBackendStatus
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.IngressBackend">IngressBackend</a>)
 </p>
-<p>
+<div>
 <p>IngressBackendStatus is the type used to represent the status of an IngressBackend resource.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -883,10 +883,10 @@ string
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.IngressBackendSpec">IngressBackendSpec</a>)
 </p>
-<p>
+<div>
 <p>IngressSourceSpec is the type used to represent the Source in the list of Sources specified in an
 IngressBackend policy specification.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -937,10 +937,10 @@ string
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.RateLimitSpec">RateLimitSpec</a>)
 </p>
-<p>
+<div>
 <p>LocalRateLimitSpec defines the local rate limiting specification
 for the upstream host.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -991,9 +991,9 @@ configured rate limit status.</p>
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.BackendSpec">BackendSpec</a>, <a href="#policy.openservicemesh.io/v1alpha1.EgressSpec">EgressSpec</a>)
 </p>
-<p>
+<div>
 <p>PortSpec is the type used to represent the Port in the list of Ports specified in an Egress policy specification.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -1031,10 +1031,10 @@ string
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSettingSpec">UpstreamTrafficSettingSpec</a>)
 </p>
-<p>
+<div>
 <p>RateLimitSpec defines the rate limiting specification for
 the upstream host.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -1065,11 +1065,11 @@ This is applied as a token bucket rate limiter.</p>
 </table>
 <h3 id="policy.openservicemesh.io/v1alpha1.Retry">Retry
 </h3>
-<p>
+<div>
 <p>Retry is the type used to represent a Retry policy.
 A Retry policy authorizes retries to failed attempts for outbound traffic
 from one service source to one or more destination services.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -1158,9 +1158,9 @@ RetryPolicySpec
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.RetrySpec">RetrySpec</a>)
 </p>
-<p>
+<div>
 <p>RetryPolicySpec is the type used to represent the retry policy specified in the Retry policy specification.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -1227,9 +1227,9 @@ Kubernetes meta/v1.Duration
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.Retry">Retry</a>)
 </p>
-<p>
+<div>
 <p>RetrySpec is the type used to represent the Retry policy specification.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -1284,10 +1284,10 @@ RetryPolicySpec
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.RetrySpec">RetrySpec</a>)
 </p>
-<p>
+<div>
 <p>RetrySrcDstSpec is the type used to represent the Destination in the list of Destinations and the Source
 specified in the Retry policy specification.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -1336,10 +1336,10 @@ string
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.ConnectionSettingsSpec">ConnectionSettingsSpec</a>)
 </p>
-<p>
+<div>
 <p>TCPConnectionSettings defines the TCP connection settings for an
 upstream host.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -1384,10 +1384,10 @@ Defaults to 5s if not specified.</p>
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.LocalRateLimitSpec">LocalRateLimitSpec</a>)
 </p>
-<p>
+<div>
 <p>TCPLocalRateLimitSpec defines the local rate limiting specification
 for the upstream host at the TCP level.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -1441,9 +1441,9 @@ rate that are allowed in a short period of time.</p>
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.BackendSpec">BackendSpec</a>)
 </p>
-<p>
+<div>
 <p>TLSSpec is the type used to represent the backend&rsquo;s TLS configuration.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -1480,10 +1480,10 @@ certificate presented by the client.</p>
 </table>
 <h3 id="policy.openservicemesh.io/v1alpha1.UpstreamTrafficSetting">UpstreamTrafficSetting
 </h3>
-<p>
+<div>
 <p>UpstreamTrafficSetting defines the settings applicable to traffic destined
 to an upstream host.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -1611,9 +1611,9 @@ UpstreamTrafficSettingStatus
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSetting">UpstreamTrafficSetting</a>)
 </p>
-<p>
+<div>
 <p>UpstreamTrafficSettingSpec defines the upstream traffic setting specification.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -1693,9 +1693,9 @@ route level.</p>
 <p>
 (<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.UpstreamTrafficSetting">UpstreamTrafficSetting</a>)
 </p>
-<p>
+<div>
 <p>UpstreamTrafficSettingStatus defines the status of an UpstreamTrafficSetting resource.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -1733,5 +1733,5 @@ string
 <hr/>
 <p><em>
 Generated with <code>gen-crd-api-reference-docs</code>
-on git commit <code>f3966a3c</code>.
+on git commit <code>d40f9b8c</code>.
 </em></p>

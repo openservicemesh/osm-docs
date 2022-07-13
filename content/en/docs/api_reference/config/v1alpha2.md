@@ -11,19 +11,70 @@ type: docs
 </li>
 </ul>
 <h2 id="config.openservicemesh.io/v1alpha2">config.openservicemesh.io/v1alpha2</h2>
-<p>
+<div>
 <p>Package v1alpha2 is the v1alpha2 version of the API.</p>
-</p>
+</div>
 Resource Types:
 <ul></ul>
+<h3 id="config.openservicemesh.io/v1alpha2.CertManagerProviderSpec">CertManagerProviderSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.ProviderSpec">ProviderSpec</a>)
+</p>
+<div>
+<p>CertManagerProviderSpec defines the configuration of the cert-manager provider</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>issuerName</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>IssuerName specifies the name of the Issuer resource</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>issuerKind</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>IssuerKind specifies the kind of Issuer</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>issuerGroup</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>IssuerGroup specifies the group the Issuer belongs to</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="config.openservicemesh.io/v1alpha2.CertificateSpec">CertificateSpec
 </h3>
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
-<p>
+<div>
 <p>CertificateSpec is the type to reperesent OSM&rsquo;s certificate management configuration.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -70,76 +121,14 @@ IngressGatewayCertSpec
 </tr>
 </tbody>
 </table>
-<h3 id="config.openservicemesh.io/v1alpha2.ClusterSpec">ClusterSpec
-</h3>
-<p>
-(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MultiClusterServiceSpec">MultiClusterServiceSpec</a>)
-</p>
-<p>
-<p>ClusterSpec is the type used to represent a remote cluster in multicluster scenarios.</p>
-</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>address</code><br/>
-<em>
-string
-</em>
-</td>
-<td>
-<p>Address defines the remote IP address of the gateway</p>
-</td>
-</tr>
-<tr>
-<td>
-<code>name</code><br/>
-<em>
-string
-</em>
-</td>
-<td>
-<p>Name defines the name of the remote cluster.</p>
-</td>
-</tr>
-<tr>
-<td>
-<code>weight</code><br/>
-<em>
-int
-</em>
-</td>
-<td>
-<p>Weight defines the load balancing weight of the remote cluster</p>
-</td>
-</tr>
-<tr>
-<td>
-<code>priority</code><br/>
-<em>
-int
-</em>
-</td>
-<td>
-<p>Priority defines the priority of the remote cluster in locality based load balancing</p>
-</td>
-</tr>
-</tbody>
-</table>
 <h3 id="config.openservicemesh.io/v1alpha2.ExternalAuthzSpec">ExternalAuthzSpec
 </h3>
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.TrafficSpec">TrafficSpec</a>)
 </p>
-<p>
+<div>
 <p>ExternalAuthzSpec is a type to represent external authorization configuration.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -223,9 +212,9 @@ response against the external authorization endpoint.</p>
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
-<p>
+<div>
 <p>FeatureFlags is a type to represent OSM&rsquo;s feature flags.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -254,17 +243,6 @@ bool
 </td>
 <td>
 <p>EnableEgressPolicy defines if OSM&rsquo;s Egress policy is enabled.</p>
-</td>
-</tr>
-<tr>
-<td>
-<code>enableMulticlusterMode</code><br/>
-<em>
-bool
-</em>
-</td>
-<td>
-<p>EnableMulticlusterMode defines if Multicluster mode is enabled.</p>
 </td>
 </tr>
 <tr>
@@ -331,9 +309,9 @@ bool
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.CertificateSpec">CertificateSpec</a>)
 </p>
-<p>
+<div>
 <p>IngressGatewayCertSpec is the type to represent the certificate specification for an ingress gateway.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -379,11 +357,34 @@ Kubernetes core/v1.SecretReference
 </tr>
 </tbody>
 </table>
+<h3 id="config.openservicemesh.io/v1alpha2.LocalProxyMode">LocalProxyMode
+(<code>string</code> alias)</h3>
+<p>
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.SidecarSpec">SidecarSpec</a>)
+</p>
+<div>
+<p>LocalProxyMode is a type alias representing the way the envoy sidecar proxies to the main application</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr><td><p>&#34;Localhost&#34;</p></td>
+<td><p>LocalProxyModeLocalhost indicates the the sidecar should communicate with the main application over localhost</p>
+</td>
+</tr><tr><td><p>&#34;PodIP&#34;</p></td>
+<td><p>LocalProxyModePodIP indicates that the sidecar should communicate with the main application via the pod ip</p>
+</td>
+</tr></tbody>
+</table>
 <h3 id="config.openservicemesh.io/v1alpha2.MeshConfig">MeshConfig
 </h3>
-<p>
+<div>
 <p>MeshConfig is the type used to represent the mesh configuration.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -498,9 +499,9 @@ FeatureFlags
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshConfig">MeshConfig</a>)
 </p>
-<p>
+<div>
 <p>MeshConfigSpec is the spec for OSM&rsquo;s configuration.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -576,12 +577,12 @@ FeatureFlags
 </tr>
 </tbody>
 </table>
-<h3 id="config.openservicemesh.io/v1alpha2.MultiClusterService">MultiClusterService
+<h3 id="config.openservicemesh.io/v1alpha2.MeshRootCertificate">MeshRootCertificate
 </h3>
-<p>
-<p>MultiClusterService is the type used to represent the multicluster configuration.
-MultiClusterService name needs to match the name of the service backing the pods in each cluster.</p>
-</p>
+<div>
+<p>MeshRootCertificate defines the configuration for certificate issuing
+by the mesh control plane</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -601,7 +602,7 @@ Kubernetes meta/v1.ObjectMeta
 </td>
 <td>
 <em>(Optional)</em>
-<p>Object&rsquo;s metadata.</p>
+<p>Object&rsquo;s metadata</p>
 Refer to the Kubernetes API documentation for the fields of the
 <code>metadata</code> field.
 </td>
@@ -610,66 +611,68 @@ Refer to the Kubernetes API documentation for the fields of the
 <td>
 <code>spec</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha2.MultiClusterServiceSpec">
-MultiClusterServiceSpec
+<a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateSpec">
+MeshRootCertificateSpec
 </a>
 </em>
 </td>
 <td>
-<p>Spec is the MultiClusterService specification.</p>
+<em>(Optional)</em>
+<p>Spec is the MeshRootCertificate config specification</p>
 <br/>
 <br/>
 <table>
 <tr>
 <td>
-<code>clusters</code><br/>
+<code>provider</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha2.ClusterSpec">
-[]ClusterSpec
+<a href="#config.openservicemesh.io/v1alpha2.ProviderSpec">
+ProviderSpec
 </a>
 </em>
 </td>
 <td>
-<p>ClusterSpec defines the configuration of other clusters</p>
+<p>Provider specifies the mesh certificate provider</p>
 </td>
 </tr>
 <tr>
 <td>
-<code>serviceAccount</code><br/>
+<code>trustDomain</code><br/>
 <em>
 string
 </em>
 </td>
 <td>
-<p>ServiceAccount represents the service account of the multicluster service.</p>
+<p>TrustDomain is the trust domain to use as a suffix in Common Names for new certificates.</p>
+</td>
+</tr>
+</table>
 </td>
 </tr>
 <tr>
 <td>
-<code>ports</code><br/>
+<code>status</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha2.PortSpec">
-[]PortSpec
+<a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateStatus">
+MeshRootCertificateStatus
 </a>
 </em>
 </td>
 <td>
-<p>Ports is the list of ports exported by this service.</p>
-</td>
-</tr>
-</table>
+<em>(Optional)</em>
+<p>Status of the MeshRootCertificate resource</p>
 </td>
 </tr>
 </tbody>
 </table>
-<h3 id="config.openservicemesh.io/v1alpha2.MultiClusterServiceSpec">MultiClusterServiceSpec
+<h3 id="config.openservicemesh.io/v1alpha2.MeshRootCertificateSpec">MeshRootCertificateSpec
 </h3>
 <p>
-(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MultiClusterService">MultiClusterService</a>)
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificate">MeshRootCertificate</a>)
 </p>
-<p>
-<p>MultiClusterServiceSpec is the type used to represent the multicluster service specification.</p>
-</p>
+<div>
+<p>MeshRootCertificateSpec defines the mesh root certificate specification</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -680,39 +683,56 @@ string
 <tbody>
 <tr>
 <td>
-<code>clusters</code><br/>
+<code>provider</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha2.ClusterSpec">
-[]ClusterSpec
+<a href="#config.openservicemesh.io/v1alpha2.ProviderSpec">
+ProviderSpec
 </a>
 </em>
 </td>
 <td>
-<p>ClusterSpec defines the configuration of other clusters</p>
+<p>Provider specifies the mesh certificate provider</p>
 </td>
 </tr>
 <tr>
 <td>
-<code>serviceAccount</code><br/>
+<code>trustDomain</code><br/>
 <em>
 string
 </em>
 </td>
 <td>
-<p>ServiceAccount represents the service account of the multicluster service.</p>
+<p>TrustDomain is the trust domain to use as a suffix in Common Names for new certificates.</p>
 </td>
 </tr>
+</tbody>
+</table>
+<h3 id="config.openservicemesh.io/v1alpha2.MeshRootCertificateStatus">MeshRootCertificateStatus
+</h3>
+<p>
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificate">MeshRootCertificate</a>)
+</p>
+<div>
+<p>MeshRootCertificateStatus defines the status of the MeshRootCertificate resource</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>
-<code>ports</code><br/>
+<code>state</code><br/>
 <em>
-<a href="#config.openservicemesh.io/v1alpha2.PortSpec">
-[]PortSpec
-</a>
+string
 </em>
 </td>
 <td>
-<p>Ports is the list of ports exported by this service.</p>
+<p>State specifies the state of the certificate provider
+All states are specified in constants.go</p>
 </td>
 </tr>
 </tbody>
@@ -722,9 +742,9 @@ string
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
-<p>
+<div>
 <p>ObservabilitySpec is the type to represent OSM&rsquo;s observability configurations.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -770,14 +790,14 @@ TracingSpec
 </tr>
 </tbody>
 </table>
-<h3 id="config.openservicemesh.io/v1alpha2.PortSpec">PortSpec
+<h3 id="config.openservicemesh.io/v1alpha2.ProviderSpec">ProviderSpec
 </h3>
 <p>
-(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MultiClusterServiceSpec">MultiClusterServiceSpec</a>)
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateSpec">MeshRootCertificateSpec</a>)
 </p>
-<p>
-<p>PortSpec contains information on service&rsquo;s port.</p>
-</p>
+<div>
+<p>ProviderSpec defines the certificate provider used by the mesh control plane</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -788,24 +808,95 @@ TracingSpec
 <tbody>
 <tr>
 <td>
-<code>Port</code><br/>
+<code>certManager</code><br/>
 <em>
-uint32
+<a href="#config.openservicemesh.io/v1alpha2.CertManagerProviderSpec">
+CertManagerProviderSpec
+</a>
 </em>
 </td>
 <td>
-<p>The port that will be exposed by this service.</p>
+<em>(Optional)</em>
+<p>CertManager specifies the cert-manager provider configuration</p>
 </td>
 </tr>
 <tr>
 <td>
-<code>Protocol</code><br/>
+<code>vault</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.VaultProviderSpec">
+VaultProviderSpec
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Vault specifies the vault provider configuration</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>tresor</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.TresorProviderSpec">
+TresorProviderSpec
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Tresor specifies the Tresor provider configuration</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="config.openservicemesh.io/v1alpha2.SecretKeyReferenceSpec">SecretKeyReferenceSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.VaultTokenSpec">VaultTokenSpec</a>)
+</p>
+<div>
+<p>SecretKeyReferenceSpec defines the configuration of the secret reference</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>name</code><br/>
 <em>
 string
 </em>
 </td>
 <td>
-<p>Protocol is The IP protocol for this port. Supports &ldquo;TCP&rdquo;, &ldquo;UDP&rdquo;, and &ldquo;SCTP&rdquo;. Default is TCP.</p>
+<p>Name specifies the name of the secret in which the Vault token is stored</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>key</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Key specifies the key whose value is the Vault token</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>namespace</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Namespace specifies the namespace of the secret in which the Vault token is stored</p>
 </td>
 </tr>
 </tbody>
@@ -815,9 +906,9 @@ string
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
-<p>
+<div>
 <p>SidecarSpec is the type used to represent the specifications for the proxy sidecar.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -857,25 +948,6 @@ string
 </td>
 <td>
 <p>EnvoyImage defines the container image used for the Envoy proxy sidecar.</p>
-</td>
-</tr>
-<tr>
-<td>
-<code>envoyWindowsImage</code><br/>
-<em>
-string
-</em>
-</td>
-</tr>
-<tr>
-<td>
-<code>localProxyMode</code><br/>
-<em>
-string
-</em>
-</td>
-<td>
-<p>Sets the destination ip address the envoy proxy will use when connecting to the backend application. Acceptable values are [Localhost, PodIP]. The default value is Localhost</p>
 </td>
 </tr>
 <tr>
@@ -935,6 +1007,63 @@ Kubernetes core/v1.ResourceRequirements
 <p>Resources defines the compute resources for the sidecar.</p>
 </td>
 </tr>
+<tr>
+<td>
+<code>tlsMinProtocolVersion</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>TLSMinProtocolVersion defines the minimum TLS protocol version that the sidecar supports. Valid TLS protocol versions are TLS_AUTO, TLSv1_0, TLSv1_1, TLSv1_2 and TLSv1_3.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>tlsMaxProtocolVersion</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>TLSMaxProtocolVersion defines the maximum TLS protocol version that the sidecar supports. Valid TLS protocol versions are TLS_AUTO, TLSv1_0, TLSv1_1, TLSv1_2 and TLSv1_3.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>cipherSuites</code><br/>
+<em>
+[]string
+</em>
+</td>
+<td>
+<p>CipherSuites defines a list of ciphers that listener supports when negotiating TLS 1.0-1.2. This setting has no effect when negotiating TLS 1.3. For valid cipher names, see the latest OpenSSL ciphers manual page. E.g. <a href="https://www.openssl.org/docs/man1.1.1/apps/ciphers.html">https://www.openssl.org/docs/man1.1.1/apps/ciphers.html</a>.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>ecdhCurves</code><br/>
+<em>
+[]string
+</em>
+</td>
+<td>
+<p>ECDHCurves defines a list of ECDH curves that TLS connection supports. If not specified, the curves are [X25519, P-256] for non-FIPS build and P-256 for builds using BoringSSL FIPS.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>localProxyMode</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.LocalProxyMode">
+LocalProxyMode
+</a>
+</em>
+</td>
+<td>
+<p>LocalProxyMode defines the network interface the envoy proxy will use to send traffic to the backend service application. Acceptable values are [<code>Localhost</code>, <code>PodIP</code>]. The default is <code>Localhost</code></p>
+</td>
+</tr>
 </tbody>
 </table>
 <h3 id="config.openservicemesh.io/v1alpha2.TracingSpec">TracingSpec
@@ -942,9 +1071,9 @@ Kubernetes core/v1.ResourceRequirements
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.ObservabilitySpec">ObservabilitySpec</a>)
 </p>
-<p>
+<div>
 <p>TracingSpec is the type to represent OSM&rsquo;s tracing configuration.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -1004,9 +1133,9 @@ string
 <p>
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshConfigSpec">MeshConfigSpec</a>)
 </p>
-<p>
+<div>
 <p>TrafficSpec is the type used to represent OSM&rsquo;s traffic management configuration.</p>
-</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -1035,6 +1164,18 @@ bool
 </td>
 <td>
 <p>OutboundIPRangeExclusionList defines a global list of IP address ranges to exclude from outbound traffic interception by the sidecar proxy.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>outboundIPRangeInclusionList</code><br/>
+<em>
+[]string
+</em>
+</td>
+<td>
+<p>OutboundIPRangeInclusionList defines a global list of IP address ranges to include for outbound traffic interception by the sidecar proxy.
+IP addresses outside this range will be excluded from outbound traffic interception by the sidecar proxy.</p>
 </td>
 </tr>
 <tr>
@@ -1084,10 +1225,192 @@ ExternalAuthzSpec
 for all inbound and ingress traffic in the mesh.</p>
 </td>
 </tr>
+<tr>
+<td>
+<code>networkInterfaceExclusionList</code><br/>
+<em>
+[]string
+</em>
+</td>
+<td>
+<p>NetworkInterfaceExclusionList defines a global list of network interface
+names to exclude from inbound and outbound traffic interception by the
+sidecar proxy.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="config.openservicemesh.io/v1alpha2.TresorCASpec">TresorCASpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.TresorProviderSpec">TresorProviderSpec</a>)
+</p>
+<div>
+<p>TresorCASpec defines the configuration of Tresor&rsquo;s root certificate</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>secretRef</code><br/>
+<em>
+<a href="https://v1-20.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#secretreference-v1-core">
+Kubernetes core/v1.SecretReference
+</a>
+</em>
+</td>
+<td>
+<p>SecretRef specifies the secret in which the root certificate is stored</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="config.openservicemesh.io/v1alpha2.TresorProviderSpec">TresorProviderSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.ProviderSpec">ProviderSpec</a>)
+</p>
+<div>
+<p>TresorProviderSpec defines the configuration of the Tresor provider</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>ca</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.TresorCASpec">
+TresorCASpec
+</a>
+</em>
+</td>
+<td>
+<p>CA specifies Tresor&rsquo;s ca configuration</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="config.openservicemesh.io/v1alpha2.VaultProviderSpec">VaultProviderSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.ProviderSpec">ProviderSpec</a>)
+</p>
+<div>
+<p>VaultProviderSpec defines the configuration of the Vault provider</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>host</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Host specifies the name of the Vault server</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>port</code><br/>
+<em>
+int
+</em>
+</td>
+<td>
+<p>Port specifies the port of the Vault server</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>role</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Role specifies the name of the role for use by mesh control plane</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>protocol</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Protocol specifies the protocol for connections to Vault</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>token</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.VaultTokenSpec">
+VaultTokenSpec
+</a>
+</em>
+</td>
+<td>
+<p>Token specifies the configuration of the token to be used by mesh control plane
+to connect to Vault</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="config.openservicemesh.io/v1alpha2.VaultTokenSpec">VaultTokenSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.VaultProviderSpec">VaultProviderSpec</a>)
+</p>
+<div>
+<p>VaultTokenSpec defines the configuration of the Vault token</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>secretKeyRef</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.SecretKeyReferenceSpec">
+SecretKeyReferenceSpec
+</a>
+</em>
+</td>
+<td>
+<p>SecretKeyRef specifies the secret in which the Vault token is stored</p>
+</td>
+</tr>
 </tbody>
 </table>
 <hr/>
 <p><em>
 Generated with <code>gen-crd-api-reference-docs</code>
-on git commit <code>386d92a1</code>.
+on git commit <code>d40f9b8c</code>.
 </em></p>
