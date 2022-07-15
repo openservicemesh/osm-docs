@@ -35,10 +35,12 @@ spec:
   selector:
     matchLabels:
       app: bookstore
+      version: v1
   template:
     metadata:
       labels:
         app: bookstore
+        version: v1
     spec:
       serviceAccountName: bookstore
       nodeSelector:
