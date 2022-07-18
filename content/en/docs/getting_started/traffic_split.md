@@ -37,13 +37,13 @@ The counter should _not_ be incrementing because no traffic is flowing yet to th
 
 ### Create SMI Traffic Split
 
-Deploy the SMI traffic split policy to direct 100 percent of the traffic sent to the root `bookstore` service to the `bookstore` service backend:
+Deploy the SMI traffic split policy to direct 100 percent of the traffic sent to the root `bookstore` service to the `bookstore` service backend. This is effectively the same as not having a `TrafficSplit` configuration as we are directing 100 percent of traffic from the root service to itself. However, the `TrafficSplit` configuration will be subsequently updated to direct a percentage of traffic to `version v2` of the bookstore service using the `bookstore-v2` leaf service. For this reason, it is important to ensure client applications always communicate with the root service if a traffic split is desired later on, otherwise the client application will need to be updated to communicate with the root service when a traffic split is desired.
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/split/traffic-split-v1.yaml
 ```
 
-_Note: The root service can be any Kubernetes service. It does not have any label selectors. It also doesn't need to overlap with any of the Backend services specified in the Traffic Split resource. The root service can be referred to in the SMI Traffic Split resource as the name of the service with or without the `.<namespace>` suffix._
+_Note: The root service is a Kubernetes service whose selector needs to match the pods backing the leaf services. In this demo, the root service `bookstore` has the selector `app:bookstore`, which matches both the labels `app:bookstore,version:v1` and `app:bookstore,version=v2` on the `bookstore (v1)` and `bookstore-v2` deployments respectively. The root service can be referred to in the SMI Traffic Split resource as the name of the service with or without the `.<namespace>.svc.cluster.local` suffix._
 
 The count for the books sold from the `bookstore-v2` browser window should remain at 0. This is because the current traffic split policy is currently weighted 100 for `bookstore` in addition to the fact that `bookbuyer` is sending traffic to the `bookstore` service and no application is sending requests to the `bookstore-v2` service. You can verify the traffic split policy by running the following and viewing the **Backends** properties:
 
