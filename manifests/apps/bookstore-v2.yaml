@@ -5,13 +5,15 @@ metadata:
   name: bookstore-v2
   namespace: bookstore
   labels:
-    app: bookstore-v2
+    app: bookstore
+    version: v2
 spec:
   ports:
   - port: 14001
     name: bookstore-port
   selector:
-    app: bookstore-v2
+    app: bookstore
+    version: v2
 
 ---
 
@@ -34,11 +36,13 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: bookstore-v2
+      app: bookstore
+      version: v2
   template:
     metadata:
       labels:
-        app: bookstore-v2
+        app: bookstore
+        version: v2
     spec:
       serviceAccountName: bookstore-v2
       nodeSelector:
