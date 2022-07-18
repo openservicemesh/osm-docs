@@ -26,14 +26,17 @@ The following demo shows a TCP client sending data to a `tcp-echo` server, which
     ```
 
 1. Deploy the `tcp-echo` service in the `tcp-demo` namespace. The `tcp-echo` service runs on port `9000` with the `appProtocol` field set to `tcp`, which indicates to OSM that TCP routing must be used for traffic directed to the `tcp-echo` service on port `9000`.
+    Create the tcp-demo namespace
     ```bash
-    # Create the tcp-demo namespace
     kubectl create namespace tcp-demo
-
-    # Add the namespace to the mesh
+    ```
+    
+    Add the namespace to the mesh
+    ```bash
     osm namespace add tcp-demo
-
-    # Deploy the service
+    ```
+    Deploy the service
+    ```bash
     kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/apps/tcp-echo.yaml -n tcp-demo
     ```
 
@@ -41,6 +44,9 @@ The following demo shows a TCP client sending data to a `tcp-echo` server, which
 
     ```console
     kubectl get svc,po -n tcp-demo
+    ```
+    Should look similar to:
+    ```console
     NAME               TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
     service/tcp-echo   ClusterIP   10.0.216.68   <none>        9000/TCP   97s
 
@@ -50,14 +56,17 @@ The following demo shows a TCP client sending data to a `tcp-echo` server, which
 
 1. Deploy the `curl` client into the `curl` namespace.
 
+    Create the curl namespace
     ```bash
-    # Create the curl namespace
     kubectl create namespace curl
-
-    # Add the namespace to the mesh
+    ```
+    Add the namespace to the mesh
+    ```bash
     osm namespace add curl
-
-    # Deploy curl client in the curl namespace
+    ```
+    
+    Deploy curl client in the curl namespace
+    ```bash
     kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/curl/curl.yaml -n curl
     ```
 
@@ -65,6 +74,9 @@ The following demo shows a TCP client sending data to a `tcp-echo` server, which
 
     ```console
     kubectl get pods -n curl
+    ```
+    should look similar to:
+    ```console
     NAME                    READY   STATUS    RESTARTS   AGE
     curl-54ccc6954c-9rlvp   2/2     Running   0          20s
     ```
@@ -81,6 +93,8 @@ We will enable service discovery using [permissive traffic policy mode](/docs/gu
 1. Confirm the `curl` client is able to send and receive a response from the `tcp-echo` service using TCP routing.
     ```console
     kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- sh -c 'echo hello | nc tcp-echo.tcp-demo 9000'
+    ```
+    ```console
     echo response: hello
     ```
 
@@ -98,6 +112,8 @@ When using SMI traffic policy mode, explicit traffic policies must be configured
 1. Confirm the `curl` client is unable to send and receive a response from the `tcp-echo` service in the absence of SMI policies.
     ```console
     kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- sh -c 'echo hello | nc tcp-echo.tcp-demo 9000'
+    ```
+    ```console
     command terminated with exit code 1
     ```
 
@@ -139,4 +155,7 @@ When using SMI traffic policy mode, explicit traffic policies must be configured
 1. Confirm the `curl` client is able to send and receive a response from the `tcp-echo` service using SMI TCP route.
     ```console
     kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- sh -c 'echo hello | nc tcp-echo.tcp-demo 9000'
+    ```
+    ```console
     echo response: hello
+    ```

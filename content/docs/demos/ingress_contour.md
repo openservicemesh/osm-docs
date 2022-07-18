@@ -54,24 +54,32 @@ export ingress_port="$(kubectl -n "$osm_namespace" get service osm-contour-envoy
 
 Next, we will deploy the sample `httpbin` service.
 
+Create a namespace
 ```bash
-# Create a namespace
 kubectl create ns httpbin
-
-# Add the namespace to the mesh
+```
+Add the namespace to the mesh
+```bash
 osm namespace add httpbin
-
-# Deploy the application
+```
+Deploy the application
+```bash
 kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/httpbin/httpbin.yaml -n httpbin
 ```
 
 Confirm the `httpbin` service and pod is up and running:
 ```console
 kubectl get pods -n httpbin
+```
+The output will be similar to:
+```console
 NAME                       READY   STATUS    RESTARTS   AGE
 httpbin-74677b7df7-zzlm2   2/2     Running   0          11h
-
+```bash
 kubectl get svc -n httpbin
+```
+The output will be similar to:
+```console
 NAME      TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)     AGE
 httpbin   ClusterIP   10.0.22.196   <none>        14001/TCP   11h
 ```
@@ -116,6 +124,9 @@ EOF
 Now, we expect external clients to be able to access the `httpbin` service for HTTP requests for the `Host:` header `httpbin.org`:
 ```console
 curl -sI http://"$ingress_host":"$ingress_port"/get -H "Host: httpbin.org"
+```
+The output will be similar to:
+```console
 HTTP/1.1 200 OK
 server: envoy
 date: Fri, 06 Aug 2021 17:39:43 GMT
@@ -195,6 +206,9 @@ EOF
 Now, we expect external clients to be able to access the `httpbin` service for HTTP requests for the `Host:` header `httpbin.org` with HTTPS proxying over mTLS between the ingress gateway and service backend:
 ```console
 curl -sI http://"$ingress_host":"$ingress_port"/get -H "Host: httpbin.org"
+```
+The output will be similar to:
+```console
 HTTP/1.1 200 OK
 server: envoy
 date: Fri, 06 Aug 2021 17:39:43 GMT
@@ -235,6 +249,9 @@ EOF
 Confirm the requests are rejected with an `HTTP 403 Forbidden` response:
 ```console
 curl -sI http://"$ingress_host":"$ingress_port"/get -H "Host: httpbin.org"
+```
+The output will be similar to:
+```console
 HTTP/1.1 403 Forbidden
 content-length: 19
 content-type: text/plain
@@ -272,6 +289,9 @@ Confirm the requests succeed again since untrusted authenticated principals are 
 
 ```bash
 curl -sI http://"$ingress_host":"$ingress_port"/get -H "Host: httpbin.org"
+```
+The output will be similar to:
+```console
 HTTP/1.1 200 OK
 server: envoy
 date: Fri, 06 Aug 2021 18:51:47 GMT

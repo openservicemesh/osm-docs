@@ -27,53 +27,63 @@ The following steps demonstrate the canary rollout deployment strategy.
 
 1. Enable permissive mode
 
-    ```bash
+    ```console
     osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
     kubectl patch meshconfig osm-mesh-config -n "$osm_namespace" -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":true}}}'  --type=merge
     ```
 
 1. Deploy the `curl` client into the `curl` namespace after enrolling its namespace to the mesh.
 
-    ```bash
-    # Create the curl namespace
+  - Create the curl namespace
+    ```console
     kubectl create namespace curl
+    ```
 
-    # Add the namespace to the mesh
+  - Add the namespace to the mesh
+    ```console
     osm namespace add curl
+    ```
 
     # Deploy curl client in the curl namespace
+    ```console
     kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/curl/curl.yaml -n curl
     ```
 
-    Confirm the `curl` client pod is up and running.
+Confirm the `curl` client pod is up and running.
+
+  ```console
+  kubectl get pods -n curl
+  ```
+  - The output will be similar to:
     ```console
-    kubectl get pods -n curl
     NAME                    READY   STATUS    RESTARTS   AGE
     curl-54ccc6954c-9rlvp   2/2     Running   0          20s
     ```
 
 1. Create the root `httpbin` service that clients will direct traffic to. The service has the selector `app: httpbin`.
 
-    ```bash
-    # Create the httpbin namespace
+- Create the httpbin namespace   
+    ```console
     kubectl create namespace httpbin
+    ```
 
     # Add the namespace to the mesh
     osm namespace add httpbin
 
     # Create the httpbin root service and service account
+    ```console
     kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/canary/httpbin.yaml -n httpbin
     ```
 
 1. Deploy version `v1` of the `httpbin` service. The service `httpbin-v1` has the selector `app: httpbin, version: v1`, and the deployment `httpbin-v1` has the labels `app: httpbin, version: v1` matching the selector of both the `httpbin` root service and `httpbin-v1` service.
 
-    ```bash
+    ```console
     kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/canary/httpbin-v1.yaml -n httpbin
     ```
 
 1. Create an SMI TrafficSplit resource that directs all traffic to the `httpbin-v1` service.
 
-    ```bash
+    ```console
     kubectl apply -f - <<EOF
     apiVersion: split.smi-spec.io/v1alpha2
     kind: TrafficSplit
@@ -118,13 +128,13 @@ The following steps demonstrate the canary rollout deployment strategy.
 
 1. Prepare the canary rollout by deploying version `v2` of the `httpbin` service. The service `httpbin-v2` has the selector `app: httpbin, version: v2`, and the deployment `httpbin-v2` has the labels `app: httpbin, version: v2` matching the selector of both the `httpbin` root service and `httpbin-v2` service.
 
-    ```bash
+    ```console
     kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/canary/httpbin-v2.yaml -n httpbin
     ```
 
 1. Perform the canary rollout by updating the SMI TrafficSplit resource to split traffic directed to the root service FQDN `httpbin.httpbin.svc.cluster.local` to both the `httpbin-v1` and `httpbin-v2` services, fronting the `v1` and `v2` versions of the `httpbin` service respectively. We will distribute the weight equally to demonstrate traffic splitting.
 
-    ```bash
+    ```console
     kubectl apply -f - <<EOF
     apiVersion: split.smi-spec.io/v1alpha2
     kind: TrafficSplit

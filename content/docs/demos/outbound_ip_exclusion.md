@@ -27,14 +27,16 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
 
 1. Deploy the `curl` client into the `curl` namespace after enrolling its namespace to the mesh.
 
+    Create the curl namespace
     ```bash
-    # Create the curl namespace
     kubectl create namespace curl
-
-    # Add the namespace to the mesh
+    ```
+    Add the namespace to the mesh
+    ```bash
     osm namespace add curl
-
-    # Deploy curl client in the curl namespace
+    ```
+    Deploy curl client in the curl namespace
+    ```bash
     kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/curl/curl.yaml -n curl
     ```
 
@@ -42,6 +44,9 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
 
     ```console
     kubectl get pods -n curl
+    ```
+    The out will be similar to:
+    ```comsole
     NAME                    READY   STATUS    RESTARTS   AGE
     curl-54ccc6954c-9rlvp   2/2     Running   0          20s
     ```
@@ -49,6 +54,9 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
 1. Retrieve the public IP address for the `httpbin.org` website. For the purpose of this demo, we will test with a single IP range to be excluded from traffic interception. In this example, we will use the IP address `54.91.118.50` represented by the IP range `54.91.118.50/32`, to make HTTP requests with and without outbound IP range exclusions configured.
     ```console
     nslookup httpbin.org
+    ```
+    The output will be similar to:
+    ```comsole
     Server:		172.23.48.1
     Address:	172.23.48.1#53
 
@@ -69,6 +77,9 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
 
     ```console
     kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I http://54.91.118.50:80
+    ```
+    The output will be similar to:
+    ```comsole
     curl: (7) Failed to connect to 54.91.118.50 port 80: Connection refused
     command terminated with exit code 7
     ```
@@ -98,6 +109,9 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
     ```console
     # 54.91.118.50 is one of the IP addresses for httpbin.org
     kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I http://54.91.118.50:80
+    ```
+    The output will be similar to:
+    ```comsole
     HTTP/1.1 200 OK
     Date: Thu, 18 Mar 2021 23:17:44 GMT
     Content-Type: text/html; charset=utf-8
@@ -109,9 +123,12 @@ The following demo shows an HTTP `curl` client making HTTP requests to the `http
     ```
 
 1. Confirm that HTTP requests to other IP addresses of the `httpbin.org` website that are not excluded fail
+    34.199.75.4 is one of the IP addresses for httpbin.org
     ```console
-    # 34.199.75.4 is one of the IP addresses for httpbin.org
     kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I http://34.199.75.4:80
+    ```
+    The output will be similar to:
+    ```console
     curl: (7) Failed to connect to 34.199.75.4 port 80: Connection refused
     command terminated with exit code 7
     ```

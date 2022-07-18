@@ -22,11 +22,12 @@ The following demo shows a load-testing client [fortio](https://github.com/forti
 
 1. Deploy the `httpbin` service into the `httpbin` namespace. The `httpbin` service runs on port `14001` and is not added to the mesh, so it is considered to be a destination external to the mesh.
 
+    Create the httpbin namespace
     ```bash
-    # Create the httpbin namespace
     kubectl create namespace httpbin
-
-    # Deploy httpbin service in the httpbin namespace
+    ```
+    Deploy httpbin service in the httpbin namespace
+    ```bash
     kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/httpbin/httpbin.yaml -n httpbin
     ```
 
@@ -34,25 +35,35 @@ The following demo shows a load-testing client [fortio](https://github.com/forti
 
     ```console
     kubectl get svc -n httpbin
+    ```
+    The output will be si,ilar to:
+    ```console
     NAME      TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)     AGE
     httpbin   ClusterIP   10.96.198.23   <none>        14001/TCP   20s
     ```
 
     ```console
     kubectl get pods -n httpbin
+    ```
+    The output will be similar to:
+    ```console
     NAME                     READY   STATUS    RESTARTS   AGE
     httpbin-5b8b94b9-lt2vs   1/1     Running   0          20s
     ```
 
 1. Deploy the `fortio` load-testing client in the `client` namespace after enrolling its namespace to the mesh.
+    Create the client namespace
     ```bash
-    # Create the client namespace
     kubectl create namespace client
+    ```
 
-    # Add the namespace to the mesh
+    Add the namespace to the mesh
+    ```bash
     osm namespace add client
+    ```
 
     # Deploy fortio client in the client namespace
+    ```bash
     kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/fortio/fortio.yaml -n client
     ```
 
@@ -60,6 +71,9 @@ The following demo shows a load-testing client [fortio](https://github.com/forti
 
     ```console
     kubectl get pods -n client
+    ```
+    The output will be si,ilar to:
+    ```console
     NAME                      READY   STATUS    RESTARTS   AGE
     fortio-6477f8495f-bj4s9   2/2     Running   0          19s
     ```
@@ -88,7 +102,9 @@ The following demo shows a load-testing client [fortio](https://github.com/forti
 1. Confirm the `fortio` client is able to successfully make HTTP requests to the external host `httpbin.httpbin.svc.cluster.local` service on port `14001`. We call the external service with `5` concurrent connections (`-c 5`) and send `50` requests (`-n 50`).
     ```console
     export fortio_pod="$(kubectl get pod -n client -l app=fortio -o jsonpath='{.items[0].metadata.name}')"
-
+    ```
+    Theoutpul will be similar to:
+    ```console
     kubectl exec "$fortio_pod" -c fortio -n client -- /usr/bin/fortio load -c 5 -qps 0 -n 50 -loglevel Warning http://httpbin.httpbin.svc.cluster.local:14001/get
     19:56:34 I logger.go:127> Log level is now 3 Warning (was 2 Info)
     Fortio 1.17.1 running at 0 queries per second, 8->8 procs, for 50 calls: http://httpbin.httpbin.svc.cluster.local:14001/get
@@ -161,6 +177,9 @@ The following demo shows a load-testing client [fortio](https://github.com/forti
 1. Confirm the `fortio` client is unable to make the same amount of successful requests as before due to the connection and request level circuit breaking limits configured above.
     ```console
     kubectl exec "$fortio_pod" -c fortio -n client -- /usr/bin/fortio load -c 5 -qps 0 -n 50 -loglevel Warning http://httpbin.httpbin.svc.cluster.local:14001/get
+    ```
+    The output will be similar to:
+    ```console
     19:58:48 I logger.go:127> Log level is now 3 Warning (was 2 Info)
     Fortio 1.17.1 running at 0 queries per second, 8->8 procs, for 50 calls: http://httpbin.httpbin.svc.cluster.local:14001/get
     Starting at max qps with 5 thread(s) [gomax 8] for exactly 50 calls (10 per thread + 0)
@@ -218,6 +237,9 @@ The following demo shows a load-testing client [fortio](https://github.com/forti
 1. Examine the `Envoy` sidecar stats to see statistics pertaining to the requests that tripped the circuit breaker.
     ```console
     osm proxy get stats $fortio_pod -n client | grep 'httpbin.*pending'
+    ```
+    The output will be similar to:
+    ```console
     cluster.httpbin_httpbin_svc_cluster_local_14001.circuit_breakers.default.remaining_pending: 1
     cluster.httpbin_httpbin_svc_cluster_local_14001.circuit_breakers.default.rq_pending_open: 0
     cluster.httpbin_httpbin_svc_cluster_local_14001.circuit_breakers.high.rq_pending_open: 0

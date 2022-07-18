@@ -48,7 +48,9 @@ Use `kubectl get configmap` to verify the `stable-prometheus-sever` configmap ha
 
 ```bash
 $ kubectl get configmap
-
+```
+The output will be similar to:
+```console
 NAME                             DATA   AGE
 ...
 stable-prometheus-alertmanager   1      18m
@@ -331,6 +333,9 @@ Use `kubectl port-forward` to forward the traffic between the Grafana's manageme
 
 ```bash
 export POD_NAME=$(kubectl get pods -l "app.kubernetes.io/name=grafana" -o jsonpath="{.items[0].metadata.name}")
+```
+The output will be similar to:
+```console
 kubectl port-forward $POD_NAME 3000
 ```
 

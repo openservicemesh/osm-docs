@@ -22,15 +22,15 @@ This guide will illustrate how to configure stateful applications with OSM and S
 
 First, we need to install Apache Zookeeper, the backing metadata store for Kafka. We're going to start off by creating a namespace for our zookeeper pods and adding that namespace to our OSM mesh:
 
-```shell
-# Create a namespace for Zookeeper and add it to OSM
+Create a namespace for Zookeeper and add it to OSM
+```bash
 kubectl create ns zookeeper 
 osm namespace add zookeeper
 ```
 
 Next, we need to configure traffic policies that will allow the Zookeepers to talk to each other once they're installed. These policies will also allow our eventual Kafka deployment to talk to Zookeeper:
 
-```shell
+```bash
 kubectl apply -f - <<EOF
 apiVersion: specs.smi-spec.io/v1alpha4
 kind: TCPRoute
@@ -98,17 +98,19 @@ Notice that there are 2 different `TCPRoute`s being created: one for communicati
 
 Now that we've prepared our traffic policies, we're ready to install Zookeeper. For this demo, we're going to leverage the Helm chart published by Bitnami, performing a Helm install in our new `zookeeper` namespace:
 
-```shell
-# Install the Zookeeper helm chart
+Install the Zookeeper helm chart
+```bash
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install zookeeper bitnami/zookeeper --set replicaCount=3 --set serviceAccount.create=true --set serviceAccount.name=zookeeper --namespace zookeeper
 ```
 
 Confirm that the pods are ready in the `zookeeper` namespace:
 
-```shell
+```bash
 kubectl get pod -n zookeeper
-
+```
+Should look similar to:
+```console
 NAME                    READY   STATUS    RESTARTS   AGE
 zookeeper-zookeeper-0   2/2     Running   0          4m30s
 zookeeper-zookeeper-1   2/2     Running   0          4m30s
@@ -119,7 +121,10 @@ Let's confirm that the Zookeepers have established consensus with one another wi
 
 ```shell
 kubectl exec zookeeper-zookeeper-1 -c zookeeper -n zookeeper -- /opt/bitnami/zookeeper/bin/zkServer.sh status
+```
 
+Should look similar to:
+```console
 /opt/bitnami/java/bin/java
 ZooKeeper JMX enabled by default
 Using config: /opt/bitnami/zookeeper/bin/../conf/zoo.cfg
@@ -133,8 +138,8 @@ Zookeeper is up and running!
 
 Now it's time to install our Kafka brokers. For the sake of this demo, we're going to install Kafka in a different namespace than our Zookeepers (similar to a multi-tenant Zookeeper deployment). First, we create a new kafka namespace and add it to our mesh:
 
-```shell
-# Create a namespace for Kafka and add it to OSM
+Create a namespace for Kafka and add it to OSM
+```bash
 kubectl create ns kafka 
 osm namespace add kafka
 ```
@@ -212,7 +217,9 @@ There are a couple of important details to note here. For one, we disable the zo
 
 ```shell
 kubectl get pod -nkafka
-
+```
+Should look similar to:
+```console
 NAME      READY   STATUS    RESTARTS   AGE
 kafka-0   3/3     Running   1          3m57s
 kafka-1   3/3     Running   1          3m56s

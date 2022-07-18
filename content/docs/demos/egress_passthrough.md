@@ -25,14 +25,16 @@ This guide demonstrates a client within the service mesh accessing destinations 
     ```
 
 1. Deploy the `curl` client into the `curl` namespace after enrolling its namespace to the mesh.
+    Create the curl namespace
     ```bash
-    # Create the curl namespace
     kubectl create namespace curl
-
-    # Add the namespace to the mesh
+    ```
+    Add the namespace to the mesh
+    ```bash
     osm namespace add curl
-
-    # Deploy curl client in the curl namespace
+    ```
+    Deploy curl client in the curl namespace
+    ```bash
     kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/curl/curl.yaml -n curl
     ```
 
@@ -40,6 +42,9 @@ This guide demonstrates a client within the service mesh accessing destinations 
 
     ```console
     kubectl get pods -n curl
+    ```
+    The output will be similar to:
+    ```console
     NAME                    READY   STATUS    RESTARTS   AGE
     curl-54ccc6954c-9rlvp   2/2     Running   0          20s
     ```
@@ -47,6 +52,9 @@ This guide demonstrates a client within the service mesh accessing destinations 
 1. Confirm the `curl` client is able to make successful HTTPS requests to the `httpbin.org` website on port `443`.
     ```console
     kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I https://httpbin.org:443
+    ```
+    The output will be similar to:
+    ```console
     HTTP/2 200
     date: Tue, 16 Mar 2021 22:19:00 GMT
     content-type: text/html; charset=utf-8
@@ -64,6 +72,9 @@ This guide demonstrates a client within the service mesh accessing destinations 
     ```
     ```console
     kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I https://httpbin.org:443
+    ```
+    The output will be similar to:
+    ```console
 	  curl: (7) Failed to connect to httpbin.org port 443 after 3 ms: Connection refused
 	  command terminated with exit code 7
     ```

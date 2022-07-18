@@ -18,13 +18,26 @@ This guide will demonstrate how to configure HTTP and HTTPS ingress to a service
 ## Demo
 
 First, note the details regarding OSM and Nginx installations:
+Replace osm-system with the namespace where OSM is installed
 ```bash
-osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
-osm_mesh_name=osm # replace osm with the mesh name (use `osm mesh list` command)
-
-nginx_ingress_namespace=<nginx-namespace> # replace <nginx-namespace> with the namespace where Nginx is installed
-nginx_ingress_service=<nginx-ingress-controller-service> # replace <nginx-ingress-controller-service> with the name of the nginx ingress controller service
+osm_namespace=osm-system 
+```
+Replace osm with the mesh name (use `osm mesh list` command)
+```bash
+osm_mesh_name=osm 
+```
+Replace <nginx-namespace> with the namespace where Nginx is installed
+```bash
+nginx_ingress_namespace=<nginx-namespace> 
+```
+Replace <nginx-ingress-controller-service> with the name of the nginx ingress controller service
+```bash
+nginx_ingress_service=<nginx-ingress-controller-service> 
+```
+```bash
 nginx_ingress_host="$(kubectl -n "$nginx_ingress_namespace" get service "$nginx_ingress_service" -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
+```
+```bash
 nginx_ingress_port="$(kubectl -n "$nginx_ingress_namespace" get service "$nginx_ingress_service" -o jsonpath='{.spec.ports[?(@.name=="http")].port}')"
 ```
 
@@ -35,24 +48,33 @@ osm namespace add "$nginx_ingress_namespace" --mesh-name "$osm_mesh_name" --disa
 
 Next, we will deploy the sample `httpbin` service.
 
+Create a namespace
 ```bash
-# Create a namespace
 kubectl create ns httpbin
-
+```
 # Add the namespace to the mesh
+```bash
 osm namespace add httpbin
-
-# Deploy the application
+```
+Deploy the application
+```bash
 kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/httpbin/httpbin.yaml -n httpbin
 ```
 
 Confirm the `httpbin` service and pod is up and running:
 ```console
 kubectl get pods -n httpbin
+```
+The output will be similar to:
+```console
 NAME                       READY   STATUS    RESTARTS   AGE
 httpbin-74677b7df7-zzlm2   2/2     Running   0          11h
-
+```
+```bash
 kubectl get svc -n httpbin
+```
+The output will be similar to:
+```console
 NAME      TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)     AGE
 httpbin   ClusterIP   10.0.22.196   <none>        14001/TCP   11h
 ```
@@ -102,6 +124,9 @@ EOF
 Now, we expect external clients to be able to access the `httpbin` service for HTTP requests:
 ```console
 curl -sI http://"$nginx_ingress_host":"$nginx_ingress_port"/get
+```
+The output will be similar to:
+```console
 HTTP/1.1 200 OK
 Date: Wed, 18 Aug 2021 18:12:35 GMT
 Content-Type: application/json
@@ -187,8 +212,11 @@ EOF
 ```
 
 Now, we expect external clients to be able to access the `httpbin` service for requests with HTTPS proxying over mTLS between the ingress gateway and service backend:
-```console
+```bash
 curl -sI http://"$nginx_ingress_host":"$nginx_ingress_port"/get
+```
+The output will be similar to:
+```comsole
 HTTP/1.1 200 OK
 Date: Wed, 18 Aug 2021 18:12:35 GMT
 Content-Type: application/json
@@ -228,6 +256,9 @@ EOF
 Confirm the requests are rejected with an `HTTP 403 Forbidden` response:
 ```console
 curl -sI http://"$nginx_ingress_host":"$nginx_ingress_port"/get
+```
+The output will be similar to:
+```console
 HTTP/1.1 403 Forbidden
 Date: Wed, 18 Aug 2021 18:36:09 GMT
 Content-Type: text/plain
@@ -263,6 +294,9 @@ EOF
 Confirm the requests succeed again since untrusted authenticated principals are allowed to connect to the backend:
 ```bash
 curl -sI http://"$nginx_ingress_host":"$nginx_ingress_port"/get
+```
+The output will be similar to:
+```comsole 
 HTTP/1.1 200 OK
 Date: Wed, 18 Aug 2021 18:36:49 GMT
 Content-Type: application/json

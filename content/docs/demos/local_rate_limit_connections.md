@@ -21,20 +21,25 @@ This guide demonstrates how to configure rate limiting for L4 TCP connections de
 The following demo shows a client [fortio-client](https://github.com/fortio/fortio) sending TCP traffic to the `fortio` `TCP echo` service. The `fortio` service echoes TCP messages back to the client. We will see the impact of applying local TCP rate limiting policies targeting the `fortio` service to control the throughput of traffic destined to the service backend.
 
 1. For simplicity, enable [permissive traffic policy mode](/docs/guides/traffic_management/permissive_mode) so that explicit SMI traffic access policies are not required for application connectivity within the mesh.
+    
+    Replace osm-system with the namespace where OSM is installed
     ```bash
-    export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
+    export osm_namespace=osm-system 
     kubectl patch meshconfig osm-mesh-config -n "$osm_namespace" -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":true}}}'  --type=merge
     ```
 
 1. Deploy the `fortio` `TCP echo` service in the `demo` namespace after enrolling its namespace to the mesh. The `fortio` `TCP echo` service runs on port `8078`.
+    
+    Create the demo namespace
     ```bash
-    # Create the demo namespace
     kubectl create namespace demo
-
-    # Add the namespace to the mesh
+    ```
+    Add the namespace to the mesh
+    ```bash
     osm namespace add demo
-
-    # Deploy fortio TCP echo in the demo namespace
+    ```
+    Deploy fortio TCP echo in the demo namespace
+    ```bash
     kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/samples/fortio/fortio.yaml -n demo
     ```
 
@@ -42,6 +47,9 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
 
     ```console
     kubectl get pods -n demo
+    ```
+    The output will be similar to:
+    ```console
     NAME                            READY   STATUS    RESTARTS   AGE
     fortio-c4bd7857f-7mm6w          2/2     Running   0          22m
     ```
@@ -63,6 +71,9 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
     fortio_client="$(kubectl get pod -n demo -l app=fortio-client -o jsonpath='{.items[0].metadata.name}')"
 
      kubectl exec "$fortio_client" -n demo -c fortio-client -- fortio load -qps -1 -c 3 -n 10 tcp://fortio.demo.svc.cluster.local:8078
+     ```
+     Theo output will be similar to:
+     ```console
     Fortio 1.32.3 running at -1 queries per second, 8->8 procs, for 10 calls: tcp://fortio.demo.svc.cluster.local:8078
     20:41:47 I tcprunner.go:238> Starting tcp test for tcp://fortio.demo.svc.cluster.local:8078 with 3 threads at -1.0 qps
     Starting at max qps with 3 thread(s) [gomax 8] for exactly 10 calls (3 per thread + 1)
@@ -125,6 +136,9 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
 1. Confirm TCP connections are rate limited.
     ```console
     kubectl exec "$fortio_client" -n demo -c fortio-client -- fortio load -qps -1 -c 3 -n 10 tcp://fortio.demo.svc.cluster.local:8078
+    ```
+    The output will be similar to:
+    ```comsole
     Fortio 1.32.3 running at -1 queries per second, 8->8 procs, for 10 calls: tcp://fortio.demo.svc.cluster.local:8078
     20:49:38 I tcprunner.go:238> Starting tcp test for tcp://fortio.demo.svc.cluster.local:8078 with 3 threads at -1.0 qps
     Starting at max qps with 3 thread(s) [gomax 8] for exactly 10 calls (3 per thread + 1)
@@ -198,6 +212,9 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
 1. Confirm the burst capability allows a burst of connections within a small window of time.
     ```console
     kubectl exec "$fortio_client" -n demo -c fortio-client -- fortio load -qps -1 -c 3 -n 10 tcp://fortio.demo.svc.cluster.local:8078
+    ```
+    The output will be similar to:
+    ```console
     Fortio 1.32.3 running at -1 queries per second, 8->8 procs, for 10 calls: tcp://fortio.demo.svc.cluster.local:8078
     20:56:56 I tcprunner.go:238> Starting tcp test for tcp://fortio.demo.svc.cluster.local:8078 with 3 threads at -1.0 qps
     Starting at max qps with 3 thread(s) [gomax 8] for exactly 10 calls (3 per thread + 1)
