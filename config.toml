@@ -87,24 +87,23 @@ osm_version = "v1.1.1"
 envoy_version = "v1.19.3"
 min_k8s_version = "v1.20.0"
 
+
 [[params.versions]]
-  version = "v1.1 (latest)"
+  version = "v1.2 (latest)"
+  url = "https://release-v1-2.docs.openservicemesh.io/"
+[[params.versions]]
+  version = "v1.1"
   url = "https://release-v1-1.docs.openservicemesh.io/"
 [[params.versions]]
   version = "v1.0"
   url = "https://release-v1-0.docs.openservicemesh.io/"
 [[params.versions]]
-  version = "v0.11"
-  url = "https://release-v0-11.docs.openservicemesh.io/"
-[[params.versions]]
-  version = "v0.10"
-  url = "https://release-v0-10.docs.openservicemesh.io/"
-[[params.versions]]
-  version = "v0.9"
-  url = "https://release-v0-9.docs.openservicemesh.io/"
-[[params.versions]]
-  version = "v0.8"
-  url = "https://release-v0-8.docs.openservicemesh.io/"
+  version = "All Releases"
+  url = "/docs/releases/docs"
+[params.versionbanner]
+	show = false
+	archive = "v1.1"
+	latest = "https://docs.openservicemesh.io/docs/releases/docs"
 
 [params.ui]
 navbar_logo = true
