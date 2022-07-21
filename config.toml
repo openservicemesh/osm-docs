@@ -89,7 +89,7 @@ project_home = "https://openservicemesh.io/"
 
 # Version params
 osm_branch = "release-v1.2"
-osm_version = "v1.2.0-rc.1"
+osm_version = "v1.2.0"
 envoy_version = "v1.22.2"
 min_k8s_version = "v1.22.9"
 
