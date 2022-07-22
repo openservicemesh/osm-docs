@@ -82,17 +82,21 @@ prism_syntax_highlighting = true
 project_home = "https://openservicemesh.io/"
 
 [[params.versions]]
-  version = "v0.11 (latest)"
-  url = "https://release-v0-11.docs.openservicemesh.io/"
+  version = "v1.2 (latest)"
+  url = "https://release-v1-2.docs.openservicemesh.io/"
 [[params.versions]]
-  version = "v0.10"
-  url = "https://release-v0-10.docs.openservicemesh.io/"
+  version = "v1.1"
+  url = "https://release-v1-1.docs.openservicemesh.io/"
 [[params.versions]]
-  version = "v0.9"
-  url = "https://release-v0-9.docs.openservicemesh.io/"
+  version = "v1.0"
+  url = "https://release-v1-0.docs.openservicemesh.io/"
 [[params.versions]]
-  version = "v0.8"
-  url = "https://release-v0-8.docs.openservicemesh.io/"
+  version = "All Releases"
+  url = "https://docs.openservicemesh.io/docs/releases/docs"
+[params.versionbanner]
+	show = true
+	archive = "v0.11"
+	latest = "https://docs.openservicemesh.io/"
 
 [params.ui]
 navbar_logo = true
