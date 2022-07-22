@@ -10,7 +10,7 @@ weight: 2
 ## Active Releases
 
 
-- [v1.2](https://release-v1-1.docs.openservicemesh.io/)
+- [v1.2](https://release-v1-2.docs.openservicemesh.io/)
 - [v1.1](https://release-v1-1.docs.openservicemesh.io/)
 - [v1.0](https://release-v1-0.docs.openservicemesh.io/)
 
