@@ -29,7 +29,13 @@ Add a namespace for monitoring and sidecar injection to the mesh with the follow
 osm namespace add <namespace>
 ```
 
-Explicitly disable sidecar injection while adding the namespace using `--disable-sidecar-injection` flag as shown [here](/docs/guides/app_onboarding/sidecar_injection/#explicitly-disabling-automatic-sidecar-injection-on-namespaces).
+Adding a namespace to the mesh enables automatic sidecar injection. If you want to explicitly disable sidecar injection while adding the namespace, use the `--disable-sidecar-injection` flag as shown [here](/docs/guides/app_onboarding/sidecar_injection/#explicitly-disabling-automatic-sidecar-injection-on-namespaces).
+
+If a namespace is added to the mesh _after_ application deployments have already been created, existing deployments need to be restarted so that OSM can automatically inject the sidecar proxy upon pod re-creation. Pods managed by a deployment can be restarted using:
+
+```bash
+kubectl rollout restart deployments -n <namespace>
+```
 
 ## Remove a Namespace from the OSM control plane
 
