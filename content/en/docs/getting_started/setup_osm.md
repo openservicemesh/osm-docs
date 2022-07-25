@@ -27,7 +27,7 @@ The binary is available on the [OSM GitHub releases page](https://github.com/ope
 
 Download the 64-bit GNU/Linux or macOS binary of OSM {{< param osm_version >}}:
 ```bash
-system=$(uname -s)
+system=$(uname -s | tr '[:upper:]' '[:lower:]')
 release={{< param osm_version >}}
 curl -L https://github.com/openservicemesh/osm/releases/download/${release}/osm-${release}-${system}-amd64.tar.gz | tar -vxzf -
 ./${system}-amd64/osm version
