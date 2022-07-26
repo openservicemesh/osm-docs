@@ -88,7 +88,7 @@ kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"
 
 At this point, applications do not have access to each other because no access control policies have been applied. Confirm this by verifying that none of the counters in the `bookbuyer`, `bookthief`, `bookstore`, and `bookstore-v2` UI are incrementing.
 
-Apply the [SMI Traffic Target][https://github.com/servicemeshinterface/smi-spec/blob/v0.6.0/apis/traffic-access/v1alpha2/traffic-access.md) and [SMI Traffic Specs](https://github.com/servicemeshinterface/smi-spec/blob/v0.6.0/apis/traffic-specs/v1alpha4/traffic-specs.md) resources to define access control and routing policies for the applications to communicate:
+Apply the [SMI Traffic Target](https://github.com/servicemeshinterface/smi-spec/blob/v0.6.0/apis/traffic-access/v1alpha2/traffic-access.md) and [SMI Traffic Specs](https://github.com/servicemeshinterface/smi-spec/blob/v0.6.0/apis/traffic-specs/v1alpha4/traffic-specs.md) resources to define access control and routing policies for the applications to communicate:
 
  Deploy SMI TrafficTarget and HTTPRouteGroup policy:
 
