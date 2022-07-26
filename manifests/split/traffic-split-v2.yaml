@@ -6,7 +6,7 @@ metadata:
 spec:
   service: bookstore.bookstore # <root-service>.<namespace>
   backends:
-  - service: bookstore
+  - service: bookstore-v1 # matches app:bookstore,version:v1
     weight: 0
-  - service: bookstore-v2
+  - service: bookstore-v2 # matches app:bookstore,version:v2
     weight: 100
