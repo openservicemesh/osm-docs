@@ -2,10 +2,10 @@
 title: "Local rate limiting of HTTP requests"
 description: "Configuring local rate limiting for HTTP requests"
 type: docs
-weight: 23
+weight: 22
 ---
 
-This guide demonstrates how to configure rate limiting for HTTP requests destined to a target host that is a part of an OSM managed service mesh.
+This guide demonstrates how to configure local rate limiting for HTTP requests destined to a target host that is a part of an OSM managed service mesh.
 
 ## Prerequisites
 

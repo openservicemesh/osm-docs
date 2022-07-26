@@ -5,7 +5,7 @@ type: docs
 weight: 22
 ---
 
-This guide demonstrates how to configure rate limiting for L4 TCP connections destined to a target host that is a part of an OSM managed service mesh.
+This guide demonstrates how to configure local rate limiting for L4 TCP connections destined to a target host that is a part of an OSM managed service mesh.
 
 ## Prerequisites
 
