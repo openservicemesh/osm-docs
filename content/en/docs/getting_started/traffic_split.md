@@ -33,11 +33,11 @@ EOF
 
 - [http://localhost:8082](http://localhost:8082) - **bookstore-v2**
 
-The counter should _not_ be incrementing because no traffic is flowing yet to the `bookstore-v2` service.
+The counter should be incrementing because traffic to the `bookstore` service is split to its endpoints that include both the `bookstore-v1` and `bookstore-v2` backend pods.
 
 ### Create SMI Traffic Split
 
-Deploy the SMI traffic split policy to direct 100 percent of the traffic sent to the root `bookstore` service to the `bookstore` service backend. This is effectively the same as not having a `TrafficSplit` configuration as we are directing 100 percent of traffic from the root service to itself. However, the `TrafficSplit` configuration will be subsequently updated to direct a percentage of traffic to `version v2` of the bookstore service using the `bookstore-v2` leaf service. For this reason, it is important to ensure client applications always communicate with the root service if a traffic split is desired later on, otherwise the client application will need to be updated to communicate with the root service when a traffic split is desired.
+Deploy the SMI traffic split policy to direct 100 percent of the traffic sent to the root `bookstore` service to the `bookstore-v1` service backend. This is necessary to ensure traffic directed to the `bookstore` service is only directed to `version v1` of the bookstore app, which includes the pods backing the `bookstore-v1` service. The `TrafficSplit` configuration will be subsequently updated to direct a percentage of traffic to `version v2` of the bookstore service using the `bookstore-v2` leaf service. For this reason, it is important to ensure client applications always communicate with the root service if a traffic split is desired later on, otherwise the client application will need to be updated to communicate with the root service when a traffic split is desired.
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/split/traffic-split-v1.yaml
@@ -45,7 +45,7 @@ kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< 
 
 _Note: The root service is a Kubernetes service whose selector needs to match the pods backing the leaf services. In this demo, the root service `bookstore` has the selector `app:bookstore`, which matches both the labels `app:bookstore,version:v1` and `app:bookstore,version=v2` on the `bookstore (v1)` and `bookstore-v2` deployments respectively. The root service can be referred to in the SMI Traffic Split resource as the name of the service with or without the `.<namespace>.svc.cluster.local` suffix._
 
-The count for the books sold from the `bookstore-v2` browser window should remain at 0. This is because the current traffic split policy is currently weighted 100 for `bookstore` in addition to the fact that `bookbuyer` is sending traffic to the `bookstore` service and no application is sending requests to the `bookstore-v2` service. You can verify the traffic split policy by running the following and viewing the **Backends** properties:
+The count for the books sold from the `bookstore-v2` browser window should stop incrementing. This is because the current traffic split policy is weighted 100 for `bookstore-v1` which exludes pods backing the `bookstore-v2` service. You can verify the traffic split policy by running the following and viewing the **Backends** properties:
 
 ```bash
 kubectl describe trafficsplit bookstore-split -n bookstore

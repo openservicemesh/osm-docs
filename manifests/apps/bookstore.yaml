@@ -1,4 +1,7 @@
-# Create bookstore Service
+# Create bookstore root Service.
+# This is the service clients direct traffic to which is also
+# used as the root service in a TrafficSplit configuration when
+# splitting traffic to multiple versions of the backend app.
 apiVersion: v1
 kind: Service
 metadata:
@@ -12,6 +15,25 @@ spec:
     name: bookstore-port
   selector:
     app: bookstore
+
+---
+
+# Create bookstore-v1 service
+apiVersion: v1
+kind: Service
+metadata:
+  name: bookstore-v1
+  namespace: bookstore
+  labels:
+    app: bookstore
+    version: v1
+spec:
+  ports:
+  - port: 14001
+    name: bookstore-port
+  selector:
+    app: bookstore
+    version: v1
 
 ---
 
