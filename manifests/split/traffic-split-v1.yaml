@@ -13,5 +13,5 @@ spec:
 #   - bookstore.bookstore.svc.cluster.local
   service: bookstore.bookstore # <root-service>.<namespace>
   backends:
-  - service: bookstore
+  - service: bookstore-v1 # matches app:bookstore,version:v1
     weight: 100
