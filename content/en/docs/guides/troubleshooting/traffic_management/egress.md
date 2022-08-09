@@ -22,9 +22,9 @@ true
 If using [Egress policy](/docs/guides/traffic_management/egress/#1-configuring-egress-policies), confirm that egress policy capability is enabled.
 
 ```console
-# Returns true if egress policy capability is enabled
-$ kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.featureFlags.enableEgressPolicy}{"\n"}'
-true
+# Returns false if egress policy capability is enabled
+$ kubectl get meshconfig osm-mesh-config -n osm-system -o jsonpath='{.spec.traffic.enableEgress}{"\n"}'
+false
 ```
 
 ### 2. Inspect OSM controller logs for errors

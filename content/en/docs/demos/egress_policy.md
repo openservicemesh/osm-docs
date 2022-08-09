@@ -18,10 +18,10 @@ This guide demonstrates a client within the service mesh accessing destinations 
 
 ## Demo
 
-1. Enable egress policy if not enabled:
+1. Enable egress policy if not enabled by disabling global mesh-wide egress to unknown destinations:
     ```bash
     export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
-    kubectl patch meshconfig osm-mesh-config -n "$osm_namespace" -p '{"spec":{"featureFlags":{"enableEgressPolicy":true}}}'  --type=merge
+    kubectl patch meshconfig osm-mesh-config -n "$osm_namespace" -p '{"spec":{"traffic":{"enableEgress":false}}}' --type=merge
     ```
 
 1. Deploy the `curl` client into the `curl` namespace after enrolling its namespace to the mesh.

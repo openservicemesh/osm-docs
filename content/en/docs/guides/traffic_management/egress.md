@@ -27,11 +27,11 @@ There are two mechanisms to configure Egress:
 
 ## 1. Configuring Egress policies
 
-OSM supports configuring fine grained policies for traffic destined to external endpoints using its [Egress policy API][1]. To use this feature, enable it if not enabled:
+OSM supports configuring fine grained policies for traffic destined to external endpoints using its [Egress policy API][1]. To use this feature, disable global mesh-wide egress to unknown destinations:
 
 ```bash
 # Replace osm-system with the namespace where OSM is installed
-kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"featureFlags":{"enableEgressPolicy":true}}}'  --type=merge
+kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enableEgress":false}}}' --type=merge
 ```
 
 Refer to the [Egress policy demo](/docs/demos/egress_policy) and [API documentation][1] on how to configure policies for routing egress traffic for various protocols.
