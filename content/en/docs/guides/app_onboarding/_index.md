@@ -35,18 +35,18 @@ The following guide describes how to onboard a Kubernetes microservice to an OSM
     $ kubectl patch meshconfig osm-mesh-config -n <osm-namespace> -p '{"spec":{"traffic":{"outboundIPRangeExclusionList":["10.0.0.1/32"]}}}'  --type=merge
     meshconfig.config.openservicemesh.io/osm-mesh-config patched
     ```
-    
+
     Restart the relevant pods in monitored namespaces for this change to take effect.
 
     **Option 2:** apply an Egress policy to allow access to the Kubernetes API server over HTTPS
-   
+
    > _Note: when using an Egress policy, the Kubernetes API service must not be in a namespace that OSM manages_
 
-    1. Enable egress policy if not enabled:
+    1. Enable egress policy if not enabled by disabling global mesh-wide egress to unknown destinations:
     ```console
-    kubectl patch meshconfig osm-mesh-config -n <osm-namespace> -p '{"spec":{"featureFlags":{"enableEgressPolicy":true}}}'  --type=merge
+    kubectl patch meshconfig osm-mesh-config -n <osm-namespace> -p '{"spec":{"traffic":{"enableEgress":false}}}'  --type=merge
     ```
-   
+
     2. Apply an Egress policy to allow the application's ServiceAccount to access the Kubernetes API server cluster IP found above.
     For example:
     ```console
@@ -67,7 +67,7 @@ The following guide describes how to onboard a Kubernetes microservice to an OSM
         - number: 443
           protocol: https
     EOF
-    ```  
+    ```
 
 1. Onboard Kubernetes Namespaces to OSM
 
