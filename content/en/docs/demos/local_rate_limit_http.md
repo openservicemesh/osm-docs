@@ -179,7 +179,7 @@ The following demo shows a client sending HTTP requests to the `fortio` service.
     All done 10 calls (plus 0 warmup) 3.183 ms avg, 6.7 qps
     ```
 
-    As seen above, only `3` out of `10` HTTP requests succeeded, while the remaining `7` requests were rate limited as per the rate limiting policy.
+    As seen above, only `3` out of `10` HTTP requests succeeded, while the remaining `7` requests were rate limited with a `429 (Too Many Requests)` response as per the rate limiting policy.
     ```
     Code 200 : 3 (30.0 %)
     Code 429 : 7 (70.0 %)
