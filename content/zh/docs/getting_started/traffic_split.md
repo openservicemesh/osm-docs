@@ -7,7 +7,7 @@ weight: 4
 
 # 配置两个服务之间的流量拆分
 
-我们将演示如何平衡两个 Kubernetes 服务之间的流量，通常被称为流量拆分。我们将在后端 `bookstore` 服务和 `bookstore-v2` 服务之间来拆分原来定向到*根* `bookstore` 服务的流量。`bookstore` 和 `bookstore-v2` 服务被称为椰子服务。有关如何配置服务的流量拆分，请参阅 [流量拆分的 how-to 指南](/docs/guides/traffic_management/traffic_split.md)。
+我们将演示如何平衡两个 Kubernetes 服务之间的流量，通常被称为流量拆分。我们将在后端 `bookstore` 服务和 `bookstore-v2` 服务之间来拆分原来定向到*根* `bookstore` 服务的流量。`bookstore` 和 `bookstore-v2` 服务被称为叶子服务。有关如何配置服务的流量拆分，请参阅 [流量拆分的 how-to 指南](/docs/guides/traffic_management/traffic_split.md)。
 
 ### 部署 bookstore v2 应用
 
@@ -45,7 +45,7 @@ EOF
 kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/{{< param osm_branch >}}/manifests/split/traffic-split-v1.yaml
 ```
 
-_注意：根服务是个 Kubernetes 服务，其标签选择器需要与叶子服务相匹配。在本示例中，根服务 `bookstore` 使用 `app:bookstore` 选择器分别匹配 `bookstore (v1)` 和 `bookstore-v2` deployment 的标签 `app:bookstore,version:v1` 和 `app:bookstore,version=v2`。在 SMI 流量拆分里，根服务能够作为有或者没有 `.<namespace>` 后缀的服务名称被引用。_
+_注意：根服务是个 Kubernetes 服务，其标签选择器需要与叶子服务相匹配。在本示例中，根服务 `bookstore` 使用 `app:bookstore` 选择器分别匹配 `bookstore (v1)` 和 `bookstore-v2` deployment 的标签 `app:bookstore,version:v1` 和 `app:bookstore,version:v2`。在 SMI 流量拆分里，根服务能够作为有或者没有 `.<namespace>` 后缀的服务名称被引用。_
 
 对于书籍销售的计数，从 `bookstore-v2` 浏览器窗口看应该保持在 0。这是因为当前的流量拆分策略是当前权重 100 是给了 `bookstore`，另外 `bookbuyer` 正发送流量到 `bookstore` 服务而没有应用发送请求到 `bookstore-v2` 服务。可以通过运行下面命令并同时观察 **Backends** 的属性来验证流量拆分策略。
 
