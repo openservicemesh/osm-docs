@@ -8,65 +8,35 @@ Open Service Mesh aims to create a high-performance service mesh while providing
 
 ## Testing environment
 
-This test is performed on a Kubernetes cluster provisioned and managed by [Microsoft Azure Kubernetes Service](https://azure.microsoft.com/en-us/services/kubernetes-service/). The cluster has 100 Standard_DS2_v2 nodes (each node has 2 vCPUs and 7GB memory). It is ensured that there is only one OSM controller pod running with default resource quota during the test. OSM is configured in non-permissive traffic mode.
+This test is performed on a Kubernetes cluster provisioned and managed by [Microsoft Azure Kubernetes Service](https://azure.microsoft.com/en-us/services/kubernetes-service/). The cluster has 62 Standard_D32s_v3 nodes (each node has 32 vCPUs and 128GB memory). That gives us around 2000 vCPUs. During the test, it is ensured that there is only one OSM controller pod running with default resource quota. OSM is configured with non-permissive traffic mode.
 
 ## Process
 
-The testing mesh contains two types of services. One is a load generator (modified from [wrk2](https://github.com/giltene/wrk2)), which can send requests at specified rate, load balanced among all other services in the mesh. Currently we test HTTP 1 requests only. The load generator serves as the client side of a request. Throughout our test, there will be at most one load generator service. The other type of service is a simple echo application that replies with whatever it receives from an inbound request. It serves as the server side of a request. We can deploy multiple copies of the echo application in the mesh. In short, the mesh topology is a typical 1-to-N service architecture.
+The testing mesh contains two types of services. One is a load generator (modified from [wrk2](https://github.com/giltene/wrk2)), which can send requests at specified rate, load balanced among all other services in the mesh. Currently we test HTTP/1 requests only. The load generator serves as the client side of a request. Throughout our test, there will be at most one load generator service. The other type of service is a simple echo application that replies with whatever it receives from an inbound request. It serves as the server side of a request. We can deploy multiple copies of the echo application in the mesh. In short, the mesh topology is a typical 1-to-N service architecture.
 
 <p align="center">
   <img src="/docs/images/perf/mesh-topo.png" width="650"/>
 </p>
 
-
 ## Performance
 
-In this test, we focus on the latency overhead and resource consumption added by the OSM sidecar. We currently test the per pod RPS at 100, 500, 1000, 2000 and 4000 respectively.
+In this section, we focus on the request latency and resource consumption added by the OSM sidecar. We will test the per pod request rate at 100, 500, 1000, 2000 and 4000 RPS respectively.
 
 ### Latency
 
-Below is the request latency at different RPS levels with and without OSM installed. The added latency comes from both the client and server sidecars.
+#### Test 1: Relation with request rate
+
+In this test, the workload receives requests at various request rates. In order to save the bandwidth of the cluster, only one workload pod is set up and monitored.
+
+Regardless of the request rates, OSM adds around 1ms and 4ms overhead to the 50th percentile and the 99th percentile latency respectively compared to the case without OSM (please refer to the chart in the Ingress traffic section below). This is caused by the request processing in both the client and server sidecars, for tasks like mTLS authentication, metrics collection etc. Our test setup was with a single client and server. Performance may vary with more complex applications, or with different traffic policies set on the mesh.
+
+#### Test 2: Relation with number of connections
+
+A similar setup to request rate scenario is used to test the relationship between latency and number of connections to the sidecar proxy. In this test, the per pod request rate is set at 1000 RPS. As the number of connections increases, the request latency shows a proportional increase while the sidecar memory usage to maintain those open connections only slightly increases. The sidecar consumes around 5MB memory for every 100 connections maintained.
 
 <p align="center">
-  <img src="/docs/images/perf/latency-wo-osm.png" width="650"/>
+  <img src="/docs/images/perf/latency-conns.png" width="650"/>
 </p>
-
-<p align="center">
-  <img src="/docs/images/perf/latency-w-osm.png" width="650"/>
-</p>
-
-<table style="width: 100%; display: table"">
-<thead>
-<tr>
-<th>Per pod RPS</th>
-<th>100</th>
-<th>500</th>
-<th>1000</th>
-<th>2000</th>
-<th>4000</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>P99 latency w/o OSM (ms)</td>
-<td>4.4</td>
-<td>4.3</td>
-<td>4.2</td>
-<td>4.3</td>
-<td>4.5</td>
-</tr>
-<tr>
-<td>P99 latency w/ OSM (ms)</td>
-<td>9.6</td>
-<td>9.4</td>
-<td>9.7</td>
-<td>9.4</td>
-<td>9.8</td>
-</tr>
-</tbody>
-</table>
-
-Regardless of the existence of OSM, the application performs quite similar across different RPS levels tested. OSM adds around 5ms overhead on the 99 percentile latency. Note that our test setup is very simple, with a single client/server relation. Your mileage may vary with more complex applications, or with different traffic policies set on the mesh.
 
 ### Resource Consumption
 
@@ -104,12 +74,51 @@ Below shows the memory usage at both pod-rollout time and stable time:
 
 There is not much difference between pod-rollout time and stable time in terms of memory usage. Memory is primarily used to store xDS configurations, which is highly relevant to the mesh scale. The memory usage is also roughly proportionally increasing along with the mesh scale. In our scenario, <b>it takes around 1MB of memory for every one pod added to the mesh.</b>
 
+#### Sidecar injection
+
+Sidecar injection speed is also measured. In the test, we keep one `osm-injector` and `osm-controller` pod respectively. With the default resource quota, OSM adds around 100 pods/minute to the mesh. At this moment, `osm-injector` hits its CPU resource limit at 0.5 cores.
+
+After increasing its resource quota to 2 cores, OSM adds around 200 pods/minute. `osm-injector` uses up to 0.8 cores during the test where CPU quota is no longer the bottleneck.
+
+To further increase the sidecar injection speed, it is recommended to scale upo the `osm-injector` Kubernetes deployment.
+
 ### Data Plane
 
-By looking at the collected metrics, in our testing scenarios, resource consumption of data plane sidecars does not change much along with the mesh size. At stable time, the average CPU usage is close to 0 and average memory usage is around 50MB. CPU usage is related to request processing and memory usage is related the size of Envoy configuration stored locally. These two factors do not change with the mesh scale.
+By looking at the collected metrics, in our testing scenarios, resource consumption of data plane sidecars does not change much along with the mesh size. At stable time, the average CPU usage is close to 0 and average memory usage is around 140MB. CPU usage is related to request processing and memory usage is related the size of Envoy configuration stored locally. These two factors do not change with the mesh scale.
 
-It is also worth mentioning that enabling permissive mode will cause data plane to use much more memory, as each sidecar needs to keep the connection configuration between all other services. The chart below shows the sidecar memory usage when 200 and 400 pods are added in a permissive-mode enabled mesh. Compared to the non-permissive mode, the memory usage is more than doubled. Similar things happen on the control plane.
+### Other Scenarios
+
+#### Permissive mode
+
+When permissive mode is enabled in OSM, services are allowed to communicate with any other services in the mesh without additional traffic policies. This is implemented by adding an allow-all wildcard RBAC policy in the inbound listener and all known services as outbound clusters in the Envoy sidecar. Permissive model still enable mTLS authentication between services and requires the services be added inside the mesh. The same load test described above is performed on a service mesh with permissive mode enabled.
+
+On the control plane, the CPU and memory usage both increase compared to non-permissive mode.
+
+On the data plane, there is no obvious difference in terms of CPU usage. However, the memory usage is much higher in permissive mode. This is expected as more outbound cluster information is stored in the sidecar. The chart below shows the sidecar memory usage when 10 and 20 services are added in permissive mesh and non-permissive mesh respectively. Compared to the non-permissive mode, the memory usage is more than doubled.
 
 <p align="center">
   <img src="/docs/images/perf/perm-memory.png" width="650"/>
 </p>
+
+The request latency from load generator to workloads is at the same level regardless of permissive mode. In both modes, the RBAC policy filter chain contains one rule, allows either all requests or requests from one specific source. Thus, they perform similarly. But we expect that with more rules in the filter chain, the non-permissive mode will cause higher latency.
+
+<p align="center">
+  <img src="/docs/images/perf/latency-perm-vs-non-perm.png" width="650"/>
+</p>
+
+#### Ingress traffic
+
+In this test, the load generator is deployed outside of the mesh. The requests enter the mesh via [IngressBackend](https://docs.openservicemesh.io/docs/guides/traffic_management/ingress/#ingressbackend-api).
+
+We compared these three scenarios:
+
+* Normal: The load generator is inside the mesh. The request goes through 2 sidecars.
+* Ingress: The load generator is outside the mesh. The request goes through only 1 sidecar.
+* No OSM installed: Request does not go through any sidecar.
+
+The test result shows that in the ingress scenario, the request latency is significantly lower than the normal scenario. It confirms that request going through an extra Envoy sidecar does add latency overhead. This complies with our expectation.
+
+<p align="center">
+  <img src="/docs/images/perf/latency-ingress.png" width="650"/>
+</p>
+
