@@ -196,6 +196,12 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
     ```
 
 1. Confirm the burst capability allows a burst of connections within a small window of time.
+
+    Reset the stat counters on the `fortio` server pod's Envoy sidecar to see the impact of rate limiting.
+    ```bash
+    osm proxy set reset_counters "$fortio_server" -n demo
+    ```
+
     ```console
     $ kubectl exec "$fortio_client" -n demo -c fortio-client -- fortio load -qps -1 -c 3 -n 10 tcp://fortio.demo.svc.cluster.local:8078
     Fortio 1.32.3 running at -1 queries per second, 8->8 procs, for 10 calls: tcp://fortio.demo.svc.cluster.local:8078
@@ -229,8 +235,8 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
     All done 10 calls (plus 0 warmup) 1.531 ms avg, 1897.1 qps
     ```
 
-    Further, examine the stats to confirm the burst allows additional connections to go through. The number of connections rate limited hasn't increased since our previous rate limit test before we configured the burst setting.
+    Further, examine the stats to confirm the burst allows additional connections to go through.
     ```console
     $ osm proxy get stats "$fortio_server" -n demo | grep 'fortio.*8078.*rate_limit'
-    local_rate_limit.inbound_demo/fortio_8078_tcp.rate_limited: 7
+    local_rate_limit.inbound_demo/fortio_8078_tcp.rate_limited: 0
     ```

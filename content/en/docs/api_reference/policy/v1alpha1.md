@@ -391,6 +391,100 @@ The destination port of the traffic is matched against the list of Ports specifi
 </tr>
 </tbody>
 </table>
+<h3 id="policy.openservicemesh.io/v1alpha1.GenericKeyDescriptorEntry">GenericKeyDescriptorEntry
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.HTTPGlobalRateLimitDescriptorEntry">HTTPGlobalRateLimitDescriptorEntry</a>)
+</p>
+<p>
+<p>GenericKeyDescriptorEntry defines a descriptor entry with a static
+key-value pair.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>value</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Value defines the descriptor entry&rsquo;s value.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>key</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Key defines the descriptor entry&rsquo;s key.
+Defaults to &lsquo;generic_key&rsquo;.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.GlobalRateLimitSpec">GlobalRateLimitSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.RateLimitSpec">RateLimitSpec</a>)
+</p>
+<p>
+<p>GlobalRateLimitSpec defines the global rate limiting specification
+for the upstream host.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>tcp</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.TCPGlobalRateLimitSpec">
+TCPGlobalRateLimitSpec
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>TCP defines the global rate limiting specification at the network
+level. This has the ultimate effect of rate limiting connections
+per unit of time that arrive at the upstream host.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>http</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.HTTPGlobalRateLimitSpec">
+HTTPGlobalRateLimitSpec
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>HTTP defines the global rate limiting specification for HTTP traffic.
+This has the ultimate effect of rate limiting HTTP requests
+per unit of time that arrive at the upstream host.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="policy.openservicemesh.io/v1alpha1.HTTPConnectionSettings">HTTPConnectionSettings
 </h3>
 <p>
@@ -465,6 +559,376 @@ uint32
 <p>MaxRetries specifies the maximum number of parallel retries
 allowed to the upstream host.
 Defaults to 4294967295 (2^32 - 1) if not specified.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.HTTPGlobalPerRouteRateLimitSpec">HTTPGlobalPerRouteRateLimitSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.HTTPPerRouteRateLimitSpec">HTTPPerRouteRateLimitSpec</a>)
+</p>
+<p>
+<p>HTTPGlobalPerRouteRateLimitSpec defines the global rate limiting specification
+applied per HTTP route.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>descriptors</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.HTTPGlobalRateLimitDescriptor">
+[]HTTPGlobalRateLimitDescriptor
+</a>
+</em>
+</td>
+<td>
+<p>Descriptors defines the list of rate limit descriptors to use
+in the rate limit service request.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.HTTPGlobalRateLimitDescriptor">HTTPGlobalRateLimitDescriptor
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.HTTPGlobalPerRouteRateLimitSpec">HTTPGlobalPerRouteRateLimitSpec</a>, <a href="#policy.openservicemesh.io/v1alpha1.HTTPGlobalRateLimitSpec">HTTPGlobalRateLimitSpec</a>)
+</p>
+<p>
+<p>HTTPGlobalRateLimitDescriptor defines rate limit descriptor to use
+in the rate limit service request for HTTP requests.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>entries</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.HTTPGlobalRateLimitDescriptorEntry">
+[]HTTPGlobalRateLimitDescriptorEntry
+</a>
+</em>
+</td>
+<td>
+<p>Entries defines the list of rate limit descriptor entries.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.HTTPGlobalRateLimitDescriptorEntry">HTTPGlobalRateLimitDescriptorEntry
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.HTTPGlobalRateLimitDescriptor">HTTPGlobalRateLimitDescriptor</a>)
+</p>
+<p>
+<p>HTTPGlobalRateLimitDescriptorEntry defines the rate limit descriptor entry
+to use in the rate limit service request for HTTP requests.
+Only one of GenericKey, RemoteAddress, RequestHeader, HeaderValueMatch may be set.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>genericKey</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.GenericKeyDescriptorEntry">
+GenericKeyDescriptorEntry
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>GenericKey defines a descriptor entry with a static key-value pair.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>remoteAddress</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.RemoteAddressDescriptorEntry">
+RemoteAddressDescriptorEntry
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>RemoteAddress defines a descriptor entry with with key &lsquo;remote_address&rsquo;
+and value equal to the client&rsquo;s IP address derived from the x-forwarded-for header.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>requestHeader</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.RequestHeaderDescriptorEntry">
+RequestHeaderDescriptorEntry
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>RequestHeader defines a descriptor entry that is generated only when the
+request header matches the given header name. The value of the descriptor
+entry is derived from the value of the header present in the request.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>headerValueMatch</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.HeaderValueMatchDescriptorEntry">
+HeaderValueMatchDescriptorEntry
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>HeaderValueMatch defines a descriptor entry that is generated when the
+request header matches the given HTTP header match criteria.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.HTTPGlobalRateLimitSpec">HTTPGlobalRateLimitSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.GlobalRateLimitSpec">GlobalRateLimitSpec</a>)
+</p>
+<p>
+<p>HTTPGlobalRateLimitSpec defines the global rate limiting specification
+for HTTP requests.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>rateLimitService</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.RateLimitServiceSpec">
+RateLimitServiceSpec
+</a>
+</em>
+</td>
+<td>
+<p>RateLimitService defines the rate limiting service to use
+as a global rate limiter.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>domain</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Domain defines a container for a set of rate limits.
+All domains known to the Ratelimit service must be globally unique.
+They serve as a way to have different rate limit configurations that
+don&rsquo;t conflict.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>descriptors</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.HTTPGlobalRateLimitDescriptor">
+[]HTTPGlobalRateLimitDescriptor
+</a>
+</em>
+</td>
+<td>
+<p>Descriptors defines the list of rate limit descriptors to use
+in the rate limit service request.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>timeout</code><br/>
+<em>
+<a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration">
+Kubernetes meta/v1.Duration
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Timeout defines the timeout interval for calls to the rate limit service.
+Defaults to 20ms.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>failOpen</code><br/>
+<em>
+bool
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>FailOpen defines whether to allow traffic in case of
+communication failure between rate limiting service and the proxy.
+Defaults to true.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>enableXRateLimitHeaders</code><br/>
+<em>
+bool
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>EnableXRateLimitHeaders defines whether to include the headers
+X-RateLimit-Limit, X-RateLimit-Remaining, and X-RateLimit-Reset on
+responses to clients when the rate limit service is consulted for a request.
+Defaults to false.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>responseStatusCode</code><br/>
+<em>
+uint32
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>ResponseStatusCode defines the HTTP status code to use for responses
+to rate limited requests. Code must be in the 400-599 (inclusive)
+error range. If not specified, a default of 429 (Too Many Requests) is used.
+See <a href="https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/v3/http_status.proto#enum-type-v3-statuscode">https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/v3/http_status.proto#enum-type-v3-statuscode</a>
+for the list of HTTP status codes supported by Envoy.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.HTTPHeaderMatcher">HTTPHeaderMatcher
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.HeaderValueMatchDescriptorEntry">HeaderValueMatchDescriptorEntry</a>)
+</p>
+<p>
+<p>HTTPHeaderMatcher defines the HTTP header match criteria.
+Only one of Exact, Prefix, Suffix, Regex, Contains, Present may be set.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>name</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Name defines the name of the header to match.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>exact</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Exact defines the exact value to match.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>prefix</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Prefix defines the prefix value to match.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>suffix</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Suffix defines the suffix value to match.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>regex</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Regex defines the regex value to match.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>contains</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Contains defines the substring value to match.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>present</code><br/>
+<em>
+bool
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Present defines whether the request matches the criteria
+when the header is present. If set to false, header match
+will be performed based on whether the header is absent.</p>
 </td>
 </tr>
 </tbody>
@@ -628,6 +1092,20 @@ HTTPLocalRateLimitSpec
 applied per HTTP route.</p>
 </td>
 </tr>
+<tr>
+<td>
+<code>global</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.HTTPGlobalPerRouteRateLimitSpec">
+HTTPGlobalPerRouteRateLimitSpec
+</a>
+</em>
+</td>
+<td>
+<p>Global defines the global rate limiting specification
+applied per HTTP route.</p>
+</td>
+</tr>
 </tbody>
 </table>
 <h3 id="policy.openservicemesh.io/v1alpha1.HTTPRouteSpec">HTTPRouteSpec
@@ -669,6 +1147,78 @@ HTTPPerRouteRateLimitSpec
 <td>
 <p>RateLimit defines the HTTP rate limiting specification for
 the specified HTTP route.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.HeaderValueMatchDescriptorEntry">HeaderValueMatchDescriptorEntry
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.HTTPGlobalRateLimitDescriptorEntry">HTTPGlobalRateLimitDescriptorEntry</a>)
+</p>
+<p>
+<p>HeaderValueMatchDescriptorEntry defines the descriptor entry that is generated
+when the request header matches the given HTTP header match criteria.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>value</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Value defines the descriptor entry&rsquo;s value.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>headers</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.HTTPHeaderMatcher">
+[]HTTPHeaderMatcher
+</a>
+</em>
+</td>
+<td>
+<p>Headers defines the list of HTTP header match criteria.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>key</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Key defines the descriptor entry&rsquo;s key.
+Defaults to &lsquo;header_match&rsquo;.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>expectMatch</code><br/>
+<em>
+bool
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>ExpectMatch defines whether the request must match the given
+match criteria for the descriptor entry to be generated.
+If set to false, a descriptor entry will be generated when the
+request does not match the match criteria.
+Defaults to true.</p>
 </td>
 </tr>
 </tbody>
@@ -1026,6 +1576,46 @@ string
 </tr>
 </tbody>
 </table>
+<h3 id="policy.openservicemesh.io/v1alpha1.RateLimitServiceSpec">RateLimitServiceSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.HTTPGlobalRateLimitSpec">HTTPGlobalRateLimitSpec</a>, <a href="#policy.openservicemesh.io/v1alpha1.TCPGlobalRateLimitSpec">TCPGlobalRateLimitSpec</a>)
+</p>
+<p>
+<p>RateLimitServiceSpec defines the Rate Limit Service specification.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>host</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Host defines the hostname of the rate limiting service.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>port</code><br/>
+<em>
+uint16
+</em>
+</td>
+<td>
+<p>Port defines the port number of the rate limiting service</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="policy.openservicemesh.io/v1alpha1.RateLimitSpec">RateLimitSpec
 </h3>
 <p>
@@ -1054,11 +1644,80 @@ LocalRateLimitSpec
 </td>
 <td>
 <em>(Optional)</em>
-<p>Local specified the local rate limiting specification
+<p>Local defines the local rate limiting specification
 for the upstream host.
 Local rate limiting is enforced directly by the upstream
 host without any involvement of a global rate limiting service.
 This is applied as a token bucket rate limiter.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>global</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.GlobalRateLimitSpec">
+GlobalRateLimitSpec
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Global defines the global rate limiting specification
+for the upstream host.
+Global rate limiting is enforced by an external rate
+limiting service.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.RemoteAddressDescriptorEntry">RemoteAddressDescriptorEntry
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.HTTPGlobalRateLimitDescriptorEntry">HTTPGlobalRateLimitDescriptorEntry</a>)
+</p>
+<p>
+<p>RemoteAddressDescriptorEntry defines a descriptor entry with
+key &lsquo;remote_address&rsquo; and value equal to the client&rsquo;s IP address
+derived from the x-forwarded-for header.</p>
+</p>
+<h3 id="policy.openservicemesh.io/v1alpha1.RequestHeaderDescriptorEntry">RequestHeaderDescriptorEntry
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.HTTPGlobalRateLimitDescriptorEntry">HTTPGlobalRateLimitDescriptorEntry</a>)
+</p>
+<p>
+<p>RequestHeaderDescriptorEntry defines a descriptor entry that is generated only
+when the request header matches the given header name. The value of the descriptor
+entry is derived from the value of the header present in the request.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>name</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Name defines the name of the header used to look up the descriptor entry&rsquo;s value.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>key</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Key defines the descriptor entry&rsquo;s key.</p>
 </td>
 </tr>
 </tbody>
@@ -1379,6 +2038,96 @@ Defaults to 5s if not specified.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="policy.openservicemesh.io/v1alpha1.TCPGlobalRateLimitSpec">TCPGlobalRateLimitSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.GlobalRateLimitSpec">GlobalRateLimitSpec</a>)
+</p>
+<p>
+<p>TCPGlobalRateLimitSpec defines the global rate limiting specification
+for TCP connections.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>rateLimitService</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.RateLimitServiceSpec">
+RateLimitServiceSpec
+</a>
+</em>
+</td>
+<td>
+<p>RateLimitService defines the rate limiting service to use
+as a global rate limiter.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>domain</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Domain defines a container for a set of rate limits.
+All domains known to the Ratelimit service must be globally unique.
+They serve as a way to have different rate limit configurations that
+don&rsquo;t conflict.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>descriptors</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.TCPRateLimitDescriptor">
+[]TCPRateLimitDescriptor
+</a>
+</em>
+</td>
+<td>
+<p>Descriptors defines the list of rate limit descriptors to use
+in the rate limit service request.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>timeout</code><br/>
+<em>
+<a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration">
+Kubernetes meta/v1.Duration
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Timeout defines the timeout interval for calls to the rate limit service.
+Defaults to 20ms.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>failOpen</code><br/>
+<em>
+bool
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>FailOpen defines whether to allow traffic in case of
+communication failure between rate limiting service and the proxy.
+Defaults to true.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="policy.openservicemesh.io/v1alpha1.TCPLocalRateLimitSpec">TCPLocalRateLimitSpec
 </h3>
 <p>
@@ -1432,6 +2181,79 @@ uint32
 <em>(Optional)</em>
 <p>Burst defines the number of connections above the baseline
 rate that are allowed in a short period of time.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.TCPRateLimitDescriptor">TCPRateLimitDescriptor
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.TCPGlobalRateLimitSpec">TCPGlobalRateLimitSpec</a>)
+</p>
+<p>
+<p>TCPRateLimitDescriptor defines the rate limit descriptor to use
+in the rate limit service request for TCP connections.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>entries</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.TCPRateLimitDescriptorEntry">
+[]TCPRateLimitDescriptorEntry
+</a>
+</em>
+</td>
+<td>
+<p>Entries defines the list of rate limit descriptor entries.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.TCPRateLimitDescriptorEntry">TCPRateLimitDescriptorEntry
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.TCPRateLimitDescriptor">TCPRateLimitDescriptor</a>)
+</p>
+<p>
+<p>TCPRateLimitDescriptorEntry defines the rate limit descriptor entry as a
+key-value pair to use in the rate limit service request for TCP connections.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>key</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Key defines the key of the descriptor entry.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>value</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Value defines the value of the descriptor entry.</p>
 </td>
 </tr>
 </tbody>
@@ -1733,5 +2555,5 @@ string
 <hr/>
 <p><em>
 Generated with <code>gen-crd-api-reference-docs</code>
-on git commit <code>f3966a3c</code>.
+on git commit <code>dddb8fa5</code>.
 </em></p>

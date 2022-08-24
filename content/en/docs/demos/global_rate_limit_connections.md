@@ -18,7 +18,7 @@ This guide demonstrates how to configure global rate limiting for L4 TCP connect
 
 ## Demo
 
-The following demo shows a client [fortio-client](https://github.com/fortio/fortio) sending TCP traffic to the `fortio` `TCP echo` service. The `fortio` service echoes TCP messages back to the client. We will see the impact of applying global TCP rate limiting policies targeting the `fortio` service to control the throughput of traffic destined to the service backend using an external Rate Limit Service (RLS).
+The following demo shows a client [fortio-client](https://github.com/fortio/fortio) sending TCP traffic to the `fortio` TCP echo service. The `fortio` service echoes TCP messages back to the client. We will see the impact of applying global TCP rate limiting policies targeting the `fortio` service to control the throughput of traffic destined to the service backend using an external Rate Limit Service (RLS).
 
 1. For simplicity, enable [permissive traffic policy mode](/docs/guides/traffic_management/permissive_mode) so that explicit SMI traffic access policies are not required for application connectivity within the mesh.
     ```bash
@@ -26,7 +26,7 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
     kubectl patch meshconfig osm-mesh-config -n "$osm_namespace" -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":true}}}'  --type=merge
     ```
 
-1. Deploy the `fortio` `TCP echo` service in the `demo` namespace after enrolling its namespace to the mesh. The `fortio` `TCP echo` service runs on port `8078`.
+1. Deploy the `fortio` TCP echo service in the `demo` namespace after enrolling its namespace to the mesh. The `fortio` TCP echo service runs on port `8078`.
     ```bash
     # Create the demo namespace
     kubectl create namespace demo
@@ -183,7 +183,7 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
     ratelimiter-bb7665d55-6qtvv   2/2     Running   0          15s
     ```
 
-1. Confirm the `fortio-client` app is able to successfully make TCP connections and send data to the `fortio` `TCP echo` service on port `8078`. We call the `fortio` service with `3` concurrent connections (`-c 3`) and send `10` calls (`-n 10`).
+1. Confirm the `fortio-client` app is able to successfully make TCP connections and send data to the `fortio` TCP echo service on port `8078`. We call the `fortio` service with `3` concurrent connections (`-c 3`) and send `10` calls (`-n 10`).
     ```console
     $ fortio_client="$(kubectl get pod -n demo -l app=fortio-client -o jsonpath='{.items[0].metadata.name}')"
 
