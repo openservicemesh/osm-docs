@@ -7,11 +7,11 @@ weight: 4
 
 # Configure Traffic Split between Two Services
 
-We will now demonstrate how to balance traffic between two Kubernetes services, commonly known as a traffic split. We will be splitting the traffic directed to the *root* `bookstore` service between the backends `bookstore-v1` service and `bookstore-v2` service.  The `bookstore-v1` and `bookstore-v2` services are also known as leaf services.  Learn more on how to configure services for Traffic Splitting in the [traffic Splitting how-to guide](/docs/guides/traffic_management/traffic_split.md)
+We will now demonstrate how to balance traffic between two Kubernetes services, commonly known as a traffic split. We will be splitting the traffic directed to the *root* `bookstore` service between the backends `bookstore-v1` service and `bookstore-v2` service.  The `bookstore-v1` and `bookstore-v2` services are also known as leaf services.  Learn more on how to configure services for Traffic Splitting in the [traffic Splitting how-to guide](/docs/guides/traffic_management/traffic_split)
 
 ### Deploy bookstore v2 application
 
-To demonstrate usage of SMI traffic access and split policies, we will now deploy version v2 of the bookstore application (`bookstore-v2`) - remember that if you are using openshift, you must add the security context constraint to the bookstore-v2 service account as specified in the [installation guide](/docs/install/#openshift).
+To demonstrate usage of SMI traffic access and split policies, we will now deploy version v2 of the bookstore application (`bookstore-v2`) - remember that if you are using openshift, you must add the security context constraint to the bookstore-v2 service account as specified in the [installation guide](/docs/guides/install/#openshift).
 
 ```bash
 # Contains the bookstore-v2 Kubernetes Service, Service Account, Deployment and SMI Traffic Target resource to allow

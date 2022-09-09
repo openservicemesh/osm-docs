@@ -27,7 +27,7 @@ Clone and set up your fork:
 ```sh
 git clone git@github.com:$GITHUB_USERNAME/osm-docs.git
 
-cd osm
+cd osm-docs
 git remote add upstream git@github.com:openservicemesh/osm-docs.git
 
 # Block accidental pushes to upstream's main branch
