@@ -15,12 +15,12 @@ enableRobotsTXT = true
 		languageName ="English"
 		weight = 10
 		contentDir = 'content/en'
-#	[languages.zh]
-#		title = "开放服务网格"
-#		contentDir = 'content/zh'
-#		description = "Documentation for Open Service Mesh (OSM)"
-#		languageName ="中文"
-#		weight = 20
+	[languages.zh]
+		title = "开放服务网格"
+		contentDir = 'content/zh'
+		description = "Documentation for Open Service Mesh (OSM)"
+		languageName ="中文"
+		weight = 20
 [services]
 [services.googleAnalytics]
 id = "UA-130516746-13"
