@@ -137,6 +137,7 @@ To create the initial translation for the latest release:
 - Add a new localization directory to the `content/` directory.
 - Copy the entire directory structure under `content/en` to the new localization directory.
 - Add a new language to `config.toml` in the `[languages]` section.
+- Add a `Disallow` entry in `themes/dosmy/layouts/robots.txt` for your localization directory.
 - Optionally, you can begin translating one or more files in the new localization directory.
 - File a PR targeting the latest release branch.
 
@@ -145,6 +146,7 @@ To create the scaffold for the new localization:
 - Create a branch based on `main`.
 - Add the same localization directory to the `content/` directory, but only containing a `.gitkeep` file.
 - Copy the new language configuration to `config.toml` in the `[languages]` section, but comment it out.
+- Add a `Disallow` entry in `themes/dosmy/layouts/robots.txt` for your localization directory.
 - File a PR targeting the `main` branch.
 
 # Site Development
