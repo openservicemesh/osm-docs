@@ -146,6 +146,7 @@ To create the scaffold for the new localization:
 - Create a branch based on `main`.
 - Add the same localization directory to the `content/` directory, but only containing a `.gitkeep` file.
 - Copy the new language configuration to `config.toml` in the `[languages]` section, but comment it out.
+- Add a `Disallow` entry in `themes/dosmy/layouts/robots.txt` for your localization directory.
 - File a PR targeting the `main` branch.
 
 # Site Development
