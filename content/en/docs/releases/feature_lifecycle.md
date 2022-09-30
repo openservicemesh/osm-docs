@@ -113,7 +113,7 @@ Similar to the [Kubernetes API deprecation policy](https://kubernetes.io/docs/re
 Stable APIs marked as deprecated:
 
 - Remain functional but will generate a warning if used
-- Will not be removed within a major release version
+- At the earliest, would not be removed until the next major version
 - Will no longer be functional after removal
 
 Alpha APIs may be removed in any release without any prior notice or deprecation.
