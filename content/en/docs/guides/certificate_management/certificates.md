@@ -52,53 +52,9 @@ kubectl get secret -n $osm_namespace $osm_ca_bundle -o jsonpath='{.data.ca\.crt}
 
 This will provide valuable certificate information, such as the expiration date and the issuer.
 
-### Root Certificate Rotation
+#### Root Certificate Rotation
 
-#### Tresor
-
->  WARNING: Rotating root certificates will incur downtime between any services as they transition their mTLS certs from one issuer to the next.
-
-We are currently working on a zero-downtime root cert rotation mechanism that we expect to announce in one of our upcoming releases.
-
-The self-signed root certificate, which is created via the Tresor package within OSM, will expire in a decade. To rotate the root cert, the following steps should be followed:
-
-1. Delete the `osm-ca-bundle` certificate in the osm namespace
-   ```console
-   export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
-   kubectl delete secret osm-ca-bundle -n $osm_namespace
-   ```
-
-2. Restart the control plane components
-   ```console
-   kubectl rollout restart deploy osm-controller -n $osm_namespace
-   kubectl rollout restart deploy osm-injector -n $osm_namespace
-   kubectl rollout restart deploy osm-bootstrap -n $osm_namespace
-   ```
-
-When the components gets re-deployed, you should be able to eventually see the new `osm-ca-bundle` secret in `$osm_namespace`:
-
-```console
-kubectl get secrets -n $osm_namespace
-```
-
-```
-NAME                           TYPE                                  DATA   AGE
-osm-ca-bundle                  Opaque                                3      74m
-```
-
-The new expiration date can be found with the following command:
-
-```console
-kubectl get secret -n $osm_namespace $osm_ca_bundle -o jsonpath='{.data.ca\.crt}' |
-    base64 -d |
-    openssl x509 -noout -dates
-```
-
-For the Envoy service and validation certificates to be rotated the data plane components must restarted.
-
-#### Hashicorp Vault and Certmanager
-
-For certificate providers other than Tresor, the process of rotating the root certificate will be different. For Hashicorp Vault and cert-manager.io, users will need to rotate the root certificate themselves outside of OSM.
+With OSM 1.3 root certificate rotation is in preview.  Refer to [certificate rotation](certificate-rotation.md) for more details.
 
 ## Issuing Certificates
 

@@ -1,0 +1,197 @@
+---
+title: "Root Certificate Rotation"
+description: "Rotating the root certificate in OSM"
+type: docs
+weight: 10
+---
+
+# Root Certificate Rotation
+
+The Mesh root certificate is a long lived certificate which is used by OSM to issue leaf certificates to the services in the Mesh enabling mTLS. This document will be focused on the steps to rotate a certificate, to learn more about OSM's certificates in OSM read about OSM's [Certificate provider options](certificates.md).  
+
+The certificate can be rotated either through a [manual process](#manual-rotation) or with OSM 1.3 we have introduced a preview feature to help [automate rotation](#certificate-rotation-with-meshrootcertificate) using a new API called the `MeshRootCertificate`.  
+
+### Manual Root Certificate Rotation
+
+#### Tresor
+
+>  WARNING: Rotating root certificates will incur downtime between any services as they transition their mTLS certs from one issuer to the next.
+
+The self-signed root certificate, which is created via the Tresor package within OSM, will expire in a decade. To rotate the root cert, the following steps should be followed:
+
+1. Delete the `osm-ca-bundle` certificate in the osm namespace
+   ```console
+   export osm_namespace=osm-system # Replace osm-system with the namespace where OSM is installed
+   kubectl delete secret osm-ca-bundle -n $osm_namespace
+   ```
+
+2. Restart the control plane components
+   ```console
+   kubectl rollout restart deploy osm-controller -n $osm_namespace
+   kubectl rollout restart deploy osm-injector -n $osm_namespace
+   kubectl rollout restart deploy osm-bootstrap -n $osm_namespace
+   ```
+
+When the components gets re-deployed, you should be able to eventually see the new `osm-ca-bundle` secret in `$osm_namespace`:
+
+```console
+kubectl get secrets -n $osm_namespace
+```
+
+```
+NAME                           TYPE                                  DATA   AGE
+osm-ca-bundle                  Opaque                                3      74m
+```
+
+The new expiration date can be found with the following command:
+
+```console
+kubectl get secret -n $osm_namespace $osm_ca_bundle -o jsonpath='{.data.ca\.crt}' |
+    base64 -d |
+    openssl x509 -noout -dates
+```
+
+For the Envoy service and validation certificates to be rotated the data plane components must restarted.
+
+#### Other certificate providers
+For certificate providers other than Tresor, the process of rotating the root certificate will be different. For Hashicorp Vault and cert-manager.io, users will need to rotate the root certificate themselves outside of OSM.
+
+### Certificate Rotation with MeshRootCertificate
+
+>  WARNING:  This feature is currently in preview and requires the `EnableMeshRootCertificate` feature flag enabled in the MeshConfig.  
+
+New in version 1.3, is the `MeshRootCertificate`. This custom resource can be enabled by using the `EnableMeshRootCertificate` feature flag when deploying OSM.
+
+```console
+osm install --set="osm.featureFlags.enableMeshRootCertificate=true"
+```
+
+> Important Note: If OSM has been installed with `EnableMeshRootCertificate` disabled, and feature flag is then enabled in the MeshConfig the control plane components must be restarted in order to pick up on the flag and begin using the `MeshRootCertificate` for certificate management. There will be no change in the Root Certificate but it will now be managed the the `MeshRootCertificate` for future management. 
+
+### MeshRootCertificate
+
+Each `MeshRootCertificate` represents a certificate that can be used in the Mesh. At most there can be only two `MeshRootCertificate`'s that are used in the mesh at a given time and there must always be one `MeshRootCertificate` in the **active** `role`.
+
+The following are the validate values for a `MeshRootCertificate` `role`:
+
+- `active`: The certificate is used to sign **and** validate certificates in the mesh. There must always be one certificate with active.
+- `passive`: The certificate is used to validate certificates in the mesh
+- `inactive`: The certificate is not used in the mesh.
+
+The following is an example of the `MeshRootCertificate` that will be created. The Provider option can be `tresor`, `certManager`, or `vault`.  Before using the providers for [CertManager](certificates.md#using-cert-manager) or [Vault](certificates.md#using-hashicorp-vault), additional pre-configuration steps are required.  Refer to the [API documentation](#TODO) for how to configure the `MeshRootCertificate` fields for each provider.
+
+Run `kubectl get meshrootcertificate` to see the default `MeshRootCertificate`:
+
+```yaml
+apiVersion: config.openservicemesh.io/v1alpha2
+kind: MeshRootCertificate
+metadata:
+  name: osm-mesh-root-certificate
+  namespace: osm-system
+spec:
+  role: active
+  provider:
+    tresor:
+      ca:
+        secretRef:
+          name: osm-ca-bundle
+          namespace: osm-system
+  spiffeEnabled: false
+  trustDomain: cluster.local
+```
+
+The only field that can be modified after initial creation is the `role` field.  Other fields will need change by creating a new MeshRootCertificate and go through the [rotation process](#meshrootcertificate-rotation). On a new install, the initial `MeshRootCertificate` will be created by OSM and the certificate will be in the **active** `role`. Fields such as `trustDomain` and `spiffeEnabled` can be configured by passing options to the install command:
+
+```
+osm install --set="osm.featureFlags.enableSPIFFE=true --set"osm.trustDomain=cluster.example"
+```
+
+### MeshRootCertificate Rotation
+
+To rotate the root certificate a mesh, a second `MeshRootCertificate` (MRC) will be created.  The second `MeshRootCertificate` will be created in a `passive` role and rotated into the `active` role. Once the new certificate is `active`, the old certificate will be moved to the `passive` role then finally `inactive`.  
+
+The full process for rotating the certificate is:
+
+| Step  |  original MRC(1) role   |  new MRC(2) role    | Signing MRC  | Validating MRC |
+| ----- | ----------------------- | ------------------- | ------------ | -------------- |
+| 1     | active                  | (not created)       | mrc1         | mcr1           |
+| 2     | active                  | passive             | mcr1         | mcr1 and mrc2  |
+| 3     | active                  | active              | mrc1 or mrc2 | mcr1 and mrc2  |
+| 4     | passive                 | active              | mcr2         | mcr1 and mrc2  |
+| 5     | inactive                | active              | mcr2         | mcr2           |
+| 5     | (deleted)               | active              | mcr2         | mcr2           |
+
+
+Each step requires time for the certificate information to propagated to all the components in the mesh. The amount of time required will depend on your mesh. 
+
+Between each step to verify a certificate was been propagated you can review the logs in osm-controller and optionally run the follow commands. When both certificates are in use, then you will see two certificates from the following commands, otherwise you will see the `active` certificate.  We are working on improving this experience as we move the `MeshRootCertificate` feature out of preview.
+
+Example commands:
+
+- logs:
+  - `kubectl logs osm-controller-67f9fd585d-ccr4b | grep "in progress root certificate rotation"`
+- osm validation and mutating webhooks:
+  - `kubectl get validatingwebhookconfigurations.admissionregistration.k8s.io osm-validator-mesh-osm -ojson | jq -r '.webhooks[] | .clientConfig.caBundle' | base64 --decode`
+  - `kubectl get mutatingwebhookconfigurations.admissionregistration.k8s.io osm-validator-mesh-osm -ojson | jq -r '.webhooks[] | .clientConfig.caBundle' | base64 --decode`
+- service certs were updated: 
+  - `osm proxy get config_dump bookbuyer-b8c7bc4d9-zpm8m -n bookbuyer | jq -r '.configs[] | select(."@type"=="type.googleapis.com/envoy.admin.v3.SecretsConfigDump") | .dynamic_active_secrets[] | select(.name == "root-cert-for-mtls-outbound:bookstore/bookstore").secret.validation_context.trusted_ca.inline_bytes' | base64 -d`
+- xds certs:
+  - `osm proxy get config_dump bookbuyer-b8c7bc4d9-zpm8m -n bookbuyer | jq -r '.configs[] | select(."@type"=="type.googleapis.com/envoy.admin.v3.SecretsConfigDump") | .dynamic_active_secrets[] | select(.name == "validation_context_sds").secret.validation_context.trusted_ca.inline_bytes' | base64 -d`
+
+There is an experimental cli command that can automate this process using a time based method. Check out the [certificate rotation demo](../../demos/certificate_rotation.md) for more information. Please provide feedback through the [OSM github repository](https://github.com/openservicemesh/osm) on the rotation process to help improve the experience.
+
+#### Rotating with OSM's Tresor certificate
+
+Tresor requires no additional configuration to rotate the certificates.  Create a second `MeshRootCertificate` and move it through the process above.
+
+#### Rotating with Hashicorp Vault
+
+Root Rotation for Hashicorp Vault requires Vault version  1.11.  Learn how to rotate a root certificate in Vault through the [Hashicorp documentation](https://learn.hashicorp.com/tutorials/vault/pki-engine#step-7-rotate-root-ca).
+
+Once the Root certificate is rotated in Hashicorp you can configure a `MeshRootCertificate`, then move it through the rotation process:
+
+```
+apiVersion: config.openservicemesh.io/v1alpha2
+kind: MeshRootCertificate
+metadata:
+  name: osm-mesh-root-certificate-2
+  namespace: osm-system
+spec:
+  role: passive
+  provider:
+    vault:
+      host: vault.osm-system.svc.cluster.local
+      port: 8200
+      protocol: http
+      role: <name of new Vault role>
+      token:
+        secretKeyRef:
+          key: "osm-key"
+          name: "osm-vault-token"
+          namespace: osm-system
+  spiffeEnabled: false
+  trustDomain: cluster.local
+```
+
+#### Rotating withing cert-manager
+
+Create a new issuer following the [cert-manager](https://release-v1-2.docs.openservicemesh.io/docs/guides/certificates/#configure-cert-manger-for-osm-signing). 
+
+Once you have a new issuer you can configure a  `MeshRootCertificate` with the issuer information, then move it through the rotation process:
+
+```
+apiVersion: config.openservicemesh.io/v1alpha2
+kind: MeshRootCertificate
+metadata:
+  name: osm-mesh-root-certificate-2
+  namespace: osm-system
+spec:
+  role: passive
+  provider:
+    certManager:
+      	IssuerName:  <name>,
+		IssuerKind:  "Issuer",
+		IssuerGroup: "cert-manager.io",
+  spiffeEnabled: false
+  trustDomain: cluster.local
+```
