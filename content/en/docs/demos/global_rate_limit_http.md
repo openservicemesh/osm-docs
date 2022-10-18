@@ -66,7 +66,7 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
     kubectl create namespace rls
     ```
 
-    Create a ConfigMap that contains the [rate limit configuration](https://github.com/envoyproxy/ratelimit#configuration). In this demo, we will start by rate limit HTTP traffic that generates the descriptor key-value pair `generic_key: my_value` to 1 request per minute.
+    Create a ConfigMap that contains the [rate limit configuration](https://github.com/envoyproxy/ratelimit#configuration).
     ```bash
     kubectl apply -f - <<EOF
     apiVersion: v1
@@ -78,6 +78,7 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
       ratelimit-config.yaml: |
         domain: test
         descriptors:
+
           # requests with a descriptor ["generic_key": "my_value"]
           # are limited to one per minute.
           - key: generic_key
@@ -85,6 +86,27 @@ The following demo shows a client [fortio-client](https://github.com/fortio/fort
             rate_limit:
               unit: minute
               requests_per_unit: 1
+
+          # each unique remote (client) address is limited to 3 per minute
+          - key: remote_address
+            rate_limit:
+              unit: minute
+              requests_per_unit: 3
+
+          # requests with the header 'my-header: foo' are rate limited to 5 per minute
+          - key: my_header
+            value: foo
+            rate_limit:
+              unit: minute
+              requests_per_unit: 5
+
+          # requests with the descriptor 'header_match: foo' are rate limited
+          # to 7 per minute
+          - key: header_match
+            value: foo
+            rate_limit:
+              unit: minute
+              requests_per_unit: 7
     EOF
     ```
     > Note: it can take a few seconds for the RLS to load the configuration.
@@ -243,6 +265,8 @@ In this demo, we will see the impact of generating different descriptor entries 
 
 #### genericKey descriptor
 
+The `genericKey` descriptor entry defines a static key-value pair. By default, the `genericKey` descriptor entry uses `generic_key` as it's descriptor key if unspecified.
+
 Recollect that we defined a rate limiting policy in the `ratelimit-config` ConfigMap to rate limit requests that generate the descriptor `generic_key: my_value` to 1 per minute:
 ```
 descriptors:
@@ -254,8 +278,6 @@ descriptors:
       unit: minute
       requests_per_unit: 1
 ```
-
-The `genericKey` descriptor entry defines a static key-value pair. By default, the `genericKey` descriptor entry uses `generic_key` as it's descriptor key if unspecified.
 
 Let's apply a global rate limit policy targeting the `fortio` service to generate the descriptor entry `generic_key: my_value`.
 
@@ -368,27 +390,15 @@ cluster.demo/fortio|8080|local.ratelimit.over_limit: 9
 
 A `remoteAddress` descriptor entry has a key of `remote_address` and a value of the client IP address that is populated using the trusted address from the `x-forwarded-for` HTTP header.
 
-Let's update the `ratelimit-config` ConfigMap to rate limit requests from each unique client to 3 per minute.
-
-```bash
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: ratelimit-config
-  namespace: rls
-data:
-  ratelimit-config.yaml: |
-    domain: test
-    descriptors:
-      # each unique remote (client) address is limited to 3 per minute
-      - key: remote_address
-        rate_limit:
-          unit: minute
-          requests_per_unit: 3
-EOF
+Recollect that we defined a rate limiting policy in the `ratelimit-config` ConfigMap to rate limit requests from each unique client to 3 per minute.
 ```
-> Note: it can take a few seconds for the RLS to load the configuration.
+descriptors:
+  # each unique remote (client) address is limited to 3 per minute
+  - key: remote_address
+    rate_limit:
+      unit: minute
+      requests_per_unit: 3
+```
 
 Update global rate limit policy targeting the `fortio` service to generate the `remote_address` descriptor entry.
 
@@ -495,29 +505,17 @@ cluster.demo/fortio|8080|local.ratelimit.over_limit: 7
 
 A `requestHeader` descriptor entry defines a static key-value pair for the descriptor entry that is generated only when the request header matches the given header name. The value of the descriptor entry is derived from the value of the header present in the request.
 
-Let's update the `ratelimit-config` ConfigMap to rate limit requests with the header `my-header: foo` and descriptor key `my_header` to 5 per minute.
-
-```bash
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: ratelimit-config
-  namespace: rls
-data:
-  ratelimit-config.yaml: |
-    domain: test
-    descriptors:
-      # requests with the header 'my-header: foo' are rate limited
-      # to 5 per minute
-      - key: my_header
-        value: foo
-        rate_limit:
-          unit: minute
-          requests_per_unit: 5
-EOF
+Recollect that we defined a rate limiting policy in the `ratelimit-config` ConfigMap to rate limit requests with the header `my-header: foo` and descriptor key `my_header` to 5 per minute.
 ```
-> Note: it can take a few seconds for the RLS to load the configuration.
+descriptors:
+  # requests with the header 'my-header: foo' are rate limited
+  # to 5 per minute
+  - key: my_header
+    value: foo
+    rate_limit:
+      unit: minute
+      requests_per_unit: 5
+```
 
 Update global rate limit policy targeting the `fortio` service to generate the `remote_address` descriptor entry.
 
@@ -680,29 +678,17 @@ Code 200 : 10 (100.0 %)
 
 A `headerValueMatch` descriptor entry defines a descriptor entry that is generated when the request header matches the given set of HTTP header match criteria. OSM supports multiple header match operators in the form of `Exact, Prefix, Suffix, Regex, Contains, Present` match semantics.
 
-Let's update the `ratelimit-config` ConfigMap to rate limit requests that generate the descriptor key `header_match: foo` to 7 per minute.
-
-```bash
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: ratelimit-config
-  namespace: rls
-data:
-  ratelimit-config.yaml: |
-    domain: test
-    descriptors:
-      # requests with the descriptor 'header_match: foo' are rate limited
-      # to 7 per minute
-      - key: header_match
-        value: foo
-        rate_limit:
-          unit: minute
-          requests_per_unit: 7
-EOF
+Recollect that we defined a rate limiting policy in the `ratelimit-config` ConfigMap to rate limit requests that generate the descriptor key `header_match: foo` to 7 per minute.
 ```
-> Note: it can take a few seconds for the RLS to load the configuration.
+descriptors:
+  # requests with the descriptor 'header_match: foo' are rate limited
+  # to 7 per minute
+  - key: header_match
+    value: foo
+    rate_limit:
+      unit: minute
+      requests_per_unit: 7
+```
 
 Update the global rate limit policy targeting the `fortio` service to generate the descriptor `header_match: foo` to rate limit requests containing the header `my-header` and not containing the header `other-header` using the global rate limiter.
 
