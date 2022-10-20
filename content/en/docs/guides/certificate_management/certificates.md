@@ -54,7 +54,7 @@ This will provide valuable certificate information, such as the expiration date 
 
 #### Root Certificate Rotation
 
-With OSM 1.3 root certificate rotation is in preview.  Refer to [certificate rotation](certificate-rotation.md) for more details.
+With OSM v1.3 root certificate rotation is in preview.  Refer to [certificate rotation](certificate-rotation.md) for more details.
 
 ## Issuing Certificates
 

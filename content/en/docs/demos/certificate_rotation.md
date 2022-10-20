@@ -5,7 +5,7 @@ type: docs
 weight: 22
 ---
 
-This guide demonstrates how to use the [MeshRootCertificate](../guides/certificate_management/certificate-rotation.md) preview feature with the OSM cli. 
+This guide demonstrates how to use the [MeshRootCertificate](../guides/certificate_management/certificate-rotation.md) preview feature with the OSM CLI. 
 
 >  WARNING:  This feature is currently in preview and requires the `EnableMeshRootCertificate` feature flag enabled in the MeshConfig.  
 
@@ -18,7 +18,7 @@ This guide demonstrates how to use the [MeshRootCertificate](../guides/certifica
 
 ## Demo
 
-The following demo shows how to use the osm cli to initiate a root certificate rotation.  Learn more about this process in the [Certificate Rotation documentation](../guides/certificate_management/certificate-rotation.md).
+The following demo shows how to use the OSM CLI to initiate a root certificate rotation.  Learn more about this process in the [Certificate Rotation documentation](../guides/certificate_management/certificate-rotation.md).
 
 1. Install OSM with the `EnableMeshRootCertificate` feature flag set to true.
    ```console
@@ -27,20 +27,21 @@ The following demo shows how to use the osm cli to initiate a root certificate r
 
 1. Check that the default `MeshRootCertificate` was created:
    ```console
-   kubectl get mrc -n osm-system 
+   kubectl get mrc -n osm-system  # Replace osm-system with the namespace where OSM is installed
    NAME                          ROLE
    osm-mesh-root-certificate     active
    ```
 
    Confirm that a Secret was created with the Root certificate:
-   ```
+   ```console
    kubectl get secrets -n osm-system
    NAME              TYPE     DATA   AGE
    osm-ca-bundle     Opaque   2      18h
    ```
 
    Take note of the modulus of the original certificate:
-   ```
+   ```console
+   # Replace osm-system with the namespace where OSM is installed
    kubectl get secret -n osm-system  osm-ca-bundle -o jsonpath='{.data.ca\.crt}' |
     base64 -d |
     openssl x509 -modulus -noout
@@ -48,8 +49,7 @@ The following demo shows how to use the osm cli to initiate a root certificate r
    ```
 
 1. Enable permissive traffic policy mode to set up automatic application connectivity.
-    > Note: this is not a requirement to use `MeshRootCertificate`'s but simplifies the demo by not requiring explicit traffic policies for application connectivity.
-
+    > Note: This is not a requirement to use `MeshRootCertificate`, but simplifies the demo by not requiring explicit traffic policies for application connectivity.
     ```bash
     kubectl patch meshconfig osm-mesh-config -n "$osm_namespace" -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":true}}}'  --type=merge
     ```
@@ -116,9 +116,9 @@ The following demo shows how to use the osm cli to initiate a root certificate r
     x-envoy-upstream-service-time: 2
     ```
 
-    A `200 OK` response indicates the HTTP request from the `curl` client to the `httpbin` service was successful. The traffic between the application sidecar proxies is encrypted and authenticated using `Mutual TLS (mTLS)` by leverging the initial root certificate.
+    A `200 OK` response indicates the HTTP request from the `curl` client to the `httpbin` service was successful. The traffic between the application sidecar proxies is encrypted and authenticated using mutual TLS (mTLS) by leverging the initial root certificate.
 
-2. Rotate the root certificate `MeshRootCertificate` using the osm command: 
+2. Rotate the root certificate `MeshRootCertificate` using the OSM command: 
    ```console
    osm alpha certificate rotate -w 20s
 
@@ -137,7 +137,7 @@ The following demo shows how to use the osm cli to initiate a root certificate r
     OSM successfully rotated root certificate for mesh [osm] in namespace [osm-system]
     ```
 
-3. Confirm the only existing MRC is the and certificates are different.
+3. Confirm that there is only one active MRC and the certificates are different.
    ```console
    kubectl get mrc -n osm-system 
    NAME                                                           ROLE
@@ -145,7 +145,7 @@ The following demo shows how to use the osm cli to initiate a root certificate r
    osm-mesh-root-certificate-11546fc67c238b0de2d91ca8f8331173     active
    ```
 
-   Confirm that a Secret was created with the Root certificate:
+   Confirm that a Secret was created with the root certificate:
    ```console
    kubectl get secrets -n osm-system
    NAME              TYPE     DATA   AGE
@@ -178,4 +178,4 @@ The following demo shows how to use the osm cli to initiate a root certificate r
     x-envoy-upstream-service-time: 2
     ```
 
-    A `200 OK` response indicates the HTTP request from the `curl` client to the `httpbin` service was successful. The traffic between the application sidecar proxies is encrypted and authenticated using `Mutual TLS (mTLS)` by leverging the new root certificate.
+    A `200 OK` response indicates the HTTP request from the `curl` client to the `httpbin` service was successful. The traffic between the application sidecar proxies is encrypted and authenticated using mTLS by leveraging the new root certificate.
