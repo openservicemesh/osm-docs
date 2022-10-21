@@ -391,6 +391,139 @@ The destination port of the traffic is matched against the list of Ports specifi
 </tr>
 </tbody>
 </table>
+<h3 id="policy.openservicemesh.io/v1alpha1.EnvoyAccessLogConfig">EnvoyAccessLogConfig
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.TelemetrySpec">TelemetrySpec</a>)
+</p>
+<p>
+<p>EnvoyAccessLogConfig defines the Envoy access log configuration.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>format</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Format defines the Envoy access log format.
+The format can either be unstructured or structured (e.g. JSON).
+Refer to <a href="https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage#format-strings">https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage#format-strings</a>
+regarding how a format string can be specified.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>openTelemetry</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.EnvoyAccessLogOpenTelemetryConfig">
+EnvoyAccessLogOpenTelemetryConfig
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>OpenTelemetry defines the OpenTelemetry configuration used to export the
+Envoy access logs to an OpenTelemetry collector.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.EnvoyAccessLogOpenTelemetryConfig">EnvoyAccessLogOpenTelemetryConfig
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.EnvoyAccessLogConfig">EnvoyAccessLogConfig</a>)
+</p>
+<p>
+<p>EnvoyAccessLogOpenTelemetryConfig defines the Envoy access log OpenTelemetry
+configuration.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>extensionService</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.ExtensionServiceRef">
+ExtensionServiceRef
+</a>
+</em>
+</td>
+<td>
+<p>ExtensionService defines the referenence to ExtensionService resource
+corresponding to the OpenTelemetry collector the access log should be exported to.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>attributes</code><br/>
+<em>
+map[string]string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Attributes defines key-value pairs as additional metadata corresponding access log record.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.ExtensionServiceRef">ExtensionServiceRef
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.EnvoyAccessLogOpenTelemetryConfig">EnvoyAccessLogOpenTelemetryConfig</a>)
+</p>
+<p>
+<p>ExtensionServiceRef defines the namespace and name of the ExtensionService resource.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>namespace</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Namespace defines the namespaces of the ExtensionService resource.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>name</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Name defines the name of the ExtensionService resource.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="policy.openservicemesh.io/v1alpha1.GenericKeyDescriptorEntry">GenericKeyDescriptorEntry
 </h3>
 <p>
@@ -763,6 +896,7 @@ don&rsquo;t conflict.</p>
 </em>
 </td>
 <td>
+<em>(Optional)</em>
 <p>Descriptors defines the list of rate limit descriptors to use
 in the rate limit service request.</p>
 </td>
@@ -2300,6 +2434,188 @@ certificate presented by the client.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="policy.openservicemesh.io/v1alpha1.Telemetry">Telemetry
+</h3>
+<p>
+<p>Telemetry defines the telemetry configuration for workloads in the mesh.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>metadata</code><br/>
+<em>
+<a href="https://v1-20.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#objectmeta-v1-meta">
+Kubernetes meta/v1.ObjectMeta
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Object&rsquo;s metadata</p>
+Refer to the Kubernetes API documentation for the fields of the
+<code>metadata</code> field.
+</td>
+</tr>
+<tr>
+<td>
+<code>spec</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.TelemetrySpec">
+TelemetrySpec
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Spec is the UpstreamTrafficSetting policy specification</p>
+<br/>
+<br/>
+<table>
+<tr>
+<td>
+<code>selector</code><br/>
+<em>
+map[string]string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Selector defines the pod label selector for pods the Telemetry
+configuration is applicable to. It selects pods with matching label keys
+and values. If not specified, the configuration applies to all pods
+in the Telemetry resource&rsquo;s namespace.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>accessLog</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.EnvoyAccessLogConfig">
+EnvoyAccessLogConfig
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>AccessLog defines the Envoy access log configuration.</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td>
+<code>status</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.TelemetryStatus">
+TelemetryStatus
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Status is the status of the TelemetryStatus resource.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.TelemetrySpec">TelemetrySpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.Telemetry">Telemetry</a>)
+</p>
+<p>
+<p>TelemetrySpec defines the Telemetry specification applicable to workloads
+in the mesh.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>selector</code><br/>
+<em>
+map[string]string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Selector defines the pod label selector for pods the Telemetry
+configuration is applicable to. It selects pods with matching label keys
+and values. If not specified, the configuration applies to all pods
+in the Telemetry resource&rsquo;s namespace.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>accessLog</code><br/>
+<em>
+<a href="#policy.openservicemesh.io/v1alpha1.EnvoyAccessLogConfig">
+EnvoyAccessLogConfig
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>AccessLog defines the Envoy access log configuration.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy.openservicemesh.io/v1alpha1.TelemetryStatus">TelemetryStatus
+</h3>
+<p>
+(<em>Appears on:</em><a href="#policy.openservicemesh.io/v1alpha1.Telemetry">Telemetry</a>)
+</p>
+<p>
+<p>TelemetryStatus defines the status of a TelemetryStatus resource.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>currentStatus</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>CurrentStatus defines the current status of a TelemetryStatus resource.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>reason</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Reason defines the reason for the current status of a TelemetryStatus resource.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="policy.openservicemesh.io/v1alpha1.UpstreamTrafficSetting">UpstreamTrafficSetting
 </h3>
 <p>
@@ -2555,5 +2871,5 @@ string
 <hr/>
 <p><em>
 Generated with <code>gen-crd-api-reference-docs</code>
-on git commit <code>dddb8fa5</code>.
+on git commit <code>a65cd374</code>.
 </em></p>
