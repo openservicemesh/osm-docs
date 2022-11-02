@@ -105,3 +105,15 @@ foo: bar
 The `helm show values` command can be used to view the Helm chart's values.
 
 A value marked as `DEPRECATED` in a release will only be removed in the next minor release at the earliest. This means, a value deprecated in release `vX.Y.Z` will only be removed on or after release `vX.Y+1.Z`. Deprecated values will be documented in the release notes.
+
+## API Deprecation
+
+Similar to the [Kubernetes API deprecation policy](https://kubernetes.io/docs/reference/using-api/deprecation-policy/), GA or stable APIs will be marked as deprecated prior to removal.
+
+Stable APIs marked as deprecated:
+
+- Remain functional but will generate a warning if used
+- At the earliest, would not be removed until the next major version
+- Will no longer be functional after removal
+
+Alpha APIs may be removed in any release without any prior notice or deprecation.
