@@ -7,9 +7,9 @@ weight: 10
 
 # Root Certificate Rotation
 
-The mesh root certificate is a long-lived certificate that is used by OSM to issue leaf certificates to services in the mesh thereby enabling mTLS. This document focuses on the steps to rotate a certificate, to learn more about OSM's certificates see [Certificate Provider Options](certificates.md).  
+The Mesh's Root certificate is a long-lived certificate that is used by OSM to issue leaf certificates to services in the mesh thereby enabling mTLS. This document focuses on the steps to rotate a certificate, to learn more about OSM's certificates see [Certificate Provider Options](certificates.md).  
 
-The certificate can be rotated either through a [manual process](#manual-rotation) or with OSM v1.3 we have introduced a preview feature to help [automate rotation](#certificate-rotation-with-meshrootcertificate) using a new API called the `MeshRootCertificate`.  
+The certificate can be rotated either through a [manual process](#manual-root-certificate-rotation) or with OSM v1.3 we have introduced a preview feature to help [automate rotation](#certificate-rotation-with-meshrootcertificate) and minimize downtime using a new API called the `MeshRootCertificate`.  
 
 ### Manual Root Certificate Rotation
 
