@@ -121,6 +121,168 @@ IngressGatewayCertSpec
 </tr>
 </tbody>
 </table>
+<h3 id="config.openservicemesh.io/v1alpha2.ExtensionService">ExtensionService
+</h3>
+<p>
+<p>ExtensionService defines the configuration of the external service
+that an OSM managed mesh integrates with.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>metadata</code><br/>
+<em>
+<a href="https://v1-20.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#objectmeta-v1-meta">
+Kubernetes meta/v1.ObjectMeta
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Object&rsquo;s metadata.</p>
+Refer to the Kubernetes API documentation for the fields of the
+<code>metadata</code> field.
+</td>
+</tr>
+<tr>
+<td>
+<code>spec</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.ExtensionServiceSpec">
+ExtensionServiceSpec
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Spec defines the specification of the extension service.</p>
+<br/>
+<br/>
+<table>
+<tr>
+<td>
+<code>host</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Host defines the hostname of the extension service.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>port</code><br/>
+<em>
+uint32
+</em>
+</td>
+<td>
+<p>Port defines the port number of the extension service.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>protocol</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Protocol defines the protocol of the extension service.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>connectTimeout</code><br/>
+<em>
+<a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration">
+Kubernetes meta/v1.Duration
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>ConnectTimeout defines the timeout for connecting to the extension service.</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="config.openservicemesh.io/v1alpha2.ExtensionServiceSpec">ExtensionServiceSpec
+</h3>
+<p>
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.ExtensionService">ExtensionService</a>)
+</p>
+<p>
+<p>ExtensionServiceSpec defines the specification of the extension service.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>host</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Host defines the hostname of the extension service.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>port</code><br/>
+<em>
+uint32
+</em>
+</td>
+<td>
+<p>Port defines the port number of the extension service.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>protocol</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Protocol defines the protocol of the extension service.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>connectTimeout</code><br/>
+<em>
+<a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration">
+Kubernetes meta/v1.Duration
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>ConnectTimeout defines the timeout for connecting to the extension service.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="config.openservicemesh.io/v1alpha2.ExternalAuthzSpec">ExternalAuthzSpec
 </h3>
 <p>
@@ -649,6 +811,31 @@ string
 <p>TrustDomain is the trust domain to use as a suffix in Common Names for new certificates.</p>
 </td>
 </tr>
+<tr>
+<td>
+<code>intent</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateIntent">
+MeshRootCertificateIntent
+</a>
+</em>
+</td>
+<td>
+<p>Intent of the MeshRootCertificate resource</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>spiffeEnabled</code><br/>
+<em>
+bool
+</em>
+</td>
+<td>
+<p>SpiffeEnabled will add a SPIFFE ID to the certificates, creating a SPIFFE compatible x509 SVID document
+To use SPIFFE ID for validation and routing, &lsquo;enableSPIFFE&rsquo; must be true in the MeshConfig after the MeshRootCertificate is made &lsquo;active&rsquo;</p>
+</td>
+</tr>
 </table>
 </td>
 </tr>
@@ -668,6 +855,241 @@ MeshRootCertificateStatus
 </tr>
 </tbody>
 </table>
+<h3 id="config.openservicemesh.io/v1alpha2.MeshRootCertificateComponentStatus">MeshRootCertificateComponentStatus
+(<code>string</code> alias)</p></h3>
+<p>
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateComponentStatuses">MeshRootCertificateComponentStatuses</a>)
+</p>
+<p>
+<p>MeshRootCertificateComponentStatus specifies the status of the certificate component,
+can be (<code>Issuing</code>, <code>Validating</code>, <code>Unknown</code>).</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr><td><p>&#34;issuing&#34;</p></td>
+<td><p>Issuing means that the root cert described by this MRC is now issuing certs for this component of OSM.</p>
+</td>
+</tr><tr><td><p>&#34;unknown&#34;</p></td>
+<td><p>UnknownComponentStatus means that the use of the root cert described by this MRC is in an unknown state for this
+component.</p>
+</td>
+</tr><tr><td><p>&#34;unused&#34;</p></td>
+<td><p>Unused means that the root cert described by this MRC is unused.</p>
+</td>
+</tr><tr><td><p>&#34;validating&#34;</p></td>
+<td><p>Validating means that the root cert&rsquo;s cert chain, described by this MRC is now part of the CABundle used to
+validate requests for this component..</p>
+</td>
+</tr></tbody>
+</table>
+<h3 id="config.openservicemesh.io/v1alpha2.MeshRootCertificateComponentStatuses">MeshRootCertificateComponentStatuses
+</h3>
+<p>
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateStatus">MeshRootCertificateStatus</a>)
+</p>
+<p>
+<p>MeshRootCertificateComponentStatuses is the set of statuses for each certificate component in the cluster.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>validatingWebhook</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateComponentStatus">
+MeshRootCertificateComponentStatus
+</a>
+</em>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<code>mutatingWebhook</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateComponentStatus">
+MeshRootCertificateComponentStatus
+</a>
+</em>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<code>xdsControlPlane</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateComponentStatus">
+MeshRootCertificateComponentStatus
+</a>
+</em>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<code>sidecar</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateComponentStatus">
+MeshRootCertificateComponentStatus
+</a>
+</em>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<code>bootstrap</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateComponentStatus">
+MeshRootCertificateComponentStatus
+</a>
+</em>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<code>gateway</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateComponentStatus">
+MeshRootCertificateComponentStatus
+</a>
+</em>
+</td>
+<td>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="config.openservicemesh.io/v1alpha2.MeshRootCertificateCondition">MeshRootCertificateCondition
+</h3>
+<p>
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateStatus">MeshRootCertificateStatus</a>)
+</p>
+<p>
+<p>MeshRootCertificateCondition defines the condition of the MeshRootCertificate resource.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>type</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateConditionType">
+MeshRootCertificateConditionType
+</a>
+</em>
+</td>
+<td>
+<p>Type of the condition,
+one of (<code>Ready</code>, <code>Accepted</code>, <code>IssuingRollout</code>, <code>ValidatingRollout</code>, <code>IssuingRollback</code>, <code>ValidatingRollback</code>).</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>status</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateConditionStatus">
+MeshRootCertificateConditionStatus
+</a>
+</em>
+</td>
+<td>
+<p>Status of the condition, one of (<code>True</code>, <code>False</code>, <code>Unknown</code>).</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>lastTransitionTime</code><br/>
+<em>
+<a href="https://v1-20.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#time-v1-meta">
+Kubernetes meta/v1.Time
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>LastTransitionTime is the timestamp corresponding to the last status
+change of this condition.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>reason</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Reason is a brief machine readable explanation for the condition&rsquo;s last
+transition (should be in camelCase).</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>message</code><br/>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Message is a human readable description of the details of the last
+transition, complementing reason.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="config.openservicemesh.io/v1alpha2.MeshRootCertificateConditionStatus">MeshRootCertificateConditionStatus
+(<code>string</code> alias)</p></h3>
+<p>
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateCondition">MeshRootCertificateCondition</a>)
+</p>
+<p>
+<p>MeshRootCertificateConditionStatus specifies the status of the MeshRootCertificate condition,
+one of (<code>True</code>, <code>False</code>, <code>Unknown</code>).</p>
+</p>
+<h3 id="config.openservicemesh.io/v1alpha2.MeshRootCertificateConditionType">MeshRootCertificateConditionType
+(<code>string</code> alias)</p></h3>
+<p>
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateCondition">MeshRootCertificateCondition</a>)
+</p>
+<p>
+<p>MeshRootCertificateConditionType specifies the type of the condition,
+one of (<code>Ready</code>, <code>Accepted</code>, <code>IssuingRollout</code>, <code>ValidatingRollout</code>, <code>IssuingRollback</code>, <code>ValidatingRollback</code>).</p>
+</p>
+<h3 id="config.openservicemesh.io/v1alpha2.MeshRootCertificateIntent">MeshRootCertificateIntent
+(<code>string</code> alias)</p></h3>
+<p>
+(<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateSpec">MeshRootCertificateSpec</a>)
+</p>
+<p>
+<p>MeshRootCertificateIntent specifies the intent of the MeshRootCertificate
+can be (Active, Passive).</p>
+</p>
 <h3 id="config.openservicemesh.io/v1alpha2.MeshRootCertificateSpec">MeshRootCertificateSpec
 </h3>
 <p>
@@ -708,6 +1130,31 @@ string
 <p>TrustDomain is the trust domain to use as a suffix in Common Names for new certificates.</p>
 </td>
 </tr>
+<tr>
+<td>
+<code>intent</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateIntent">
+MeshRootCertificateIntent
+</a>
+</em>
+</td>
+<td>
+<p>Intent of the MeshRootCertificate resource</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>spiffeEnabled</code><br/>
+<em>
+bool
+</em>
+</td>
+<td>
+<p>SpiffeEnabled will add a SPIFFE ID to the certificates, creating a SPIFFE compatible x509 SVID document
+To use SPIFFE ID for validation and routing, &lsquo;enableSPIFFE&rsquo; must be true in the MeshConfig after the MeshRootCertificate is made &lsquo;active&rsquo;</p>
+</td>
+</tr>
 </tbody>
 </table>
 <h3 id="config.openservicemesh.io/v1alpha2.MeshRootCertificateStatus">MeshRootCertificateStatus
@@ -716,7 +1163,7 @@ string
 (<em>Appears on:</em><a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificate">MeshRootCertificate</a>)
 </p>
 <p>
-<p>MeshRootCertificateStatus defines the status of the MeshRootCertificate resource</p>
+<p>MeshRootCertificateStatus defines the status of the MeshRootCertificate resource.</p>
 </p>
 <table>
 <thead>
@@ -734,8 +1181,52 @@ string
 </em>
 </td>
 <td>
-<p>State specifies the state of the certificate provider
+<p>State specifies the state of the certificate provider.
 All states are specified in constants.go</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>transitionAfter</code><br/>
+<em>
+<a href="https://v1-20.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#time-v1-meta">
+Kubernetes meta/v1.Time
+</a>
+</em>
+</td>
+<td>
+<p>If present, this MRC can transition to the next state in the state machine after this timestamp.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>componentStatuses</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateComponentStatuses">
+MeshRootCertificateComponentStatuses
+</a>
+</em>
+</td>
+<td>
+<p>Set of statuses for each certificate component in the cluster (e.g. webhooks, bootstrap, etc.)
+NOTE: There is a caveat that since these components belong to horizontally scalable pods, it is possible that not
+all of these components will be ready. That is, one controller might mark the ADS server as ready, while all other
+controllers have yet to rotate their controller cert.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>conditions</code><br/>
+<em>
+<a href="#config.openservicemesh.io/v1alpha2.MeshRootCertificateCondition">
+[]MeshRootCertificateCondition
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>List of status conditions to indicate the status of a MeshRootCertificate.
+Known condition types are <code>Ready</code> and <code>InvalidRequest</code>.</p>
 </td>
 </tr>
 </tbody>
@@ -1415,5 +1906,5 @@ SecretKeyReferenceSpec
 <hr/>
 <p><em>
 Generated with <code>gen-crd-api-reference-docs</code>
-on git commit <code>f890cb73</code>.
+on git commit <code>a65cd374</code>.
 </em></p>
