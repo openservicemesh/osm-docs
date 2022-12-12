@@ -7,7 +7,7 @@ weight: 10
 
 # Root Certificate Rotation
 
-The Mesh's Root certificate is a long-lived certificate that is used by OSM to issue leaf certificates to services in the mesh thereby enabling mTLS. This document focuses on the steps to rotate a certificate, to learn more about OSM's certificates see [Certificate Provider Options](certificates.md).  
+The mesh's root certificate is a long-lived certificate that is used by OSM to issue leaf certificates to services in the mesh thereby enabling mTLS. This document focuses on the steps to rotate a certificate, to learn more about OSM's certificates see [Certificate Provider Options](certificates.md).  
 
 The certificate can be rotated either through a [manual process](#manual-root-certificate-rotation) or with OSM v1.3 we have introduced a preview feature to help [automate rotation](#certificate-rotation-with-meshrootcertificate) and minimize downtime using a new API called the `MeshRootCertificate`.  
 
@@ -72,13 +72,11 @@ osm install --set="osm.featureFlags.enableMeshRootCertificate=true"
 
 Each `MeshRootCertificate` represents a certificate that can be used in the mesh. There can be only two `MeshRootCertificate`'s that are used in the mesh at a given time and there must always be one `MeshRootCertificate` in the **active** `role`.
 
-The following are the possible `MeshRootCertificate role`s:
+The `MeshRootCertificate` role has the following options:
 
 - `active`: The certificate is used to sign **and** validate certificates in the mesh. There must always be one active certificate.
 - `passive`: The certificate is used to validate certificates in the mesh.
 - `inactive`: The certificate is not used in the mesh.
-
-The following is an example of the `MeshRootCertificate` that will be created. The `provider` field can be `tresor`, `certManager`, or `vault`.  Before using the providers for [CertManager](certificates.md#using-cert-manager) or [Vault](certificates.md#using-hashicorp-vault), additional pre-configuration steps are required.  Refer to the [API documentation](#TODO) on how to configure the `MeshRootCertificate` fields for each provider.
 
 Run `kubectl get meshrootcertificate` to see the default `MeshRootCertificate`:
 
@@ -100,6 +98,8 @@ spec:
   trustDomain: cluster.local
 ```
 
+The `provider` field can be `tresor`, `certManager`, or `vault`.  Before using the providers for [CertManager](certificates.md#using-cert-manager) or [Vault](certificates.md#using-hashicorp-vault), additional pre-configuration steps are required.  Refer to the [API documentation](../../api_reference/) on how to configure the `MeshRootCertificate` fields for each provider.
+
 The only field that can be modified after initial creation is the `role` field.  Other fields will need to be changed by creating a new MeshRootCertificate and going through the [rotation process](#meshrootcertificate-rotation). On a new install, the initial `MeshRootCertificate` will be created by OSM and the certificate will be in the **active** `role`. Fields such as `trustDomain` and `spiffeEnabled` can be configured by passing options to the install command:
 
 ```bash
@@ -108,11 +108,11 @@ osm install --set="osm.featureFlags.enableSPIFFE=true --set="osm.trustDomain=clu
 
 ### MeshRootCertificate Rotation
 
-To rotate the root certificate a mesh, a second `MeshRootCertificate` (MRC) will be created.  The second `MeshRootCertificate` will be created in a `passive` role and rotated into the `active` role. Once the new certificate is `active`, the old certificate will be moved to the `passive` role then finally `inactive`.  
+To rotate the root certificate, a second `MeshRootCertificate` (MRC) will be created.  The second `MeshRootCertificate` will be created in a `passive` role and rotated into the `active` role. Once the new certificate is `active`, the old certificate will be moved to the `passive` role then finally `inactive`.  
 
-The full process for rotating the certificate is:
+Below is a table representing the full process for rotating the certificate:
 
-| Step  |  original MRC(1) role   |  new MRC(2) role    | Signing MRC  | Validating MRC |
+| Step  |  original mrc1 role   |  new mrc2 role    | Signing MRC  | Validating MRC |
 | ----- | ----------------------- | ------------------- | ------------ | -------------- |
 | 1     | active                  | (not created)       | mrc1         | mrc1           |
 | 2     | active                  | passive             | mrc1         | mrc1 and mrc2  |
@@ -134,14 +134,17 @@ Example commands:
   ```
   kubectl logs osm-controller-67f9fd585d-ccr4b | grep "in progress root certificate rotation"
   ```
+  
 - osm validation and mutating webhooks certificates:
   ```
   kubectl get validatingwebhookconfigurations.admissionregistration.k8s.io osm-validator-mesh-osm -ojson | jq -r '.webhooks[] | .clientConfig.caBundle' | base64 --decode
   kubectl get mutatingwebhookconfigurations.admissionregistration.k8s.io osm-validator-mesh-osm -ojson | jq -r '.webhooks[] | .clientConfig.caBundle' | base64 --decode
   ```
+
 - service certificates: 
   ```osm proxy get config_dump bookbuyer-b8c7bc4d9-zpm8m -n bookbuyer | jq -r '.configs[] | select(."@type"=="type.googleapis.com/envoy.admin.v3.SecretsConfigDump") | .dynamic_active_secrets[] | select(.name == "root-cert-for-mtls-outbound:bookstore/bookstore").secret.validation_context.trusted_ca.inline_bytes' | base64 -d
   ```
+
 - xds certificates:
   ```
   osm proxy get config_dump bookbuyer-b8c7bc4d9-zpm8m -n bookbuyer | jq -r '.configs[] | select(."@type"=="type.googleapis.com/envoy.admin.v3.SecretsConfigDump") | .dynamic_active_secrets[] | select(.name == "validation_context_sds").secret.validation_context.trusted_ca.inline_bytes' | base64 -d
@@ -155,7 +158,7 @@ Tresor requires no additional configuration to rotate the certificates.  Create 
 
 #### Rotating with Hashicorp Vault
 
-Root rotation for Hashicorp Vault requires Vault version 1.11.  Learn how to rotate a root certificate in Vault through the [Hashicorp documentation](https://learn.hashicorp.com/tutorials/vault/pki-engine#step-7-rotate-root-ca).
+Root certificate rotation for Hashicorp Vault requires Vault version 1.11.  Learn how to rotate a root certificate in Vault through the [Hashicorp documentation](https://learn.hashicorp.com/tutorials/vault/pki-engine#step-7-rotate-root-ca).
 
 Once the root certificate is rotated in Hashicorp you can configure a `MeshRootCertificate`, then move it through the [rotation process](#meshrootcertificate-rotation):
 

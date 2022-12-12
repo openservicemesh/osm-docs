@@ -32,7 +32,7 @@ The following demo shows how to use the OSM CLI to initiate a root certificate r
    osm-mesh-root-certificate     active
    ```
 
-   Confirm that a Secret was created with the Root certificate:
+   Confirm that a Secret was created with the root certificate:
    ```console
    kubectl get secrets -n osm-system
    NAME              TYPE     DATA   AGE
@@ -70,13 +70,13 @@ The following demo shows how to use the OSM CLI to initiate a root certificate r
     Confirm the `httpbin` service and pods are up and running.
 
     ```console
-    $ kubectl get svc -n httpbin
+    kubectl get svc -n httpbin
     NAME      TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)     AGE
     httpbin   ClusterIP   10.96.198.23   <none>        14001/TCP   20s
     ```
 
     ```console
-    $ kubectl get pods -n httpbin
+    kubectl get pods -n httpbin
     NAME                     READY   STATUS    RESTARTS   AGE
     httpbin-5b8b94b9-lt2vs   2/2     Running   0          20s
     ```
@@ -97,7 +97,7 @@ The following demo shows how to use the OSM CLI to initiate a root certificate r
     Confirm the `curl` client pod is up and running.
 
     ```console
-    $ kubectl get pods -n curl
+    kubectl get pods -n curl
     NAME                    READY   STATUS    RESTARTS   AGE
     curl-54ccc6954c-9rlvp   2/2     Running   0          20s
     ```
@@ -105,7 +105,7 @@ The following demo shows how to use the OSM CLI to initiate a root certificate r
 6. Confirm the `curl` client is able to access the `httpbin` service on port `14001`.
 
     ```console
-    $ kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I http://httpbin.httpbin:14001
+    kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I http://httpbin.httpbin:14001
     HTTP/1.1 200 OK
     server: envoy
     date: Mon, 15 Mar 2021 22:45:23 GMT
@@ -167,7 +167,7 @@ The following demo shows how to use the OSM CLI to initiate a root certificate r
 
 9. Confirm the `curl` client is able to access the `httpbin` service on port `14001`.
     ```console
-    $ kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I http://httpbin.httpbin:14001
+    kubectl exec -n curl -ti "$(kubectl get pod -n curl -l app=curl -o jsonpath='{.items[0].metadata.name}')" -c curl -- curl -I http://httpbin.httpbin:14001
     HTTP/1.1 200 OK
     server: envoy
     date: Mon, 15 Mar 2021 22:45:23 GMT
