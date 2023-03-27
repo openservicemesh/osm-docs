@@ -1520,7 +1520,7 @@ string
 </em>
 </td>
 <td>
-<p>TLSMaxProtocolVersion defines the maximum TLS protocol version that the sidecar supports. Valid TLS protocol versions are TLS_AUTO, TLSv1_0, TLSv1_1, TLSv1_2 and TLSv1_3.</p>
+<p>TLSMaxProtocolVersion defines the maximum TLS protocol version that the sidecar supports. Valid TLS protocol versions are TLS_AUTO, TLSv1_0 (deprecated), TLSv1_1 (deprecated), TLSv1_2 and TLSv1_3.</p>
 </td>
 </tr>
 <tr>
