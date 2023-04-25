@@ -22,6 +22,8 @@ OSM supports the following application protocols for service ports:
 
 The application protocol configuration described is applicable to both SMI and Permissive traffic policy modes.
 
+> Note: If the `appProtocol` field on the service's port is not set, OSM defaults to HTTP.
+
 ### Examples
 
 Consider the following SMI traffic access and traffic specs policies:
