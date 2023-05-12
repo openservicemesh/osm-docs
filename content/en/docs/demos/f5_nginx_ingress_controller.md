@@ -1,11 +1,25 @@
-## This document outlines how to integrate F5 NGINX Ingress Controller with Open Service Mesh (OSM)
+---
+title: "Integrate F5 NGINX Ingress Controller with Open Service Mesh (OSM)"
+description: "Describes how to set up an OSM-specific configuration and dashboards with your own Prometheus and Grafana stack"
+type: docs
+weight: 35
+---
 
-Open Service Mesh will work with both versions of [F5 NGINX Ingress controller](https://github.com/nginxinc/kubernetes-ingress): the free as well as the NGINX Plus versions.
+# Integrate F5 NGINX Ingress Controller with Open Service Mesh (OSM)
 
-Below is a link to the official F5 NGINX Ingress controller documentation.    
-[F5 NGINX Ingress controller](https://docs.nginx.com/nginx-ingress-controller/)
+This document outlines how to integrate F5 NGINX Ingress Controller with Open Service Mesh (OSM)
 
-# Integrating NGINX Ingress Controller with Open Service Mesh
+> IMPORTANT: Open Service Mesh will work with both versions of [F5 NGINX Ingress controller](https://github.com/nginxinc/kubernetes-ingress): the free as well as the NGINX Plus versions.
+
+## Prerequisites
+
+- Kubernetes cluster running Kubernetes {{< param min_k8s_version >}} or greater.
+- OSM installed on the Kubernetes cluster.
+- `kubectl` installed and access to the cluster's API server.
+- `osm` CLI installed.
+- `helm` CLI installed.
+
+## Integrating NGINX Ingress Controller with Open Service Mesh
 
 There are two ways to integrate the NGINX Ingress Controller with Open Service Mesh (OSM):
 
@@ -13,7 +27,7 @@ There are two ways to integrate the NGINX Ingress Controller with Open Service M
 2. Using the Open Service Mesh `ingressBackend` "proxy" feature.
 
 
-# NGINX Ingress controller and OSM with sidecar injected 
+## NGINX Ingress controller and OSM with sidecar injected 
 
 Install OSM in the cluster
 
@@ -39,7 +53,7 @@ osm namespace add nginx-ingress --mesh-name osm-nginx
 
 The above command will use the mark the `nginx-ingress` namespace, where OSM will be installed (sidecar)
 
-# Install F5 NGINX Ingress controller. Here the links to the install guides:
+### Install F5 NGINX Ingress controller. Here the links to the install guides:
 
 [Using Helm to install NGINX Ingress](https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-helm/)   
 [Using Manifests to install NGINX Ingress](https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-manifests/)   
@@ -47,7 +61,7 @@ The above command will use the mark the `nginx-ingress` namespace, where OSM wil
 
 When using the sidecar method, ensure that you add the correct annotations listed below. This ensures proper integration of NGINX Ingress Controller with the envoy sidecar proxy.
 
-## Helm installs
+#### Helm installs
 
 If using `helm`, add the following `annotation` to your `values.yaml` file:
 
@@ -68,7 +82,7 @@ helm install nic01 nginx-stable/nginx-ingress -n nginx-ingress --create-namespac
 ```
 Change your `release` accordingly to match your environment.
 
-## Manifest installs
+#### Manifest installs
 
 For your `manifest` deployments, add the following `annotation`.
 
@@ -77,7 +91,7 @@ annotations:
   openservicemesh.io/inbound-port-exclusion-list: "80,443"
 ```
 
-### Sample deployment file with annotation required
+#### Sample deployment file with annotation required
 
 ```yaml
 apiVersion: apps/v1
